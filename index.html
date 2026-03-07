@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BREACH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <!-- Matrix rain background -->
+  <canvas id="matrix-rain"></canvas>
+
+  <!-- CRT overlays -->
+  <div id="scanlines"></div>
+  <div id="vignette"></div>
+  <div id="scan-beam"></div>
+
+  <div id="app">
+    <div id="status-bar">
+      <span id="status-title">[ BREACH v2.4.1 ]</span>
+      <span id="status-user">USER: vodkashotsandvolvos</span>
+      <span id="conn-status"><span id="conn-dot"></span>CONN: ACTIVE</span>
+      <div id="status-right">
+        <span id="status-time">00:00:00</span>
+        <span id="status-layer">LAYER: --/15</span>
+        <div id="progress-track">
+          <div id="progress-bar"></div>
+        </div>
+        <span id="detection-label">DETECT:</span>
+        <div id="detection-track">
+          <div id="detection-bar"></div>
+        </div>
+        <span id="detection-pct">0%</span>
+      </div>
+    </div>
+
+    <div id="terminal-frame">
+      <div class="corner top-left">┌</div>
+      <div class="corner top-right">┐</div>
+      <div class="corner bottom-left">└</div>
+      <div class="corner bottom-right">┘</div>
+
+      <div id="terminal" tabindex="0">
+        <div id="output"></div>
+        <div id="input-line">
+          <span id="prompt"></span>
+          <span id="input-display"></span><span id="cursor">█</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
