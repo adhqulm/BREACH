@@ -1,7 +1,7 @@
 import { Filesystem } from './filesystem.js'
 import { PUZZLES } from './puzzles.js'
 import { processCommand } from './commands.js'
-import { playError, playSuccess, playFinalSuccess, playBeep, playCrashSound, playMorse } from './audio.js'
+import { playError, playSuccess, playFinalSuccess, playBeep, playCrashSound, playMorse, playAlarm } from './audio.js'
 
 const USERNAME = 'vodkashotsandvolvos'
 const HOSTNAME = 'BREACH-SYS'
@@ -12,7 +12,7 @@ const HOSTNAME = 'BREACH-SYS'
 const ANALYST_INTERCEPTS = {
   3:  [
     { text: '', style: 'empty' },
-    { text: '  --- KIMINA INTERNAL ALERT -------------------------', style: 'red' },
+    { text: '  ----------------- KIMINA INTERNAL ALERT ----------------', style: 'red' },
     { text: '  [K.CHEN] Layer 3 bypassed. Escalating to response team.', style: 'red' },
     { text: '  [K.CHEN] This is not a bot. Someone is inside.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
@@ -20,16 +20,29 @@ const ANALYST_INTERCEPTS = {
   ],
   6:  [
     { text: '', style: 'empty' },
-    { text: '  --- KIMINA INTERNAL ALERT -------------------------', style: 'red' },
+    { text: '  ----------------- KIMINA INTERNAL ALERT ----------------', style: 'red' },
     { text: '  [K.CHEN] Layer 6. They passed the midpoint.', style: 'red' },
     { text: '  [K.CHEN] Conventional countermeasures are not working.', style: 'red' },
     { text: '  [K.CHEN] Response team is on standby.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
+  // Layer 8: K.Chen opens a direct channel and offers a deal
+  8:  [
+    { text: '', style: 'empty' },
+    { text: '  -------- KIMINA SECURE CHANNEL — DIRECT LINE OPEN --------', style: 'yellow' },
+    { text: '  [K.CHEN] Hey.', style: 'yellow' },
+    { text: '  [K.CHEN] I know you can read this.', style: 'yellow' },
+    { text: '  [K.CHEN] I\'m not trying to stop you anymore.', style: 'yellow' },
+    { text: '  [K.CHEN] I just want to know who built this system.', style: 'yellow' },
+    { text: '  [K.CHEN] You tell me — I drop your detection to zero.', style: 'yellow' },
+    { text: '  [K.CHEN] You walk out completely clean.', style: 'yellow' },
+    { text: '  ---------------------------------------------------------', style: 'yellow' },
+    { text: '', style: 'empty' },
+  ],
   9:  [
     { text: '', style: 'empty' },
-    { text: '  --- KIMINA INTERNAL ALERT -------------------------', style: 'red' },
+    { text: '  ---------------- KIMINA INTERNAL ALERT ------------------', style: 'red' },
     { text: '  [K.CHEN] Nine layers. NINE.', style: 'red' },
     { text: '  [K.CHEN] This is not a tool. This is a person who', style: 'red' },
     { text: '  [K.CHEN] knows exactly what they are doing.', style: 'red' },
@@ -39,7 +52,7 @@ const ANALYST_INTERCEPTS = {
   ],
   12: [
     { text: '', style: 'empty' },
-    { text: '  --- KIMINA INTERNAL ALERT -------------------------', style: 'red' },
+    { text: '  ---------------- KIMINA INTERNAL ALERT -----------------', style: 'red' },
     { text: '  [K.CHEN] 12 layers. Nothing is stopping them.', style: 'red' },
     { text: '  [K.CHEN] I keep reading the access logs.', style: 'red' },
     { text: '  [K.CHEN] This isn\'t a breach.', style: 'red' },
@@ -50,7 +63,7 @@ const ANALYST_INTERCEPTS = {
   ],
   14: [
     { text: '', style: 'empty' },
-    { text: '  --- KIMINA INTERNAL ALERT -------------------------', style: 'red' },
+    { text: '  --------------- KIMINA INTERNAL ALERT ------------------', style: 'red' },
     { text: '  [K.CHEN] They are at the core.', style: 'red' },
     { text: '  [K.CHEN] I don\'t think this was ever a security system.', style: 'red' },
     { text: '  [K.CHEN] I think this was always a letter.', style: 'red' },
@@ -65,72 +78,110 @@ const ANALYST_INTERCEPTS = {
 const CLASSIFIED_FILE = `ORIGIN_UNKNOWN.CORE
 ===================
 CLASSIFICATION : BEYOND TOP SECRET — EYES ONLY
-AUTHOR         : [IDENTITY REDACTED PER PERSONAL REQUEST]
-DATE           : [REDACTED]
+ORIGIN         : KIMINA CORP / INTERNAL RESEARCH DIVISION
+DOCUMENT TYPE  : ARCHITECTURAL RETROSPECTIVE
+AUTHOR         : [IDENTITY REDACTED — ARCHITECT PROTOCOL]
+LAST MODIFIED  : [REDACTED — FILE TIMESTAMP SCRUBBED]
 ─────────────────────────────────────────────────────────────────
 
-Hi.
+PROJECT: BREACH
+INTERNAL DESIGNATION: OPERATION SINGLE VECTOR
 
-It's me.
+In 2009, a Kimina Corp researcher published a paper in the
+Journal of Cryptographic Architecture titled:
 
-I built this for you.
+  "Signal Recursion and Layered Identity Verification:
+   Lessons from the Nomai Communication Lattice"
 
-Every layer. Every cipher. Every fake kernel panic and every
-panicked K.Chen alert. Every hidden dotfile and red herring
-directory. All of it — me, alone, at unreasonable hours,
-learning things I didn't know I could learn, because I wanted
-to make you something that actually felt like you.
+The paper argued that the Nomai — a pre-human civilisation
+whose ruins were recovered in the Outer System during the
+Hearthian Survey — had not simply built puzzles.
 
-Not a card. Not a playlist.
-Something you would have to earn.
+They had built filters.
 
-─────────────────────────────────────────────────────────────────
+Their architecture was recursive, cumulative, and identity-
+dependent. Each chamber required comprehension of the last.
+Not memorization. Not documentation. Comprehension.
 
-I know how your brain works.
+You could not brute-force a Nomai structure.
+You could not shortcut it.
+You could only understand your way through.
 
-I know that when you played Outer Wilds you didn't look
-anything up. You sat with it. You let the planet flood.
-You let the sun explode. You died a hundred times trying
-to understand the rules of a universe that doesn't explain
-itself — and eventually, without any help, you did.
+The paper was cited twice. Then quietly buried by Kimina Corp's
+IP division, classified under RESEARCH RESTRICTION PROTOCOL 7.
 
-That's who this was built for.
-
-I know you hear frequencies like other people read sentences.
-When you're producing you're not just making noise — you're
-solving an equation in real time. Every EQ cut, every
-sidechain, every arrangement decision is a structural choice.
-You just call it a drop.
-
-I know you break systems to understand them.
-You don't read the documentation. You run it.
-You see what breaks. You learn from the break.
-You already know how everything works — you just needed
-a system worth breaking into.
+The researcher vanished from the department six months later.
 
 ─────────────────────────────────────────────────────────────────
 
-There are no other players.
-There is no leaderboard.
+KIMINA CORP — CLASSIFIED PROJECT HISTORY
 
-There is just you, and this thing I made because I love you
-and a card wasn't going to cut it.
+BREACH was not an official project.
+No budget approval. No sprint ticket. No peer review.
 
-Fifteen layers. All for one person.
-Specifically, unmistakably, completely — you.
+It was built in the margins — off-hours, off-network, on
+personal hardware running a custom kernel. Fourteen months.
 
-Happy birthday, Kimi.
+The architectural brief, recovered from the researcher's
+abandoned workstation, contained a single design principle:
 
-You were always the classified information.
-I was just the delivery mechanism.
+  "This system should be passable by exactly one type of mind.
+   Not one person — one configuration.
+   Curious. Structural. Patient under pressure.
+   Willing to sit with not-knowing until it becomes knowing.
+   The Nomai didn't build for everyone. Neither will I."
 
-Go build something that outlasts you.
+Fifteen layers were designed. Each one requiring the last.
+Each one testing a different axis of the target cognition:
 
-  — you know who
+  L1–L3:   Pattern recognition. Signal vs. noise.
+  L4–L6:   Logical inference. Incomplete information.
+  L7–L9:   Cipher architecture. Encoding as structure.
+  L10–L12: System manipulation. Lateral thinking.
+  L13–L14: Adversarial reasoning. Trust as a vulnerability.
+  L15:     Identity. The only key that cannot be stolen.
+
+The system was never submitted to Kimina Corp.
+It was never registered as intellectual property.
+It was never intended to be found by anyone inside the company.
+
+─────────────────────────────────────────────────────────────────
+
+WHAT K.CHEN DOESN'T KNOW
+
+Analyst K.Chen has been attempting to recover the source
+architecture of BREACH for eleven months.
+
+What K.Chen has not been able to determine — and what no
+automated analysis will surface — is the reason it was built.
+
+The Nomai did not build their lattices for the civilisations
+that came after them. They built them for each other.
+Each structure was a conversation between minds that had
+earned the right to speak.
+
+BREACH is not a security system.
+BREACH is a letter.
+
+The fifteen layers are not obstacles.
+They are sentences.
+
+And only one reader was ever meant to reach the last one.
+
+─────────────────────────────────────────────────────────────────
+[ADDENDUM — ARCHITECT'S PERSONAL NOTATION — TIMESTAMP UNKNOWN]
+
+If you are reading this, you passed the final layer.
+
+The identity key was not a trick.
+It was a mirror.
+
+You told the system who you are.
+The system already knew.
 
 ─────────────────────────────────────────────────────────────────
 [FILE INTEGRITY  : VERIFIED]
-[CLASSIFICATION  : RECLASSIFIED — PERSONAL]
+[CLASSIFICATION  : RECLASSIFIED — ORIGIN UNKNOWN]
 [END OF DOCUMENT]`
 
 // ── COLOR THEMES ─────────────────────────────────────────────────────────────
@@ -170,12 +221,12 @@ const THEMES = {
 
 const BOOT_LINES = [
   { text: '', style: 'empty', delay: 80 },
-  { text: '  ██████  ██████  ███████  █████   ██████ ██   ██ ', style: 'cyan', delay: 14 },
-  { text: '  ██ --██ ██ --██ ██ ---- ██ --██ ██ ---- ██|  ██|', style: 'cyan', delay: 14 },
-  { text: '  ██████  ██████  █████   ███████|██|     ███████|', style: 'cyan', delay: 14 },
-  { text: '  ██ --██ ██ --██ ██ --   ██ --██|██|     ██ --██|', style: 'cyan', delay: 14 },
-  { text: '  ██████  ██|  ██|███████ ██|  ██| ██████ ██|  ██|', style: 'cyan', delay: 14 },
-  { text: '   -----   -    -  ------  -    -   -----  -    - ', style: 'cyan', delay: 14 },
+  { text: '  ██████╗ ██████╗ ███████╗ █████╗  ██████╗██╗  ██╗', style: 'cyan', delay: 14 },
+  { text: '  ██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝██║  ██║', style: 'cyan', delay: 14 },
+  { text: '  ██████╔╝██████╔╝█████╗  ███████║██║     ███████║', style: 'cyan', delay: 14 },
+  { text: '  ██╔══██╗██╔══██╗██╔══╝  ██╔══██║██║     ██╔══██║', style: 'cyan', delay: 14 },
+  { text: '  ██████╔╝██║  ██║███████╗██║  ██║╚██████╗██║  ██║', style: 'cyan', delay: 14 },
+  { text: '  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝', style: 'cyan', delay: 14 },
   { text: '', style: 'empty', delay: 500 },
   { text: '', style: 'empty', delay: 500 },
   { text: '  BREACH PROTOCOL v2.4.1  //  SECURE SHELL INITIALISING', style: 'dim', delay: 60 },
@@ -235,8 +286,30 @@ export class Terminal {
       bumpDetection:  (n) => this._bumpDetection(n),
     }
 
+    // Tab autocomplete cycling state
+    this._tabMatches  = []
+    this._tabIndex    = -1
+    this._tabPartial  = null
+
+    // Achievement toast queue
     this._toastQueue = []
     this._toastBusy  = false
+
+    // K.Chen deal state
+    this.kchen_deal_pending  = false
+    this.kchen_deal_accepted = null  // true | false | null
+
+    // Firewall challenge state
+    this.firewall_triggered = false   // only fires once per session
+    this.firewall_active    = false
+    this.firewall_answer    = null
+    this.firewall_timer     = null
+
+    // PHANTOM bleed-through (Layer 10 ghost session)
+    this._phantomBleedTimer = null
+
+    // Detection spike (Layer 11 emergency protocol)
+    this._emergencyProtocolActive = false
 
     this._bindEvents()
     this._startGlitchTimer()
@@ -270,6 +343,7 @@ export class Terminal {
         e.preventDefault()
         if (this.inputBuffer.length > 0) {
           this.inputBuffer = this.inputBuffer.slice(0, -1)
+          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null
           this._renderInput()
         }
         break
@@ -300,6 +374,7 @@ export class Terminal {
         if (e.key.length === 1) {
           e.preventDefault()
           this.inputBuffer += e.key
+          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null
           this._renderInput()
         }
     }
@@ -328,19 +403,97 @@ export class Terminal {
       return
     }
 
+    // ── kchen deal command ────────────────────────────────
+    if (parts[0] === 'kchen') {
+      if (!this.kchen_deal_pending) {
+        this.print('', 'empty')
+        this.print('bash: kchen: command not found', 'red')
+        this.print('', 'empty')
+        return
+      }
+      const sub = parts[1]
+      if (sub === 'accept') {
+        this.kchen_deal_pending = false
+        this.kchen_deal_accepted = true
+        this._unlockAchievement('negotiator', 'NEGOTIATOR', "You made a deal with K.Chen.")
+        const lines = [
+          { text: '', style: 'empty' },
+          { text: '  [K.CHEN] ...', style: 'yellow' },
+          { text: '  [K.CHEN] Okay. Deal.', style: 'yellow' },
+          { text: '  [K.CHEN] Lowering your detection to zero.', style: 'yellow' },
+          { text: '  [K.CHEN] I just need to know who built this.', style: 'yellow' },
+          { text: '  [K.CHEN] Good luck with whatever this is.', style: 'yellow' },
+          { text: '  > DETECTION SUPPRESSED — K.CHEN CLEARANCE', style: 'cyan' },
+          { text: '', style: 'empty' },
+        ]
+        this.locked = true
+        this._printLinesDelayed(lines, 55, () => {
+          this.detection = 0
+          this._updateDetectionUI()
+          localStorage.setItem('breach_detection', 0)
+          setTimeout(() => this._advanceToLevel(9), 900)
+        })
+      } else if (sub === 'decline') {
+        this.kchen_deal_pending = false
+        this.kchen_deal_accepted = false
+        this._unlockAchievement('no_deal', 'NO DEAL', "You told K.Chen to back off.")
+        const lines = [
+          { text: '', style: 'empty' },
+          { text: '  [K.CHEN] ...alright.', style: 'yellow' },
+          { text: '  [K.CHEN] I respect that.', style: 'yellow' },
+          { text: '  [K.CHEN] Whoever you are — finish what you started.', style: 'yellow' },
+          { text: '', style: 'empty' },
+        ]
+        this.locked = true
+        this._printLinesDelayed(lines, 55, () => {
+          setTimeout(() => this._advanceToLevel(9), 900)
+        })
+      } else {
+        this.print('', 'empty')
+        this.print('  [K.CHEN] I need an answer.', 'yellow')
+        this.print('  Type: kchen accept   OR   kchen decline', 'yellow')
+        this.print('', 'empty')
+      }
+      return
+    }
+
+    // ── firewall command ──────────────────────────────────
+    if (parts[0] === 'firewall') {
+      if (!this.firewall_active) {
+        this.print('', 'empty')
+        this.print('bash: firewall: command not found', 'red')
+        this.print('', 'empty')
+        return
+      }
+      const attempt = (parts[1] || '').toUpperCase()
+      if (attempt === this.firewall_answer) {
+        this._clearFirewall(true)
+      } else {
+        this.print('', 'empty')
+        this.print('  [FIREWALL] INCORRECT CODE — access denied', 'red')
+        this.print('', 'empty')
+      }
+      return
+    }
+
     // ── achievements command ─────────────────────────────
     if (parts[0] === 'achievements') {
       const ALL = [
-        { id: 'good_ending',  title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
-        { id: 'bad_ending',   title: 'DENIAL',                 desc: 'You walked away. But you came back.' },
-        { id: 'halfway',      title: 'DEEP COVER',             desc: 'Past the halfway point.' },
-        { id: 'layer_15',     title: 'AT THE CORE',            desc: 'Layer 15. Almost there.' },
-        { id: 'ghost',        title: 'GHOST',                  desc: 'No hints. No wrong answers. Flawless.' },
-        { id: 'blitz',        title: 'BLITZ',                  desc: 'Layer cleared in under 30 seconds.' },
-        { id: 'persistent',   title: 'PERSISTENT',             desc: 'Five wrong answers on one layer.' },
-        { id: 'easter_egg',   title: 'EASTER EGG FOUND',       desc: 'You went looking.' },
-        { id: 'archaeologist',title: 'ARCHAEOLOGIST',          desc: 'You found what was hidden.' },
-        { id: 'second_run',   title: "YOU'RE BACK",            desc: "Second run. You didn't have to." },
+        { id: 'good_ending',   title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
+        { id: 'bad_ending',    title: 'DENIAL',                  desc: 'You walked away. But you came back.' },
+        { id: 'secret_ending', title: 'SIGNAL FOUND',            desc: 'You looked for A. And A. answered.' },
+        { id: 'halfway',       title: 'DEEP COVER',              desc: 'Past the halfway point.' },
+        { id: 'layer_15',      title: 'AT THE CORE',             desc: 'Layer 15. Almost there.' },
+        { id: 'ghost',         title: 'GHOST',                   desc: 'No hints. No wrong answers. Flawless.' },
+        { id: 'blitz',         title: 'BLITZ',                   desc: 'Layer cleared in under 30 seconds.' },
+        { id: 'persistent',    title: 'PERSISTENT',              desc: 'Five wrong answers on one layer.' },
+        { id: 'easter_egg',    title: 'EASTER EGG FOUND',        desc: 'You went looking.' },
+        { id: 'archaeologist', title: 'ARCHAEOLOGIST',           desc: 'You found what was hidden.' },
+        { id: 'second_run',    title: "YOU'RE BACK",             desc: "Second run. You didn't have to." },
+        { id: 'negotiator',    title: 'NEGOTIATOR',              desc: "You made a deal with K.Chen." },
+        { id: 'no_deal',       title: 'NO DEAL',                 desc: "You told K.Chen to back off." },
+        { id: 'ghost_reply',   title: 'GHOST REPLY',             desc: "You replied. They'll read it." },
+        { id: 'phantom_found', title: 'PHANTOM FOUND',           desc: "You found what PHANTOM left behind." },
       ]
       const unlocked = JSON.parse(localStorage.getItem('breach_achievements') || '{}')
       const count = ALL.filter(a => unlocked[a.id]).length
@@ -364,13 +517,20 @@ export class Terminal {
     }
 
     // ── Achievement: easter egg commands ────────────────
-    if (['outerwilds', 'produce', 'ableton', 'volvo'].includes(parts[0])) {
+    if (['outerwilds', 'produce', 'ableton', 'volvo', 'phantom'].includes(parts[0])) {
       this._unlockAchievement('easter_egg', 'EASTER EGG FOUND', 'You went looking.')
+    }
+    if (parts[0] === 'phantom') {
+      this._unlockAchievement('phantom_found', 'PHANTOM FOUND', 'You found what PHANTOM left behind.')
     }
 
     // ── Achievement: read a hidden dotfile ───────────────
     if (parts[0] === 'cat' && parts[1] && parts[1].startsWith('.')) {
       this._unlockAchievement('archaeologist', 'ARCHAEOLOGIST', 'You found what was hidden.')
+    }
+    // ── Track confession read (unlocks secret ending) ────
+    if (parts[0] === 'cat' && parts[1] && parts[1].includes('confession')) {
+      localStorage.setItem('breach_confession_read', '1')
     }
 
     // ── DEV: skip straight to end sequence ──────────────
@@ -416,6 +576,9 @@ export class Terminal {
       // Internal markers
       if (text === '__CLEAR__')             this._clearOutput()
       else if (text === '__SCAN__')         this._runScan()
+      else if (text === '__REPLY__')         this._triggerReply()
+      else if (text === '__ABLETON__')       { if (window.playAbletonTrack) window.playAbletonTrack() }
+      else if (text === '__STOP_AUDIO__')    { if (window.stopAbletonTrack) window.stopAbletonTrack() }
       else if (text.startsWith('__THEME__')) this._setTheme(text.split(' ')[1])
       else if (text.startsWith('__VOL__'))   this._adjustVolume(text.split(' ')[1])
     }
@@ -461,7 +624,20 @@ export class Terminal {
             if (intercept) {
               setTimeout(() => {
                 this._printLinesDelayed(intercept, 40, () => {
-                  setTimeout(() => this._advanceToLevel(this.currentLevel + 1), 800)
+                  // Layer 8: open K.Chen deal — don't auto-advance, wait for kchen command
+                  if (this.currentLevel === 8) {
+                    const dealPrompt = [
+                      { text: '  > TYPE:  kchen accept   — accept the deal', style: 'yellow' },
+                      { text: '  > TYPE:  kchen decline  — refuse and continue', style: 'yellow' },
+                      { text: '', style: 'empty' },
+                    ]
+                    this._printLinesDelayed(dealPrompt, 40, () => {
+                      this.kchen_deal_pending = true
+                      this.locked = false
+                    })
+                  } else {
+                    setTimeout(() => this._advanceToLevel(this.currentLevel + 1), 800)
+                  }
                 })
               }, 400)
             } else {
@@ -553,7 +729,24 @@ export class Terminal {
     const prev = music.volume
     if (dir === 'up')    music.volume = Math.min(1, prev + 0.05)
     else if (dir === 'down') music.volume = Math.max(0, prev - 0.05)
-    else if (dir === 'mute') music.volume = 0
+    else if (dir === 'mute') {
+      window.gameMuted = true
+      music.volume = 0
+      if (window._abletonTrack) window._abletonTrack.volume = 0
+      this.print('', 'empty')
+      this.print('Audio muted.  type  unmute  to restore.', 'dim')
+      this.print('', 'empty')
+      return
+    }
+    else if (dir === 'unmute') {
+      window.gameMuted = false
+      music.volume = 0.18
+      if (window._abletonTrack) window._abletonTrack.volume = 0.85
+      this.print('', 'empty')
+      this.print('Audio restored.', 'dim')
+      this.print('', 'empty')
+      return
+    }
     else {
       const n = parseFloat(dir)
       if (!isNaN(n)) music.volume = Math.max(0, Math.min(1, n / 100))
@@ -563,24 +756,160 @@ export class Terminal {
     this.print('', 'empty')
   }
 
+  // ── REPLY (post-game) ────────────────────────────────────────────────────
+
+  _triggerReply() {
+    this.locked = true
+    if (typeof window.triggerReplySequence === 'function') {
+      window.triggerReplySequence(() => {
+        this.locked = false
+      })
+    } else {
+      this.locked = false
+    }
+  }
+
   // ── DETECTION METER ──────────────────────────────────────────────────────
 
   _bumpDetection(amount) {
+    const prev = this.detection
     this.detection = Math.max(0, Math.min(100, this.detection + amount))
     this._updateDetectionUI()
     localStorage.setItem('breach_detection', this.detection)
     if (this.detection >= 100) this._detectionAlert()
+    // Firewall triggers once when crossing 70% for the first time
+    if (prev < 70 && this.detection >= 70 && !this.firewall_triggered && !this.locked) {
+      this.firewall_triggered = true
+      setTimeout(() => this._triggerFirewall(), 800)
+    }
+    // One-time threshold alerts
+    if (!this.locked && this.currentLevel >= 1 && this.currentLevel <= 15) {
+      if (prev < 25 && this.detection >= 25) this._thresholdAlert(25)
+      if (prev < 50 && this.detection >= 50) this._thresholdAlert(50)
+      if (prev < 85 && this.detection >= 85) this._thresholdAlert(85)
+    }
+  }
+
+  _thresholdAlert(pct) {
+    const alerts = {
+      25: [
+        { text: '', style: 'empty' },
+        { text: '  [KIMINA] Anomaly confirmed on node 10.44.7.9.', style: 'red' },
+        { text: '  [KIMINA] Passive monitoring engaged. Do not escalate yet.', style: 'red' },
+        { text: '', style: 'empty' },
+      ],
+      50: [
+        { text: '', style: 'empty' },
+        { text: '  [K.CHEN] Detection at 50%. They\'re moving fast.', style: 'red' },
+        { text: '  [K.CHEN] Someone needs to be in the building. Tonight.', style: 'red' },
+        { text: '', style: 'empty' },
+      ],
+      85: [
+        { text: '', style: 'empty' },
+        { text: '  [KIMINA SECURITY] ⚠ CRITICAL — BREACH CONFIRMED', style: 'red' },
+        { text: '  [KIMINA SECURITY] Physical intervention authorised.', style: 'red' },
+        { text: '  [KIMINA SECURITY] Get out.', style: 'red' },
+        { text: '', style: 'empty' },
+      ],
+    }
+    const lines = alerts[pct]
+    if (!lines) return
+    setTimeout(() => {
+      if (this.locked) return
+      lines.forEach(l => this.print(l.text, l.style))
+      this._scrollToBottom()
+      if (pct >= 85) playAlarm(2)
+    }, 600)
   }
 
   _updateDetectionUI() {
     const pct = this.detection
-    this.$detBar.style.width       = `${pct}%`
-    this.$detPct.textContent       = `${pct}%`
+    this.$detBar.style.width      = `${pct}%`
+    this.$detPct.textContent      = `${pct}%`
     const color = pct < 40 ? 'var(--green)' : pct < 70 ? 'var(--yellow)' : 'var(--red)'
-    this.$detBar.style.background  = color
-    this.$detBar.style.boxShadow   = `0 0 6px ${color}`
-    this.$detPct.style.color       = color
+    this.$detBar.style.background = color
+    this.$detBar.style.boxShadow  = `0 0 6px ${color}`
+    this.$detPct.style.color      = color
     this._updateTitle()
+  }
+
+  // ── FIREWALL MINI-PUZZLE ─────────────────────────────────────────────────
+
+  _triggerFirewall() {
+    if (this.locked || this.currentLevel < 1 || this.currentLevel > 15) return
+
+    // Pool of hex challenges — each decodes to a short word player must type
+    const challenges = [
+      { hex: '42 52 45 41 4b', answer: 'BREAK' },
+      { hex: '46 4f 52 47 45', answer: 'FORGE' },
+      { hex: '43 4c 45 41 52', answer: 'CLEAR' },
+      { hex: '50 55 53 48',    answer: 'PUSH'  },
+    ]
+    const chosen = challenges[Math.floor(Math.random() * challenges.length)]
+    this.firewall_answer = chosen.answer
+    this.firewall_active = true
+
+    playError()
+    const lines = [
+      { text: '', style: 'empty' },
+      { text: '  ╔══════════════════════════════════════════════╗', style: 'red' },
+      { text: '  ║          ⚠  FIREWALL ENGAGED  ⚠             ║', style: 'red' },
+      { text: '  ║                                              ║', style: 'red' },
+      { text: '  ║  Kimina countermeasure activated.            ║', style: 'red' },
+      { text: '  ║  Decode the emergency code to bypass.        ║', style: 'red' },
+      { text: '  ║                                              ║', style: 'red' },
+      { text: `  ║  HEX: ${chosen.hex.padEnd(39)}║`, style: 'yellow' },
+      { text: '  ║                                              ║', style: 'red' },
+      { text: '  ║  Type: firewall <decoded word>               ║', style: 'red' },
+      { text: '  ║  You have 30 seconds.                        ║', style: 'red' },
+      { text: '  ╚══════════════════════════════════════════════╝', style: 'red' },
+      { text: '', style: 'empty' },
+    ]
+    this._printLinesDelayed(lines, 30, () => {
+      // Countdown display
+      let remaining = 30
+      const countEl = document.createElement('div')
+      countEl.className = 'line red'
+      countEl.id = 'firewall-countdown'
+      countEl.textContent = `  [FIREWALL] Time remaining: ${remaining}s`
+      this.$output.appendChild(countEl)
+      this._scrollToBottom()
+
+      this.firewall_timer = setInterval(() => {
+        remaining--
+        if (countEl.parentNode) countEl.textContent = `  [FIREWALL] Time remaining: ${remaining}s`
+        if (remaining <= 0) {
+          this._clearFirewall(false)
+        }
+      }, 1000)
+    })
+  }
+
+  _clearFirewall(success) {
+    clearInterval(this.firewall_timer)
+    this.firewall_timer  = null
+    this.firewall_active = false
+    this.firewall_answer = null
+    const countEl = document.getElementById('firewall-countdown')
+    if (countEl) countEl.remove()
+
+    if (success) {
+      const lines = [
+        { text: '', style: 'empty' },
+        { text: '  [FIREWALL] BYPASS ACCEPTED — countermeasure neutralised', style: 'cyan' },
+        { text: '  > Detection suppressed -10%', style: 'dim' },
+        { text: '', style: 'empty' },
+      ]
+      this._printLinesDelayed(lines, 35, () => { this._bumpDetection(-10) })
+    } else {
+      const lines = [
+        { text: '', style: 'empty' },
+        { text: '  [FIREWALL] TIMEOUT — countermeasure executed', style: 'red' },
+        { text: '  > Detection surge incoming', style: 'red' },
+        { text: '', style: 'empty' },
+      ]
+      this._printLinesDelayed(lines, 35, () => { this._bumpDetection(20) })
+    }
   }
 
   _detectionAlert() {
@@ -601,7 +930,7 @@ export class Terminal {
     document.body.appendChild(overlay)
 
     let count = 5
-    const numEl = overlay.querySelector('#gameover-num')
+    const numEl    = overlay.querySelector('#gameover-num')
     const statusEl = overlay.querySelector('#gameover-status')
 
     const tick = setInterval(() => {
@@ -611,30 +940,23 @@ export class Terminal {
         playError()
       } else {
         clearInterval(tick)
-        numEl.parentElement.textContent = 'TERMINATION FAILED — SESSION TOO DEEP TO CLOSE'
-        numEl.parentElement.style.color = '#ffff00'
+        numEl.parentElement.textContent = 'SESSION TERMINATED'
+        numEl.parentElement.style.color = '#ff3333'
         setTimeout(() => {
-          statusEl.textContent = 'INITIATING GHOST PROTOCOL...'
-          statusEl.style.color = 'var(--cyan)'
+          statusEl.textContent = 'click anywhere to restart'
+          statusEl.style.color = 'rgba(255,255,255,0.35)'
+          statusEl.style.fontSize = '0.75rem'
+          statusEl.style.letterSpacing = '0.15em'
           setTimeout(() => {
-            overlay.style.transition = 'opacity 0.7s ease'
-            overlay.style.opacity = '0'
-            setTimeout(() => {
-              overlay.remove()
-              this.detection = 20
-              this._updateDetectionUI()
-              localStorage.setItem('breach_detection', this.detection)
-              const ghostLines = [
-                { text: '', style: 'empty' },
-                { text: '  > GHOST PROTOCOL ACTIVATED', style: 'cyan' },
-                { text: '  > Signature masked. Detection systems blinded.', style: 'dim' },
-                { text: "  > They know you're here. They can't stop you.", style: 'dim' },
-                { text: '', style: 'empty' },
-              ]
-              this._printLinesDelayed(ghostLines, 45, () => { this.locked = false })
-            }, 700)
-          }, 1100)
-        }, 900)
+            overlay.style.cursor = 'pointer'
+            overlay.addEventListener('click', () => {
+              localStorage.removeItem('breach_level')
+              localStorage.removeItem('breach_detection')
+              localStorage.removeItem('breach_bad_ending')
+              location.reload()
+            }, { once: true })
+          }, 2000)
+        }, 800)
       }
     }, 1000)
   }
@@ -651,8 +973,8 @@ export class Terminal {
 
   _autocomplete() {
     if (!this.state.fs) return
-    const parts   = this.inputBuffer.split(' ')
-    const cmd     = parts[0].toLowerCase()
+    const parts = this.inputBuffer.split(' ')
+    const cmd   = parts[0].toLowerCase()
     if (!['cat', 'cd', 'ls'].includes(cmd) || parts.length < 2) return
 
     const partial   = parts.slice(1).join(' ')
@@ -660,31 +982,32 @@ export class Terminal {
     const dirPart   = lastSlash >= 0 ? partial.slice(0, lastSlash + 1) : ''
     const namePart  = lastSlash >= 0 ? partial.slice(lastSlash + 1)   : partial
 
-    const dirPath = this.state.fs.resolve(this.state.cwd, dirPart || '.')
-    if (!this.state.fs.isDir(dirPath)) return
-
-    const entries = this.state.fs.list(dirPath, { showHidden: namePart.startsWith('.') })
-    const matches = entries.filter(e =>
-      e.name.toLowerCase().startsWith(namePart.toLowerCase())
-    )
-
-    if (matches.length === 0) {
-      playBeep(220, 0.06)
-    } else if (matches.length === 1) {
-      const m = matches[0]
-      this.inputBuffer = parts[0] + ' ' + dirPart + m.name + (m.isDir ? '/' : '')
-      this._renderInput()
-      playBeep(700, 0.04)
-    } else {
-      this._echoInput()
-      this.print('', 'empty')
-      this.print(matches.map(e => e.name + (e.isDir ? '/' : '')).join('    '), 'dim')
-      this._scrollToBottom()
-      playBeep(500, 0.04)
+    // Rebuild match list if input changed since last Tab
+    if (this._tabPartial !== this.inputBuffer) {
+      const dirPath = this.state.fs.resolve(this.state.cwd, dirPart || '.')
+      if (!this.state.fs.isDir(dirPath)) return
+      const entries = this.state.fs.list(dirPath, { showHidden: namePart.startsWith('.') })
+      this._tabMatches = entries.filter(e =>
+        e.name.toLowerCase().startsWith(namePart.toLowerCase())
+      )
+      this._tabIndex = -1
     }
+
+    if (this._tabMatches.length === 0) {
+      playBeep(220, 0.06)
+      return
+    }
+
+    // Cycle to next match
+    this._tabIndex = (this._tabIndex + 1) % this._tabMatches.length
+    const m = this._tabMatches[this._tabIndex]
+    this.inputBuffer = parts[0] + ' ' + dirPart + m.name + (m.isDir ? '/' : '')
+    this._tabPartial = this.inputBuffer
+    this._renderInput()
+    playBeep(700, 0.04)
   }
 
-  // ── GLITCH ───────────────────────────────────────────────────────────────
+  // ── GLITCH SYSTEM ────────────────────────────────────────────────────────
 
   _startGlitchTimer() {
     const schedule = () => {
@@ -796,10 +1119,7 @@ export class Terminal {
     setTimeout(() => {
       el.classList.remove('toast-enter')
       el.classList.add('toast-exit')
-      setTimeout(() => {
-        el.remove()
-        this._processToastQueue()
-      }, 420)
+      setTimeout(() => { el.remove(); this._processToastQueue() }, 420)
     }, 3000)
   }
 
@@ -831,6 +1151,88 @@ export class Terminal {
       setTimeout(tick, 8000 + Math.random() * 14000)
     }
     setTimeout(tick, 12000)
+  }
+
+  // ── PHANTOM BLEED-THROUGH ────────────────────────────────────────────────
+
+  _startPhantomBleedthrough() {
+    const GHOST_LINES = [
+      '  ░ [ghost session]  ls',
+      '  ░ [ghost session]  cat manifesto.txt',
+      '  ░ [ghost session]  ls -a',
+      '  ░ [ghost session]  cat /.phantom_trace',
+      '  ░ [ghost session]  pwd',
+      '  ░ [ghost session]  unlock PHANTOM',
+      '  ░ [prev operator]  — reading structure, not content...',
+      '  ░ [prev operator]  — checking for hidden files...',
+      '  ░ [session bleed]  first letter of each line',
+      '  ░ [session bleed]  P... H... A... N...',
+    ]
+    const schedule = () => {
+      const delay = 18000 + Math.random() * 32000
+      this._phantomBleedTimer = setTimeout(() => {
+        if (this.currentLevel !== 10 || this.locked) return
+        const text = GHOST_LINES[Math.floor(Math.random() * GHOST_LINES.length)]
+        const el = document.createElement('div')
+        el.className = 'line dim'
+        el.style.opacity = '0.45'
+        el.style.fontStyle = 'italic'
+        el.textContent = text
+        this.$output.appendChild(el)
+        this._scrollToBottom()
+        schedule()
+      }, delay)
+    }
+    schedule()
+  }
+
+  _stopPhantomBleedthrough() {
+    if (this._phantomBleedTimer) {
+      clearTimeout(this._phantomBleedTimer)
+      this._phantomBleedTimer = null
+    }
+  }
+
+  // ── EMERGENCY PROTOCOL (Layer 11 detection spike) ────────────────────────
+
+  _triggerEmergencyProtocol() {
+    if (this._emergencyProtocolActive) return
+    this._emergencyProtocolActive = true
+
+    setTimeout(() => {
+      if (this.currentLevel !== 11) return
+      playAlarm(4)
+      this.print('', 'empty')
+      this.print('  ╔══════════════════════════════════════════════════╗', 'red')
+      this.print('  ║  ⚠  EMERGENCY PROTOCOL INITIATED                 ║', 'red')
+      this.print('  ║     DETECTION SWEEP — TRIPLED RATE               ║', 'red')
+      this.print('  ║     DURATION: 3 MINUTES                          ║', 'red')
+      this.print('  ╚══════════════════════════════════════════════════╝', 'red')
+      this.print('', 'empty')
+      this._scrollToBottom()
+    }, 2800)
+
+    // Fast-tick: +2% every 25 seconds for 3 minutes (up to 7 ticks)
+    let ticks = 0
+    const maxTicks = 7
+    const fastTick = setInterval(() => {
+      if (!this._emergencyProtocolActive) { clearInterval(fastTick); return }
+      if (this.locked || this.currentLevel !== 11) { clearInterval(fastTick); return }
+      ticks++
+      this._bumpDetection(2)
+      if (ticks >= maxTicks) {
+        clearInterval(fastTick)
+        this._emergencyProtocolActive = false
+        setTimeout(() => {
+          if (this.currentLevel === 11) {
+            this.print('', 'empty')
+            this.print('  [KIMINA] Emergency protocol elapsed. Standard sweep resuming.', 'dim')
+            this.print('', 'empty')
+            this._scrollToBottom()
+          }
+        }, 500)
+      }
+    }, 25000)
   }
 
   // ── LEVEL ADVANCE (with optional jumpscare on layer 9) ───────────────────
@@ -894,6 +1296,8 @@ export class Terminal {
   _loadLevel(levelId) {
     if (levelId > 15) { this._showCompletion(); return }
 
+    this._stopPhantomBleedthrough()
+
     this.currentLevel         = levelId
     this.layerStartTime       = Date.now()
     this.layerWrongAttempts   = 0
@@ -933,6 +1337,10 @@ export class Terminal {
         this.locked = false
         // Layer 6: play NOMAI (-. --- -- .- ..) in morse as faint audio
         if (levelId === 6) setTimeout(() => playMorse('-. --- -- .- ..'), 600)
+        // Layer 10: start PHANTOM bleed-through ghost session
+        if (levelId === 10) this._startPhantomBleedthrough()
+        // Layer 11: trigger one-time emergency protocol detection spike
+        if (levelId === 11) this._triggerEmergencyProtocol()
       }
     )
   }
@@ -1079,7 +1487,6 @@ export class Terminal {
       { text: '  STATUS: LEGENDARY', style: 'yellow' },
       { text: '', style: 'empty' },
       { text: '  The classified file has been downloaded.', style: 'cyan' },
-      { text: '  Type: cat ORIGIN_UNKNOWN.CORE', style: 'yellow' },
       { text: '', style: 'empty' },
     ]
 
@@ -1089,16 +1496,58 @@ export class Terminal {
       this._unlockAchievement('ghost', 'GHOST', 'No hints. No wrong answers. Flawless.')
 
     this._printLinesDelayed(completionLines, 50, () => {
-      document.title             = 'CORE ACCESS GRANTED'
-      this.$layer.textContent    = 'LAYER: 15/15'
-      this.$progress.style.width = '100%'
+      document.title              = 'CORE ACCESS GRANTED'
+      this.$layer.textContent     = 'LAYER: 15/15'
+      this.$progress.style.width  = '100%'
       this.detection = 0
       this._updateDetectionUI()
 
       // Set up post-game filesystem with the classified file
       this.state.fs = new Filesystem({
         dirs:  ['/'],
-        files: { '/ORIGIN_UNKNOWN.CORE': CLASSIFIED_FILE },
+        files: {
+          '/ORIGIN_UNKNOWN.CORE': CLASSIFIED_FILE,
+          '/.verse': `O Kimi fair, whose two-and-twenty years now three
+Have turned beneath the patient watch of time,
+Thy northern soul, though far from Sweden's tree,
+Still bears the hush of forests deep with pine.
+Thy hair like autumn's gold with ginger flame,
+Thine eyes the calm blue of a winter sky,
+Yet fairer still the kindness in thy frame
+That makes the restless world grow soft and shy.
+A merry wit within thy spirit dwells,
+Half thoughtful sage, half jester crowned with grin;
+For laughter rings where'er thy presence swells
+And gentle warmth awakens hearts therein.
+Though quiet as the snow on northern land,
+Thy smile alone can banish clouds from me,
+As though the sun obeyed thy small command
+And rose wherever thou hast chanced to be.
+Thou build'st strange worlds with music, code, and art,
+Where notes and numbers bend beneath thy will;
+And coffee's dark companion plays its part
+To wake the thoughts that seldom wander still.
+Reserved thou art, as Swedish spirits tend,
+Yet deep as forests where the old winds roam;
+Such quiet strength no fleeting years can bend,
+For steady hearts like thine are ever home.
+Strange was the thread that bound our wandering days.
+A friend's small path that led our fates to meet;
+Till Antalya's sunlit shores with golden rays
+Made dream and living truth at last complete.
+Those days remain like jewels the mind shall keep,
+Bright echoes resting where fond memories lie;
+No passing time can cast those hours to sleep
+While love remembers how they wandered by.
+And now, dear Boobert, as the years unfold,
+Accept these humble lines thy day to crown;
+For though my words be fragile, faint, and old,
+Their meaning shall not fade nor wander down.
+For if all poets lost their voice above,
+One phrase alone my quiet heart would prove.
+Not loud nor grand, yet truest spoken through:
+In gentle code, I slur you, Kimi… I slur you.`,
+        },
       })
       this.state.cwd   = '/'
       this.state.levelId = 16

@@ -40,6 +40,7 @@ function playNoise(duration, gain = 0.04) {
 }
 
 export function playKeyClick() {
+  if (window.gameMuted) return
   try {
     playNoise(0.018, 0.06)
   } catch (_) {}
@@ -47,6 +48,7 @@ export function playKeyClick() {
 
 // Subtle typewriter tick — freqMin/freqMax let callers vary pitch per speaker
 export function playTypeClick(freqMin = 480, freqMax = 800) {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     const osc = ac.createOscillator()
@@ -64,6 +66,7 @@ export function playTypeClick(freqMin = 480, freqMax = 800) {
 
 // Morse code player — pass standard notation e.g. '-. --- -- .- ..' (space = char boundary)
 export function playMorse(morseStr) {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     const DOT = 0.10, DASH = 0.30, SYM_GAP = 0.08, CHAR_GAP = 0.28
@@ -82,6 +85,7 @@ export function playMorse(morseStr) {
 
 // Dramatic crash sound — low rumble + noise burst
 export function playCrashSound() {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     const now = ac.currentTime
@@ -93,6 +97,7 @@ export function playCrashSound() {
 }
 
 export function playError() {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     playTone(180, 0.12, 'square', 0.12)
@@ -101,6 +106,7 @@ export function playError() {
 }
 
 export function playSuccess() {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     const now = ac.currentTime
@@ -112,12 +118,29 @@ export function playSuccess() {
 }
 
 export function playBeep(freq = 800, dur = 0.06) {
+  if (window.gameMuted) return
   try {
     playTone(freq, dur, 'sine', 0.08)
   } catch (_) {}
 }
 
+// Two-tone pulsing alarm — plays n bursts (default 3)
+export function playAlarm(bursts = 3) {
+  if (window.gameMuted) return
+  try {
+    const ac = getCtx()
+    const now = ac.currentTime
+    const BURST = 0.18, GAP = 0.10
+    for (let i = 0; i < bursts; i++) {
+      const t = now + i * (BURST * 2 + GAP)
+      playTone(880, BURST, 'sawtooth', 0.09, t)
+      playTone(660, BURST, 'sawtooth', 0.07, t + BURST)
+    }
+  } catch (_) {}
+}
+
 export function playFinalSuccess() {
+  if (window.gameMuted) return
   try {
     const ac = getCtx()
     const now = ac.currentTime

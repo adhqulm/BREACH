@@ -1,15 +1,30 @@
 import { Terminal } from './terminal.js'
 import { playTypeClick } from './audio.js'
-import musicUrl from './music.mp3'
+import musicUrl from './mp3/music.mp3'
 import jumpscarePng from './jumpscare.png'
-import jumpscareAudioUrl from './jumpscare.mp3'
-import fallAudioUrl from './fall.mp3'
+import jumpscareAudioUrl from './mp3/jumpscare.mp3'
+import fallAudioUrl from './mp3/fall.mp3'
+import abletonUrl from './mp3/ableton.mp3'
 
 // Ambient background music — fade in over 4 seconds
 const bgMusic = new Audio(musicUrl)
 bgMusic.loop   = true
 bgMusic.volume = 0
 window.bgMusic = bgMusic   // exposed for vol command in terminal
+
+// Ableton easter egg track — starts at 18s
+window._abletonTrack = null
+window.gameMuted = false
+window.playAbletonTrack = () => {
+  if (window._abletonTrack) { window._abletonTrack.pause(); window._abletonTrack = null }
+  window._abletonTrack = new Audio(abletonUrl)
+  window._abletonTrack.currentTime = 18
+  window._abletonTrack.volume = window.gameMuted ? 0 : 0.85
+  window._abletonTrack.play().catch(() => {})
+}
+window.stopAbletonTrack = () => {
+  if (window._abletonTrack) { window._abletonTrack.pause(); window._abletonTrack = null }
+}
 
 function startMusic() {
   bgMusic.play().catch(() => {})  // silently ignore if blocked
@@ -45,24 +60,35 @@ function triggerJumpscare(onDone) {
 }
 
 // ── DIALOGUE ──
-const ENDING_SCRIPT = [
-  'Pedro: Kimi?….',
-  'Pedro: Kimi!!',
-  'Pedro: Kimi, are you okay???',
-  "Pedro: I'm so glad you're awake…",
-  'Pedro: You slipped in the shower and hit your head really hard dude...',
+function buildEndingScript() {
+  const confessionRead = localStorage.getItem('breach_confession_read') === '1'
+  return [
+  'Pedro: Kimi?…',
+  'Pedro: Kimi!! Hey!!',
+  'Pedro: Oh thank god — are you okay??',
+  'Pedro: You slipped in the shower and hit your head really hard, dude.',
+  'Pedro: You were out for like a full minute. I was actually scared.',
+  'Kimi: ...wait...',
   'Kimi: ...phantom protocol...',
   'Kimi: ...layer fifteen... K.Chen... I bypassed it...',
-  'Pedro: What are you even talking about cuzzo',
-  'Pedro: Dude you hit your head WAY too hard lmao',
-  'Pedro: Happy birthday by the way!',
-  "Pedro: Come on, let's go get a beer",
+  'Pedro: What are you talking about?',
+  'Kimi: The system. Fifteen layers. I got through all of them.',
+  'Kimi: NOMAI was layer six. The frequency was A4 — 440 hertz.',
+  'Pedro: Kimi.',
+  'Pedro: You hit your head.',
+  'Pedro: It was a dream.',
+  'Kimi: It felt real, Pedro.',
+  'Kimi (thoughts): "...the last key is the only one I couldn\'t encrypt..."',
+  'Kimi (thoughts): "...because it was never mine to keep..."',
+  'Pedro: Okay yeah you are definitely concussed.',
+  'Pedro: Happy birthday by the way! For real!',
+  "Pedro: Come on. Bar opens in ten minutes. Let's go.",
   {
     choice: [
       {
         label: "wait, lemme just wash my face real quick",
         lines: [
-          'Pedro: Wait',
+          'Pedro: WAIT',
           'Pedro: Kimi!!',
           "Pedro: Don't go back in there!!",
           'Pedro: THE FLOOR IS STILL WET!!!',
@@ -70,18 +96,179 @@ const ENDING_SCRIPT = [
         ending: 'good',
       },
       {
-        label: 'ouch... my head...',
+        label: "ouch... my head...",
         lines: [
-          "Pedro: Let's go, bar opens in like 10 minutes",
-          'Kimi: *Sigh*… okay...',
-          'Kimi (thoughts): "Tf was that???…"',
-          'Kimi (thoughts): "Whatever…"',
+          "Pedro: Come on, let's go",
+          'Kimi: *sigh*... okay...',
+          'Kimi (thoughts): "What even was that...?"',
+          'Kimi (thoughts): "Fifteen layers..."',
+          'Kimi (thoughts): "Whatever."',
         ],
         ending: 'bad',
       },
+      ...(confessionRead ? [{
+        label: "...who built it for me...",
+        lines: [
+          'Pedro: Kimi?',
+          'Kimi: The dream. Someone built it, Pedro.',
+          'Kimi: Fifteen layers. Every single one designed around things I know.',
+          'Pedro: ...what do you mean?',
+          'Kimi: The Outer Wilds puzzle. Music frequencies. Volvos.',
+          'Kimi: Even the answer to the last layer was... me.',
+          'Pedro: Kimi, it was a—',
+          'Kimi: The key to layer fifteen was my username.',
+          'Pedro: ...',
+          'Kimi: Someone signed it. Just "A."',
+          'Kimi (thoughts): "I know you break systems to understand them."',
+          'Kimi (thoughts): "You already had a system worth breaking into."',
+          'Pedro: Kimi that\'s... okay. That\'s kind of insane actually.',
+          'Pedro: But even if it was real — how would you even find them?',
+          'Kimi: The confession file.',
+          'Kimi: There was a postscript at the bottom.',
+          'Kimi: Encoded. Same Caesar shift as layer nine.',
+          'Kimi (thoughts): "shift six. obviously."',
+          'Kimi: I already decoded it.',
+          'Kimi: I need to reply.',
+        ],
+        ending: 'secret',
+      }] : []),
     ],
   },
-]
+  ]
+}
+
+// ── SECRET ENDING ──
+function triggerSecretEnding(onDone) {
+  const overlay = document.createElement('div')
+  overlay.id = 'secret-ending-overlay'
+  document.body.appendChild(overlay)
+
+  const phone = document.createElement('div')
+  phone.id = 'phone-screen'
+  overlay.appendChild(phone)
+
+  const phoneLine = (text, cls) => {
+    const el = document.createElement('div')
+    el.className = cls || 'phone-line'
+    el.textContent = text
+    return el
+  }
+
+  phone.appendChild(phoneLine('Messages', 'phone-header'))
+  phone.appendChild(phoneLine('A.', 'phone-contact'))
+  phone.appendChild(phoneLine('──────────────────────────', 'phone-divider'))
+
+  const sentBubble = document.createElement('div')
+  sentBubble.className = 'phone-bubble sent'
+  sentBubble.style.opacity = '0'
+  phone.appendChild(sentBubble)
+
+  setTimeout(() => {
+    overlay.style.opacity = '1'
+    // Kimi's sent message types out
+    const msg = 'hey. i found it. all 15 layers. who are you?'
+    let i = 0
+    const typeMsg = setInterval(() => {
+      i++
+      sentBubble.textContent = msg.slice(0, i)
+      sentBubble.style.opacity = '1'
+      if (i >= msg.length) {
+        clearInterval(typeMsg)
+        // Delivered indicator
+        const delivered = phoneLine('Delivered', 'phone-delivered')
+        phone.appendChild(delivered)
+
+        // Typing indicator appears
+        setTimeout(() => {
+          const typing = phoneLine('A. is typing...', 'phone-typing')
+          phone.appendChild(typing)
+
+          // Reply arrives
+          setTimeout(() => {
+            typing.remove()
+            const replyBubble = document.createElement('div')
+            replyBubble.className = 'phone-bubble received'
+            replyBubble.style.opacity = '0'
+            phone.appendChild(replyBubble)
+
+            const reply = 'hey. happy birthday. good job.'
+            let j = 0
+            const typeReply = setInterval(() => {
+              j++
+              replyBubble.textContent = reply.slice(0, j)
+              replyBubble.style.opacity = '1'
+              if (j >= reply.length) {
+                clearInterval(typeReply)
+
+                // Second message
+                setTimeout(() => {
+                  const typing2 = phoneLine('A. is typing...', 'phone-typing')
+                  phone.appendChild(typing2)
+
+                  setTimeout(() => {
+                    typing2.remove()
+                    const reply2 = document.createElement('div')
+                    reply2.className = 'phone-bubble received'
+                    reply2.style.opacity = '0'
+                    phone.appendChild(reply2)
+
+                    const msg2 = 'i knew you\'d find it.'
+                    let k = 0
+                    const typeReply2 = setInterval(() => {
+                      k++
+                      reply2.textContent = msg2.slice(0, k)
+                      reply2.style.opacity = '1'
+                      if (k >= msg2.length) {
+                        clearInterval(typeReply2)
+
+                        setTimeout(() => {
+                          // Fade out and call done
+                          overlay.style.transition = 'opacity 1.5s ease'
+                          overlay.style.opacity = '0'
+                          setTimeout(() => {
+                            overlay.remove()
+                            onDone && onDone()
+                          }, 1500)
+                        }, 3500)
+                      }
+                    }, 55)
+                  }, 2200)
+                }, 1800)
+              }
+            }, 50)
+          }, 2000)
+        }, 1200)
+      }
+    }, 60)
+  }, 800)
+}
+
+// ── REPLY SEQUENCE (post-game) ──
+function triggerReplySequence(onDone) {
+  const REPLY_SCRIPT = [
+    'Kimi (thoughts): "...no reply needed."',
+    'Kimi (thoughts): "That\'s what it said."',
+    'Kimi (thoughts): "Just go live your life."',
+    'Kimi (thoughts): "But fifteen layers, Pedro."',
+    'Kimi (thoughts): "Someone stayed up building this for me."',
+    'Kimi (thoughts): "I\'m not just walking away from that."',
+    'Kimi: ...hey.',
+    'Kimi: I don\'t know if you\'ll read this.',
+    'Kimi: I found all fifteen layers.',
+    'Kimi: I read the note at the core.',
+    'Kimi: ...thank you.',
+    'Kimi: You didn\'t have to do any of that.',
+    'Kimi: But you did.',
+    'Kimi (thoughts): "Send."',
+  ]
+  triggerDialogue(REPLY_SCRIPT, () => {
+    if (window.unlockAchievement)
+      window.unlockAchievement('ghost_reply', 'GHOST REPLY', 'You replied. They\'ll read it.')
+    onDone && onDone()
+  })
+}
+
+window.triggerReplySequence = triggerReplySequence
 
 function triggerDialogue(script, onDone) {
   const overlay = document.createElement('div')
@@ -196,17 +383,34 @@ function triggerDialogue(script, onDone) {
     }, 500)
   }
 
+  function showSecretEndingFlow() {
+    box.style.transition = 'opacity 0.5s ease'
+    box.style.opacity = '0'
+    setTimeout(() => {
+      overlay.remove()
+      triggerSecretEnding(() => {
+        if (window.unlockAchievement)
+          window.unlockAchievement('secret_ending', 'SIGNAL FOUND', 'You looked for A. And A. answered.')
+        onDone && onDone()
+      })
+    }, 600)
+  }
+
   function finish() {
     cleanup()
     if (selectedEnding === 'bad') {
       showBadEnding()
       return
     }
+    if (selectedEnding === 'secret') {
+      showSecretEndingFlow()
+      return
+    }
     // Good ending — play fall.mp3 then show stats
     box.style.transition = 'opacity 0.3s ease'
     box.style.opacity = '0'
     const fallSnd = new Audio(fallAudioUrl)
-    fallSnd.volume = 1.0
+    fallSnd.volume = window.gameMuted ? 0 : 1.0
     fallSnd.play().catch(() => {})
     const done = () => {
       onDone && onDone()
@@ -242,7 +446,10 @@ function triggerDialogue(script, onDone) {
 
     keyHandler = (e) => {
       const key = e.key.toLowerCase()
-      const idx = (key === 'a' || key === '1') ? 0 : (key === 'b' || key === '2') ? 1 : -1
+      const idx = (key === 'a' || key === '1') ? 0
+                : (key === 'b' || key === '2') ? 1
+                : (key === 'c' || key === '3') ? 2
+                : -1
       if (idx >= 0 && idx < choiceNode.choice.length) {
         e.stopPropagation()
         e.preventDefault()
@@ -333,7 +540,7 @@ function triggerEndSequence(onDone) {
 
   triggerJumpscare(() => {
     blocker.remove()
-    triggerDialogue(ENDING_SCRIPT, onDone)
+    triggerDialogue(buildEndingScript(), onDone)
   })
 }
 
@@ -420,12 +627,13 @@ function initFlicker() {
 // Boot on first user interaction (required for Web Audio API)
 let booted = false
 
-function startGame() {
+async function startGame() {
   if (booted) return
   booted = true
   waiting.remove()
   startMusic()
   const terminal = new Terminal()
+  await document.fonts.ready
   terminal.boot()
 }
 

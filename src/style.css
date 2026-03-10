@@ -51,24 +51,10 @@ a, button, select { cursor: pointer; }
   );
 }
 
-/* ── CRT VIGNETTE ── */
-#vignette {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 901;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 50%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
-}
-
-/* ── MOVING SCAN BEAM ── */
+/* ── SCAN BEAM ── */
 #scan-beam {
   position: fixed;
-  left: 0;
-  right: 0;
+  left: 0; right: 0;
   top: -4px;
   height: 4px;
   pointer-events: none;
@@ -89,6 +75,19 @@ a, button, select { cursor: pointer; }
   3%   { opacity: 1; }
   97%  { opacity: 0.6; }
   100% { top: 100vh;  opacity: 0; }
+}
+
+/* ── CRT VIGNETTE ── */
+#vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 901;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
 }
 
 /* ── LAYOUT ── */
@@ -122,7 +121,7 @@ a, button, select { cursor: pointer; }
 
 #status-title {
   color: var(--cyan);
-  text-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(0,229,255,0.3);
+  text-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(0, 229, 255, 0.3);
   font-weight: bold;
   letter-spacing: 0.1em;
 }
@@ -362,9 +361,9 @@ a, button, select { cursor: pointer; }
   animation: shake 0.35s ease;
 }
 
-/* ── GLITCH with chromatic aberration ── */
+/* ── GLITCH EFFECT ── */
 @keyframes glitch {
-  0%   { transform: translate(0);        filter: none; }
+  0%   { transform: translate(0); filter: none; }
   10%  { transform: translate(-3px, 1px); filter: hue-rotate(90deg) brightness(1.2); }
   20%  { transform: translate(3px, -1px); filter: hue-rotate(-90deg); }
   30%  { transform: translate(-1px, 2px); filter: none; }
@@ -374,9 +373,7 @@ a, button, select { cursor: pointer; }
   100% { transform: translate(0); filter: none; text-shadow: none; }
 }
 
-.glitch {
-  animation: glitch 0.4s steps(2, end);
-}
+.glitch { animation: glitch 0.4s steps(2, end); }
 
 /* ── LEVEL BANNER ── */
 .level-banner {
@@ -644,4 +641,101 @@ a, button, select { cursor: pointer; }
 .completion-line {
   color: var(--cyan);
   text-shadow: 0 0 16px var(--cyan), 0 0 32px rgba(0,229,255,0.3);
+}
+
+/* ── SECRET ENDING — PHONE SCREEN ── */
+#secret-ending-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+#phone-screen {
+  width: 320px;
+  background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 28px;
+  padding: 32px 0 24px;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  box-shadow: 0 0 60px rgba(0, 229, 255, 0.08), 0 0 0 1px #333;
+  overflow: hidden;
+}
+
+.phone-header {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  letter-spacing: 0.05em;
+  padding: 0 20px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.phone-contact {
+  text-align: center;
+  font-size: 17px;
+  color: #eee;
+  font-weight: 600;
+  padding: 12px 20px 4px;
+}
+
+.phone-divider {
+  text-align: center;
+  font-size: 10px;
+  color: #333;
+  padding: 0 20px 12px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.phone-bubble {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 6px 16px;
+  word-wrap: break-word;
+  min-height: 18px;
+  transition: opacity 0.3s ease;
+}
+
+.phone-bubble.sent {
+  background: #0b84fe;
+  color: #fff;
+  margin-left: auto;
+  border-bottom-right-radius: 4px;
+}
+
+.phone-bubble.received {
+  background: #1c1c1e;
+  color: #f2f2f7;
+  margin-right: auto;
+  border-bottom-left-radius: 4px;
+}
+
+.phone-delivered {
+  text-align: right;
+  font-size: 11px;
+  color: #555;
+  padding: 0 20px 4px;
+}
+
+.phone-typing {
+  text-align: left;
+  font-size: 12px;
+  color: #555;
+  padding: 4px 20px 8px;
+  font-style: italic;
+  animation: fade-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes fade-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1;   }
 }

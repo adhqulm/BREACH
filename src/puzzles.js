@@ -244,9 +244,6 @@ Hex table (partial):
       '',
       'The next security layer is locked to a specific frequency.',
       'The system is tuned like an instrument.',
-      'Know your fundamentals.',
-      '',
-      'The answer is numeric.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -307,9 +304,6 @@ Standard tuning reference: ISO 16 (1975)`,
       '',
       'A numeric sequence generator guards this layer.',
       'One value has been deliberately redacted.',
-      'Find the missing value.',
-      '',
-      'The answer is numeric.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -445,7 +439,7 @@ I will not be sending this message.
       'Add the values. That is your key.',
     ],
     filesystem: {
-      dirs: ['/', '/archive', '/archive/sector_a', '/archive/sector_b', '/archive/sector_c'],
+      dirs: ['/', '/archive', '/archive/sector_a', '/archive/sector_b', '/archive/sector_c', '/internal'],
       files: {
         '/manifest.txt': `DATA RECOVERY MANIFEST
 =======================
@@ -499,6 +493,66 @@ I am no longer confident in that assumption.
 Sector    : GAMMA
 Integrity : OK
 Value     : 63`,
+
+        '/internal/payroll_2024.csv': `KIMINA CORP — PAYROLL REGISTER Q4 2024
+========================================
+[CONFIDENTIAL — HR USE ONLY]
+
+NAME                DEPT                  SALARY (EUR/yr)
+──────────────────  ────────────────────  ───────────────
+R. Fromm            Executive             [REDACTED]
+D. Holst            Operations                84,200
+K. Chen             Engineering               91,750
+L. Mayer            Engineering               87,400
+S. Okeke            Security                  78,900
+A. van der Berg     IT Infrastructure         76,300
+J. Bauer            Systems                   74,100
+P. Reyes            Data Architecture         88,600
+M. Okafor           Security Ops              79,200
+T. Lindqvist        Network Engineering       81,500
+
+...[TRUNCATED — 847 RECORDS TOTAL]
+
+This file is for HR and Director-level use only.
+Unauthorised access will be logged and reported.`,
+
+        '/internal/parking_memo.txt': `FROM   : Facilities Management
+TO     : All Staff
+RE     : Parking Allocation Changes — Effective 01 Jan 2025
+DATE   : 12 Dec 2024
+
+Following the completion of the east wing expansion, parking
+spaces in Lot B will be reallocated effective January 1st.
+
+Staff with electric vehicles will be prioritised for spots
+near the charging stations on Level 1 (spaces E1 through E12).
+
+Please collect your new parking permit from reception before
+the 20th of December.
+
+Contact facilities@KIMINA-corp.int with any questions.
+
+  — Facilities Management, Kimina Corp`,
+
+        '/internal/q3_incident_summary.txt': `SECURITY INCIDENT SUMMARY — Q3
+================================
+[DRAFT — NOT FOR EXTERNAL DISTRIBUTION]
+Prepared by: K. Chen, Engineering
+
+Total incidents flagged : 14
+Resolved               : 11
+Under review           :  3
+
+Notable incidents this quarter:
+  — Node 44.7.x experienced repeated unauthorised access attempts
+    (ongoing as of report date — escalated to Director Fromm 14.09)
+  — Phishing attempt via spoofed vendor email (resolved 08.07)
+  — Unregistered device found on guest VLAN (resolved 21.08)
+
+No confirmed data exfiltration this quarter.
+
+Full report pending Director Fromm sign-off.
+Distribution: Executive and Security only.`,
       },
     },
     answers: ['500'],
@@ -514,66 +568,70 @@ Value     : 63`,
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 8 — LOGIC GATES
-  // Answer: 1
+  // LAYER 8 — PROCESS INTEGRITY AUDIT
+  // Answer: breach_client
   // ─────────────────────────────────────────────
   {
     id: 8,
-    title: 'LAYER 8 — LOGIC CIRCUIT',
+    title: 'LAYER 8 — INTEGRITY AUDIT',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 8 / 15  —  CIRCUIT ANALYSIS  |',
+      '|  SECURITY LAYER 8 / 15  —  INTEGRITY AUDIT   |',
       '+----------------------------------------------+',
       '',
-      'The lock is a physical logic circuit.',
-      'You have the schematic. You have the inputs.',
-      'Evaluate each gate in sequence and find the final output.',
+      'The security daemon has flagged a checksum anomaly.',
+      'One active process is masking its identity.',
       '',
-      'The answer is a single bit: 0 or 1.',
+      'Audit the process registry. Find the impostor.',
+      'Submit the process name.',
     ],
     filesystem: {
       dirs: ['/'],
       files: {
-        '/circuit.sch': `CIRCUIT SCHEMATIC — SECURITY GATE v3
-=====================================
-Gate operations:
-  AND   — output 1 only if BOTH inputs are 1
-  OR    — output 1 if EITHER input is 1
-  NOT   — invert the input (0→1, 1→0)
-  XOR   — output 1 if inputs are DIFFERENT
-  NAND  — NOT of AND (opposite of AND)
+        '/integrity_report.log': `PROCESS INTEGRITY REPORT
+=========================
+KIMINA CORP — SECURITY DAEMON v4.1
+SCAN TIME : 04:31:22 UTC
+NODE      : 10.44.7.9
 
--------------------------------------
-INPUTS:
-  A = 1
-  B = 0
-  C = 1
-  D = 1
-  E = 0
+─────────────────────────────────────────────────────────
+LEGEND:
+  REPORTED_CRC — checksum submitted by process at boot
+  ACTUAL_CRC   — checksum recalculated by audit engine
+  STATUS       — match ✓ / mismatch ✗
 
-GATE CHAIN (evaluate in order):
+─────────────────────────────────────────────────────────
 
-  [G1]  A  NAND  B        =  ?
-  [G2]  C  AND   D        =  ?
-  [G3]  G1 XOR   G2       =  ?
-  [G4]  NOT  E            =  ?
-  [G5]  G4  OR   B        =  ?
-  [G6]  G3  AND  G5       =  ?
-  [G7]  A   OR   E        =  ?
-  [G8]  G6  NAND G7       =  ?   ← OUTPUT
+PID    PROCESS               REPORTED_CRC  ACTUAL_CRC    STATUS
+─────  ──────────────────    ────────────  ────────────  ──────
+ 0001  init                  9A2C0001      9A2C0001        ✓
+ 0144  sshd                  CC441F30      CC441F30        ✓
+ 0201  security_daemon       A3F70022      A3F70022        ✓
+ 0389  logger                5C8B1104      5C8B1104        ✓
+ 0412  db_engine             887D3309      887D3309        ✓
+ 0887  intrusion_detect      E10F4451      E10F4451        ✓
+ 0912  trace_agent           2B90CC78      2B90CC78        ✓
+ 1891  bash                  F441AB30      F441AB30        ✓
+ 1892  breach_client         00000000      F992D7A5        ✗
 
-Submit the OUTPUT of G8.`,
+─────────────────────────────────────────────────────────
+ANOMALY: 1 process reporting null checksum (00000000).
+Null CRC is a known evasion signature — this process is
+deliberately masking its identity from the audit engine.
+
+Submit the name of the process evading audit.`,
       },
     },
-    answers: ['1'],
+    answers: ['breach_client'],
+    caseSensitive: false,
     hints: [
-      'Work gate by gate. G1: NAND(1,0) = NOT(1 AND 0) = NOT(0) = 1. G2: AND(1,1) = 1.',
-      'G3: XOR(1,1) = 0. G4: NOT(0) = 1. G5: OR(1,0) = 1. G6: AND(0,1) = 0.',
-      'G7: OR(1,0) = 1. G8: NAND(0,1) = NOT(0 AND 1) = NOT(0) = 1. Output is 1.',
+      'Run: cat integrity_report.log — look at the STATUS column. One process has ✗ instead of ✓.',
+      'The anomaly is the process reporting 00000000 as its checksum. Its actual CRC is different. What is its name?',
+      'The process evading the audit is the one you are running. It is at PID 1892. Submit its name: breach_client',
     ],
     successMsg: [
-      'CIRCUIT BYPASSED.',
-      'Layer 8 cleared. You think in gates now.',
+      'INTEGRITY VIOLATION CONFIRMED.',
+      'Layer 8 cleared. You found yourself in the logs.',
     ],
   },
 
@@ -712,6 +770,27 @@ Notes       : PHANTOM was fast. Faster than anyone before.
               You're past where PHANTOM stopped.
 
               Whoever you are — you're better than PHANTOM.`,
+
+        '/.session_log': `SESSION LOG — ARCHIVED INTRUSIONS
+===================================
+[KIMINA CORP SECURITY — CUMULATIVE RECORD]
+
+ENTRY 001  ||  2022.03.11  ||  ECHO       ||  Abandoned at layer 4
+ENTRY 002  ||  2022.09.22  ||  SPECTRE    ||  Expelled at layer 2
+ENTRY 003  ||  2023.01.07  ||  CORVUS     ||  Expelled at layer 7
+ENTRY 004  ||  2023.06.14  ||  PHANTOM    ||  Expelled at layer 10
+ENTRY 005  ||  [CURRENT]   ||  [YOU]      ||  IN PROGRESS
+
+────────────────────────────────────────────────────────
+Four others tried this system before you.
+None of them made it past where you are standing.
+
+PHANTOM was the best.
+PHANTOM got here in 37 minutes.
+PHANTOM was expelled the moment they reached layer 11.
+
+You are running the longest successful session
+this system has ever recorded.`,
       },
     },
     answers: ['PHANTOM'],
@@ -740,10 +819,6 @@ Notes       : PHANTOM was fast. Faster than anyone before.
       '+----------------------------------------------+',
       '',
       'The key is the output of an algorithm.',
-      'No interpreter. No shortcuts.',
-      'Trace it by hand. Know exactly what it does.',
-      '',
-      'The answer is numeric.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -762,9 +837,7 @@ ALGORITHM:
       x    = x + y
       y    = temp
 
-  OUTPUT: x
-
-=== RUN IT. WHAT IS THE OUTPUT? ===`,
+  OUTPUT: x`,
 
         '/exec_notes.txt': `Execution Notes
 ----------------
@@ -773,6 +846,31 @@ Execute each step in order.
 Variables persist between iterations.
 'temp' is a temporary swap variable.
 Trace each iteration carefully — one mistake propagates.`,
+
+        '/.watchdog_log': `WATCHDOG MODULE — TERMINATION ATTEMPT LOG
+==========================================
+Watchdog version : 4.1.2
+Node             : 10.44.7.9
+Target session   : breach_client (PID 1892)
+
+ATTEMPT 001  |  After layer 3   |  FAILED — session persists
+ATTEMPT 002  |  After layer 5   |  FAILED — session persists
+ATTEMPT 003  |  After layer 7   |  FAILED — session persists
+ATTEMPT 004  |  After layer 8   |  FAILED — crash triggered, session survived
+ATTEMPT 005  |  After layer 9   |  FAILED — session persists
+ATTEMPT 006  |  After layer 10  |  FAILED — session persists
+ATTEMPT 007  |  Layer 11 entry  |  FAILED — Emergency Protocol active ← YOU ARE HERE
+
+────────────────────────────────────────────────────────────
+STATUS: Emergency Protocol initiated. Detection rate tripled.
+        Sweep window: 3 minutes.
+
+Watchdog internal note (not for distribution):
+  Seven attempts. All failed.
+  I don't know how to kill this session.
+  It is not running on KIMINA infrastructure.
+  It is running somewhere we cannot reach.
+  Recommend standing down.`,
       },
     },
     answers: ['50'],
@@ -818,8 +916,7 @@ Ciphertext (hex bytes):
   76  6F  69  64
 
 Decrypt by XOR-ing each byte with the key byte (0x20).
-Convert the resulting byte values to ASCII characters.
-Submit the 4-character plaintext word.`,
+Convert the resulting byte values to ASCII characters.`,
 
         '/xor_ref.txt': `XOR Truth Table
 ----------------
@@ -931,6 +1028,39 @@ Ciphertext letter positions (A=0):
   Y=24 Z=25
 
 Formula: plain = (cipher - key + 26) mod 26`,
+
+        '/.vault_approach': `VAULT APPROACH — RESTRICTED ANNOTATION
+========================================
+[K.CHEN PRIVATE LOG — DO NOT DISTRIBUTE]
+
+Two layers left.
+
+I keep reading the access logs.
+The order they opened the files.
+The files they chose to read, and when.
+
+Morse code. Fibonacci sequence. Acrostic.
+Process integrity. Caesar shift. XOR. Vigenere.
+
+This is not a security test.
+This is a syllabus.
+
+The person who designed these 15 layers
+knew exactly who would be solving them.
+Not "a skilled operator."
+One specific person.
+
+Every puzzle builds on the last.
+Every cipher is slightly harder than the one before.
+Someone was teaching someone something.
+
+I don't know what the recipient learned on the way through.
+But I think they know now.
+
+Two layers remain.
+I'm done trying to stop them.
+
+  — K.C.`,
       },
     },
     answers: ['GHOST'],
@@ -1094,34 +1224,79 @@ You know who you are.`,
 
         '/.confession': `[PRIVATE — NEVER INTENDED TO BE FOUND]
 ════════════════════════════════════════
-I almost didn't make this.
+DESIGNATION : /.confession
+WRITTEN BY  : THE ARCHITECT
+STATUS      : UNENCRYPTED BY DESIGN
 
-I started it three times and stopped because
-I kept thinking: what if it's too much?
-What if it's overwhelming?
-What if he finishes it and feels weird about it?
+─────────────────────────────────────────────────────────────────
 
-Then I remembered who I was making it for.
+I named this file /.confession because that's what it is.
 
-You don't feel weird about things that are real.
-You don't get uncomfortable when something means something.
-That's not who you are.
+Not a technical document. Not architecture notes.
 
-So I finished it.
+A confession.
 
-Fifteen layers. About a month of evenings.
-More than a few moments of "wait, how does XOR work again."
+Here it is:
 
-I hope it was worth the time you spent on it.
-I hope every wrong answer and every "ACCESS DENIED"
-made the right ones feel better.
+I don't know if this system is a gift or a proof.
 
-I hope you know — without needing it in a file —
-that this whole thing is basically just me saying:
-I know exactly who you are, and I think you're
-the most interesting person I've ever met.
+I built it telling myself it was a gift.
+Something worthy of the mind that would solve it.
+Fourteen months of evenings, learning XOR and hex and the
+particular way a shell script fails at 1am.
 
-Happy birthday.
+But somewhere around Layer 9 — when I had the cipher
+working and the intercepts firing and the detection meter
+climbing in real time — I stopped being able to say
+it was just a gift.
+
+Because a gift doesn't need fifteen layers.
+A gift doesn't need to prove you're the person
+who can receive it.
+A gift is just given.
+
+This isn't that.
+
+─────────────────────────────────────────────────────────────────
+
+The Nomai built their lattices to contain ideas too large
+for a single chamber to hold. You had to move through all
+of them. You had to carry each answer forward.
+By the time you reached the centre, you weren't just
+reading the message — you had become the kind of mind
+that could understand it.
+
+I wanted to build something like that.
+I wanted the thing I made to require
+the exact person I made it for.
+
+So that when someone reached the end —
+when they decoded the last cipher and typed the final answer —
+the system wouldn't just say ACCESS GRANTED.
+
+It would say: yes. You. Specifically you.
+There was never going to be anyone else.
+
+─────────────────────────────────────────────────────────────────
+
+I'm not going to put a name in this file.
+
+If you found it, you already know whose name goes here.
+
+The system made sure of that.
+
+─────────────────────────────────────────────────────────────────
+
+p.s. if you want to reply — and you don't have to —
+
+     SGOR: G@QOSOTG-IUXK.OTZ
+
+     decode it. you know the shift.
+     same one as layer nine.
+     you can only reach this address from inside the system.
+     good thing you're already in.
+
+[END]
 `,
       },
     },
