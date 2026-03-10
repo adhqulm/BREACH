@@ -1,5 +1,5 @@
 /**
- * All 15 BREACH puzzle definitions.
+ * All 20 BREACH puzzle definitions.
  *
  * Each puzzle has:
  *   id         – 1-indexed level number
@@ -23,7 +23,7 @@ export const PUZZLES = [
     title: 'LAYER 1 — ROTATIONAL ENCRYPTION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 1 / 15  —  PERIMETER BREACH  |',
+      '|  SECURITY LAYER 1 / 20  —  PERIMETER BREACH  |',
       '+----------------------------------------------+',
       '',
       'You are in. The outer perimeter is down.',
@@ -78,9 +78,9 @@ Keep going.`,
     },
     answers: ['PROTOCOL'],
     hints: [
-      'ROT13 replaces each letter with the letter 13 positions ahead in the alphabet. It is its own inverse — apply it once to encrypt, once to decrypt.',
-      'Go letter by letter: C→P, E→R, B→O, T→G, B→O, P→C, B→O, Y→L. Map each through a +13 shift.',
-      'The decoded word is PROTOCOL.',
+      'The encryption is symmetrical and ancient. It was already considered outdated when it was invented.',
+      'The alphabet has 26 letters. The cipher moves each letter by exactly half that number.',
+      'Go letter by letter through CEBGBPBY. Shift each character forward 13 positions. Wrap at Z back to A.',
     ],
     successMsg: [
       'ACCESS GRANTED — Layer 1 cleared.',
@@ -97,7 +97,7 @@ Keep going.`,
     title: 'LAYER 2 — BINARY SIGNAL',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 2 / 15  —  SIGNAL ANALYSIS   |',
+      '|  SECURITY LAYER 2 / 20  —  SIGNAL ANALYSIS   |',
       '+----------------------------------------------+',
       '',
       'You hit a signal interceptor on the internal subnet.',
@@ -137,9 +137,9 @@ ASCII reference:
     },
     answers: ['BREACH'],
     hints: [
-      'Convert each 8-bit binary group to a decimal number, then look up the ASCII character. There are 6 groups.',
-      '01000010 = 66 = B. Work through the rest: 01010010, 01000101, 01000001, 01000011, 01001000.',
-      'The six characters spell BREACH.',
+      'Six groups of eight digits. The language machines were built on. Older than any operating system.',
+      'Each group of 8 bits is one character. Convert binary to decimal: 01000010 = 64+2 = 66.',
+      '66=B, then work through 01010010, 01000101, 01000001, 01000011, 01001000 using the ASCII table.',
     ],
     successMsg: [
       'SIGNAL DECODED.',
@@ -157,7 +157,7 @@ ASCII reference:
     title: 'LAYER 3 — HEX TRACE',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 3 / 15  —  DEEP PACKET LOG   |',
+      '|  SECURITY LAYER 3 / 20  —  DEEP PACKET LOG   |',
       '+----------------------------------------------+',
       '',
       'You are inside the packet logging layer.',
@@ -180,10 +180,11 @@ ASCII reference:
 [INFO]   04:12:08 — Packet 006 processed. Size: 64b
 [SYS]    04:12:09 — Router keepalive OK
 [INFO]   04:12:10 — Packet 007 processed. Size: 128b
-[INFO]   04:12:11 — Packet 008 processed. Size: 64b
-[WARN]   04:12:12 — Packet 009 — retransmit requested
-[INFO]   04:12:13 — Packet 010 processed. Size: 32b
-[SYS]    04:12:14 — Router keepalive OK`,
+[CRIT]   04:12:11 — Anomalous payload on port 9002: 53797374656d (quarantined — unrelated)
+[INFO]   04:12:12 — Packet 008 processed. Size: 64b
+[WARN]   04:12:13 — Packet 009 — retransmit requested
+[INFO]   04:12:14 — Packet 010 processed. Size: 32b
+[SYS]    04:12:15 — Router keepalive OK`,
 
         '/.access_log.bak': `BACKUP ACCESS LOG — Kimina Corp [ARCHIVED]
 ==========================================
@@ -220,9 +221,9 @@ Hex table (partial):
     },
     answers: ['MOON', 'moon'],
     hints: [
-      'Search trace.log for the CRIT line. The payload is a hex string. Split it into 2-character pairs.',
-      '4d6f6f6e → pairs: 4d 6f 6f 6e. Use the hex_ref.txt table to decode each pair.',
-      '4d=M, 6f=o, 6f=o, 6e=n → Moon. Submit: unlock MOON',
+      'Something was flagged in the logs. There are two CRIT entries — only the first one matters. The payload is base-16 encoded.',
+      'Split the flagged hex string into pairs of two characters. Each pair is one byte. Use the reference table.',
+      '4d, 6f, 6f, 6e — four pairs, four characters. Convert each pair using hex_ref.txt.',
     ],
     successMsg: [
       'PAYLOAD DECODED.',
@@ -239,7 +240,7 @@ Hex table (partial):
     title: 'LAYER 4 — FREQUENCY LOCK',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 4 / 15  —  AUDIO SUBSYSTEM   |',
+      '|  SECURITY LAYER 4 / 20  —  AUDIO SUBSYSTEM   |',
       '+----------------------------------------------+',
       '',
       'The next security layer is locked to a specific frequency.',
@@ -280,9 +281,9 @@ Standard tuning reference: ISO 16 (1975)`,
     },
     answers: ['440'],
     hints: [
-      'The note is A4 — A in the fourth octave. It is the international standard for concert pitch.',
-      'Each octave is double the previous. A3 = 220 Hz. A4 = 220 × 2.',
-      'A4 = 440 Hz. Submit: unlock 440',
+      'Every tuned instrument in the world references a single note. A concert hall calibrates to it before every performance.',
+      'The note is A in the fourth octave. Look at the pattern in tuning_notes.txt. Each octave has a relationship with the one before it.',
+      'A3 = 220 Hz. The relationship between octaves is consistent. Apply it to find A4.',
     ],
     successMsg: [
       'FREQUENCY MATCHED.',
@@ -299,7 +300,7 @@ Standard tuning reference: ISO 16 (1975)`,
     title: 'LAYER 5 — SEQUENCE LOCK',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 5 / 15  —  PATTERN ANALYSIS  |',
+      '|  SECURITY LAYER 5 / 20  —  PATTERN ANALYSIS  |',
       '+----------------------------------------------+',
       '',
       'A numeric sequence generator guards this layer.',
@@ -325,9 +326,9 @@ Each number is derived from the two before it.`,
     },
     answers: ['34'],
     hints: [
-      'This is a famous mathematical sequence. Each term equals the sum of the two preceding terms.',
-      '21 is followed by [REDACTED], then 55. What number, when added to 21, gives the next term? And does [REDACTED] + that result = 89?',
-      '21 + 13 = 34. 34 + 21 = 55. The missing value is 34.',
+      'A famous sequence named after a 13th century Italian mathematician. It appears in sunflowers, shells, and fractals.',
+      'Each term equals the sum of the two before it. You have 21 on the left of the gap and 55 on the right.',
+      'The missing number N satisfies: 21 + [previous term] = N, and N + 21 = 55. What is N?',
     ],
     successMsg: [
       'SEQUENCE VALIDATED.',
@@ -338,14 +339,13 @@ Each number is derived from the two before it.`,
   // ─────────────────────────────────────────────
   // LAYER 6 — MORSE CODE
   // Answer: NOMAI
-  // (The Nomai are the ancient alien civilisation from Outer Wilds)
   // ─────────────────────────────────────────────
   {
     id: 6,
     title: 'LAYER 6 — MORSE TRANSMISSION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 6 / 15  —  SIGNAL DECODE     |',
+      '|  SECURITY LAYER 6 / 20  —  SIGNAL DECODE     |',
       '+----------------------------------------------+',
       '',
       'A transmission is looping on a legacy radio channel.',
@@ -409,9 +409,9 @@ I will not be sending this message.
     },
     answers: ['NOMAI'],
     hints: [
-      'Split the signal by spaces to get individual letter codes: [-.]  [---]  [--]  [.-]  [..]',
-      'Decode each code using the morse_table.txt: -. = N, --- = O, -- = M, .- = A, .. = I',
-      'The word is NOMAI. An ancient civilisation that left their mark on everything.',
+      'Five code groups separated by spaces. A communication system invented in the 1800s, still taught today.',
+      'Each group of dots and dashes is one letter. Use the reference table. Count the signals carefully.',
+      'Five groups: -. --- -- .- .. — map each to its letter using morse_table.txt.',
     ],
     successMsg: [
       'SIGNAL DECODED.',
@@ -429,7 +429,7 @@ I will not be sending this message.
     title: 'LAYER 7 — FRAGMENTED DATA',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 7 / 15  —  DATA RECOVERY     |',
+      '|  SECURITY LAYER 7 / 20  —  DATA RECOVERY     |',
       '+----------------------------------------------+',
       '',
       'The key was shredded and scattered across the file system.',
@@ -439,7 +439,7 @@ I will not be sending this message.
       'Add the values. That is your key.',
     ],
     filesystem: {
-      dirs: ['/', '/archive', '/archive/sector_a', '/archive/sector_b', '/archive/sector_c', '/internal'],
+      dirs: ['/', '/archive', '/archive/sector_a', '/archive/sector_b', '/archive/sector_c', '/archive/sector_d', '/internal'],
       files: {
         '/manifest.txt': `DATA RECOVERY MANIFEST
 =======================
@@ -493,6 +493,16 @@ I am no longer confident in that assumption.
 Sector    : GAMMA
 Integrity : OK
 Value     : 63`,
+
+        '/archive/sector_d/fragment_quarantine.dat': `FRAGMENT — QUARANTINE SECTOR D
+================================
+Sector    : DELTA
+Integrity : DEGRADED (56%)
+Value     : 89
+
+Sector integrity below threshold.
+Data reliability: UNVERIFIED.
+Flagged for review — do not include in key recovery.`,
 
         '/internal/payroll_2024.csv': `KIMINA CORP — PAYROLL REGISTER Q4 2024
 ========================================
@@ -557,9 +567,9 @@ Distribution: Executive and Security only.`,
     },
     answers: ['500'],
     hints: [
-      'Navigate with cd. Try: cd archive, then ls. Keep going deeper into each sector.',
-      'Fragment values: sector_a = 173, sector_b = 264, sector_c = 63. Add them.',
-      '173 + 264 + 63 = 500. Submit: unlock 500',
+      'The key was fragmented. The manifest tells you which sectors matter. Navigate carefully — not everything you find is part of the key.',
+      'Three valid sectors. Navigate into each using cd. The key is a mathematical operation on the three fragment values.',
+      'Find the three integrity-verified fragments in sector_a, sector_b, and sector_c. Add the values together.',
     ],
     successMsg: [
       'FRAGMENTS ASSEMBLED.',
@@ -576,7 +586,7 @@ Distribution: Executive and Security only.`,
     title: 'LAYER 8 — INTEGRITY AUDIT',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 8 / 15  —  INTEGRITY AUDIT   |',
+      '|  SECURITY LAYER 8 / 20  —  INTEGRITY AUDIT   |',
       '+----------------------------------------------+',
       '',
       'The security daemon has flagged a checksum anomaly.',
@@ -625,9 +635,9 @@ Submit the name of the process evading audit.`,
     answers: ['breach_client'],
     caseSensitive: false,
     hints: [
-      'Run: cat integrity_report.log — look at the STATUS column. One process has ✗ instead of ✓.',
-      'The anomaly is the process reporting 00000000 as its checksum. Its actual CRC is different. What is its name?',
-      'The process evading the audit is the one you are running. It is at PID 1892. Submit its name: breach_client',
+      'One process in the registry is lying. The audit engine caught it. Read the log carefully — every row tells you something.',
+      'Compare the STATUS column for every process. Most have ✓. One has something different.',
+      'The anomalous process reports 00000000 as its CRC — a null signature. Its actual checksum is different. What is its name?',
     ],
     successMsg: [
       'INTEGRITY VIOLATION CONFIRMED.',
@@ -644,7 +654,7 @@ Submit the name of the process evading audit.`,
     title: 'LAYER 9 — CAESAR CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 9 / 15  —  SHIFT ENCRYPTION  |',
+      '|  SECURITY LAYER 9 / 20  —  SHIFT ENCRYPTION  |',
       '+----------------------------------------------+',
       '',
       'A Caesar cipher. Simple in theory.',
@@ -696,13 +706,21 @@ We don't know where it's running.
 K.Chen note appended 00:04:17:
   I think the system belongs to them now.
   We are guests in our own machine.`,
+
+        '/backup_comms.log': `BACKUP COMMS — SUPPLEMENTAL LOG
+=================================
+Note: standard fallback cipher is Caesar shift=3.
+Used for non-critical transmissions in 03:00–05:00 UTC window.
+
+Backup payload (shift=3): WLBJDO
+Status: UNRELATED TO PRIMARY CIPHER — archived only.`,
       },
     },
     answers: ['SIGNAL'],
     hints: [
-      'A standard electric guitar has 6 strings. The shift is 6. Shift each letter back 6 positions.',
-      'Y-6=S, O-6=I, M-6=G, T-6=N, G-6=A, R-6=L. Use modular arithmetic: A=0, Z=25, wrap around.',
-      'The plaintext is SIGNAL.',
+      'A Caesar cipher shifts every letter by a fixed amount. The shift is hidden in plain sight somewhere on this node.',
+      'The hint file refers to something physical and musical. Count carefully — acoustic and electric versions differ.',
+      'Shift = 6. Reverse-shift each letter of YOMTGR backward by 6. Y-6=S, then work through the rest.',
     ],
     successMsg: [
       'CIPHER BROKEN.',
@@ -719,7 +737,7 @@ K.Chen note appended 00:04:17:
     title: 'LAYER 10 — HIDDEN TRANSMISSION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 10 / 15  —  STEGANOGRAPHY    |',
+      '|  SECURITY LAYER 10 / 20  —  STEGANOGRAPHY    |',
       '+----------------------------------------------+',
       '',
       'Someone left a manifesto on this node.',
@@ -791,13 +809,22 @@ PHANTOM was expelled the moment they reached layer 11.
 
 You are running the longest successful session
 this system has ever recorded.`,
+
+        '/.column_analysis': `ANALYST NOTE — FAILED EXTRACTION ATTEMPT
+==========================================
+Previous attempt: column-based extraction from manifesto.
+Method: 3rd character of each line.
+Result: OIWNTSO
+Access denied — not the correct extraction method.
+
+Filed under: wrong approaches.`,
       },
     },
     answers: ['PHANTOM'],
     hints: [
-      'The key is hidden in the structure of the manifesto, not in its content. Read the first character of each line.',
-      'Take the first letter of each of the 7 lines of the manifesto body (after the header).',
-      'P-H-A-N-T-O-M. The word is PHANTOM.',
+      'The manifesto is not random. It was written to carry a hidden message. The words are camouflage.',
+      'The hidden message is not inside the words — it is in the shape of the text itself. Try a different unit of extraction.',
+      'Take the very first character of each of the 7 body lines of the manifesto. Read them in order.',
     ],
     successMsg: [
       'MESSAGE EXTRACTED.',
@@ -815,7 +842,7 @@ this system has ever recorded.`,
     title: 'LAYER 11 — ALGORITHM TRACE',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 11 / 15  —  CODE EXECUTION   |',
+      '|  SECURITY LAYER 11 / 20  —  CODE EXECUTION   |',
       '+----------------------------------------------+',
       '',
       'The key is the output of an algorithm.',
@@ -875,9 +902,9 @@ Watchdog internal note (not for distribution):
     },
     answers: ['50'],
     hints: [
-      'Trace each iteration. After iter 1: temp=5, x=5+2=7, y=5. After iter 2: temp=7, x=7+5=12, y=7.',
-      'Iter 3: x=12+7=19, y=12. Iter 4: x=19+12=31, y=19. Iter 5: x=31+19=50, y=31.',
-      'The output is 50.',
+      'Execute the algorithm with paper and pencil. There is no shortcut — trace every single iteration precisely.',
+      'After iteration 1: temp=5, x=5+2=7, y=5. After iteration 2: temp=7, x=7+5=12, y=7.',
+      'Iteration 3: x=19, y=12. Iteration 4: x=31, y=19. Run iteration 5 yourself.',
     ],
     successMsg: [
       'ALGORITHM EXECUTED.',
@@ -886,37 +913,81 @@ Watchdog internal note (not for distribution):
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 12 — XOR CIPHER
-  // Answer: VOID
-  // Ciphertext bytes: 76 6F 69 64 XOR 0x20 = VOID
+  // LAYER 12 — XOR CIPHER (multi-step)
+  // Key is DERIVED: alloc_register XOR parity_byte = 0x55 XOR 0x75 = 0x20
+  // Ciphertext: 76 6F 69 64  XOR  0x20  →  VOID
   // ─────────────────────────────────────────────
   {
     id: 12,
     title: 'LAYER 12 — XOR CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 12 / 15  —  BINARY CRYPTO    |',
+      '|  SECURITY LAYER 12 / 20  —  BINARY CRYPTO    |',
       '+----------------------------------------------+',
       '',
       'XOR encryption. Simple, fast, and everywhere.',
-      'The ciphertext and key are both here.',
-      'XOR is reversible — the same operation decrypts.',
+      'The ciphertext is here.',
+      'The key is not.',
       '',
-      'Work byte by byte. The result is a 4-letter word.',
+      'Find the key. Then decrypt.',
     ],
     filesystem: {
-      dirs: ['/'],
+      dirs: ['/', '/sys', '/sys/diagnostics'],
       files: {
         '/xor_cipher.txt': `XOR CIPHER — DECRYPTION CHALLENGE
 ===================================
 Cipher type  : Single-byte XOR
-Key byte     : 0x20
+Key byte     : DERIVATION-LOCKED (see key_derivation.txt)
 
 Ciphertext (hex bytes):
   76  6F  69  64
 
-Decrypt by XOR-ing each byte with the key byte (0x20).
+Decrypt by XOR-ing each byte with the derived key byte.
 Convert the resulting byte values to ASCII characters.`,
+
+        '/key_derivation.txt': `XOR KEY DERIVATION PROTOCOL
+=============================
+The encryption key is not stored directly.
+It is computed at runtime from two hardware values.
+
+Formula:
+  key = alloc_register XOR parity_byte
+
+Both values are stored in the system diagnostics directory.
+Locate them, compute the key, then decrypt the ciphertext.`,
+
+        '/sys/diagnostics/alloc_register.dat': `SYSTEM ALLOCATION REGISTER
+===========================
+Node      : 10.44.7.9
+Component : Memory allocation controller
+
+Register value (hex): 0x55`,
+
+        '/sys/diagnostics/parity_byte.dat': `SYSTEM PARITY REGISTER
+========================
+Node      : 10.44.7.9
+Component : Error correction module
+
+Parity byte (hex): 0x75`,
+
+        '/sys/diagnostics/.debug_dump': `DEBUG DUMP — HARDWARE SNAPSHOT
+================================
+[AUTOMATED — DO NOT MODIFY]
+
+Register snapshot at 04:31:09 UTC:
+
+  REG_0x00  :  0xAB  (cpu_id)
+  REG_0x01  :  0x3C  (clock_div)
+  REG_0x02  :  0xF1  (bus_ctrl)
+  REG_0x03  :  0x55  (alloc_ctrl)    ← allocation register
+  REG_0x04  :  0x12  (dma_base)
+  REG_0x05  :  0x75  (parity_chk)    ← parity byte
+  REG_0x06  :  0xCC  (irq_mask)
+  REG_0x07  :  0x08  (timer_div)
+  REG_0x08  :  0xE4  (gpio_cfg)
+
+Anomalous session detected on this node.
+Watchdog cannot terminate.`,
 
         '/xor_ref.txt': `XOR Truth Table
 ----------------
@@ -925,18 +996,24 @@ Convert the resulting byte values to ASCII characters.`,
   1 XOR 0 = 1
   1 XOR 1 = 0
 
-To XOR two hex values:
-  Convert both to binary, XOR each bit pair, convert back.
-
-  OR simply: decimal(A) XOR decimal(B) = result
+To XOR two hex values, convert to decimal:
+  decimal(A) XOR decimal(B) = result
 
 Hex to decimal (partial):
-  20=32  56=86  64=100  65=101  66=102  67=103  68=100
-  69=105 6F=111 70=112  71=113  72=114  76=118
+  20=32  55=85  64=100  65=101  66=102  67=103  68=100
+  69=105 6F=111 70=112  71=113  72=114  75=117  76=118
 
 ASCII (relevant range):
   68=D   69=E   70=F   73=I   76=L   77=M
   78=N   79=O   80=P   82=R   83=S   84=T   86=V`,
+
+        '/.null_session': `NULL SESSION LOG — REDACTED
+============================
+A previous attempt used key 0x41 (decimal 65).
+Result: 37 0E 28 05 — not valid ASCII.
+Session aborted.
+
+Do not repeat this approach.`,
 
         '/.architect_trace': `ARCHITECT IDENTITY — PARTIAL TRACE
 [FRAGMENT — RECOVERED FROM DELETED PARTITION]
@@ -965,9 +1042,9 @@ The architect IS the system.`,
     },
     answers: ['VOID'],
     hints: [
-      'XOR each ciphertext byte with the key byte 0x20 (decimal 32). Convert results to ASCII.',
-      '0x76 XOR 0x20: 118 XOR 32 = 86 = V. 0x6F XOR 0x20: 111 XOR 32 = 79 = O. Continue.',
-      '86=V, 79=O, 73=I, 68=D → VOID.',
+      'The decryption key is not in the main cipher file. It must be derived. Navigate into the system diagnostics directory.',
+      'The key formula is: alloc_register XOR parity_byte. Both values are in /sys/diagnostics/. XOR their hex values.',
+      '0x55 = 85 decimal, 0x75 = 117 decimal. 85 XOR 117 = ? Use that as your key byte against ciphertext 76 6F 69 64.',
     ],
     successMsg: [
       'CIPHER DECRYPTED.',
@@ -976,32 +1053,33 @@ The architect IS the system.`,
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 13 — VIGENERE CIPHER
-  // Key: BASS  |  Ciphertext: HHGKU  |  Plaintext: GHOST
+  // LAYER 13 — VIGENERE CIPHER (multi-step)
+  // Key BASS is ROT13-encoded as ONFF in key_source.log
+  // Ciphertext: HHGKU  →  GHOST
   // ─────────────────────────────────────────────
   {
     id: 13,
     title: 'LAYER 13 — VIGENERE CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 13 / 15  —  POLYALPHABETIC   |',
+      '|  SECURITY LAYER 13 / 20  —  POLYALPHABETIC   |',
       '+----------------------------------------------+',
       '',
       'You have reached the inner vault antechamber.',
       'A Vigenere cipher. Stronger than Caesar.',
       'Multiple shifting alphabets, one cycling key.',
       '',
-      'The encryption key is hidden elsewhere on this node.',
-      'Find it. Use it.',
+      'The encryption key is here — but not in plaintext.',
+      'Decode the key first. Then decode the message.',
     ],
     filesystem: {
-      dirs: ['/'],
+      dirs: ['/', '/vault', '/vault/keys'],
       files: {
         '/vault_msg.enc': `VIGENERE ENCRYPTED MESSAGE
 ===========================
 Cipher type  : Vigenere
 Ciphertext   : HHGKU
-Key location : see key_hint.txt
+Key location : /vault/keys/
 
 Decryption method:
   For each letter in the ciphertext:
@@ -1011,13 +1089,36 @@ Decryption method:
     3. Take result mod 26
     4. Convert back to a letter`,
 
-        '/key_hint.txt': `Decryption Key — Derivation
-============================
-The Vigenere key is a 4-letter word.
-It is a genre of electronic music.
-It is known for its heavy, low-frequency basslines.
-It drives the floor. It hits at 140 BPM.
-Four letters. All caps.`,
+        '/vault/keys/key_source.log': `VAULT KEY RECORD
+=================
+The Vigenere key was encoded before storage
+using the same rotational method as the
+outermost layer of this system.
+
+Encoded key: ONFF
+
+Decode this to retrieve the actual decryption key.`,
+
+        '/vault/keys/encoding_note.txt': `Key Encoding Protocol
+======================
+To protect the key at rest, it was encoded before
+being written to this file.
+
+The encoding method is the same one used at
+the very first layer of this system.
+Simple. Symmetrical. Its own inverse.`,
+
+        '/vault/keys/.key_attempt_log': `FAILED KEY ATTEMPTS — DO NOT USE
+===================================
+Previous automated brute-force attempts:
+  Attempt 001 — key: DRUM — FAILED
+  Attempt 002 — key: JAZZ — FAILED
+  Attempt 003 — key: ROCK — FAILED
+  Attempt 004 — key: FUNK — FAILED
+  Attempt 005 — key: SOUL — FAILED
+
+None of the standard genre keys worked.
+The key is specific. Not guessable by category alone.`,
 
         '/vigenere_table.txt': `Vigenere Decryption Reference
 ==============================
@@ -1065,9 +1166,9 @@ I'm done trying to stop them.
     },
     answers: ['GHOST'],
     hints: [
-      'The key is BASS. Check the key_hint.txt — bass music, heavy basslines, 140 BPM.',
-      'Decrypt: H-B=H-1=6=G, H-A=H-0=7=H, G-S=6-18+26=14=O, K-S=10-18+26=18=S, U-B=20-1=19=T.',
-      'The plaintext is GHOST.',
+      'There are two steps here. The key is stored encoded — decode it first, then use it to decrypt the message.',
+      'The encoded key is ONFF. The encoding method is described in encoding_note.txt — it is the same method from the very first layer.',
+      'ONFF decoded = BASS. Apply Vigenère decryption to HHGKU using key BASS: (H-B), (H-A), (G-S), (K-S), (U-B) mod 26.',
     ],
     successMsg: [
       'CIPHER CRACKED.',
@@ -1084,7 +1185,7 @@ I'm done trying to stop them.
     title: 'LAYER 14 — BASE64 ENCODING',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 14 / 15  —  ENCODING LAYER   |',
+      '|  SECURITY LAYER 14 / 20  —  ENCODING LAYER   |',
       '+----------------------------------------------+',
       '',
       'You are one step from the core.',
@@ -1114,7 +1215,7 @@ If you found this file, you used ls -a.
 You looked where most people don't.
 That's the whole point.
 
-I built these 15 layers.
+I built these layers.
 Every cipher. Every fragment. Every gate.
 
 The last key isn't something I invented.
@@ -1147,9 +1248,9 @@ The point is knowing what it is and how it works.`,
     },
     answers: ['SHADOW'],
     hints: [
-      'Decode "U0hBRE9X" from Base64. You can decode it mentally or look it up — knowing what it is matters more than how.',
-      'Base64 "U0hBRE9X" decodes to: S(0x53) H(0x48) A(0x41) D(0x44) O(0x4F) W(0x57)',
-      'The decoded word is SHADOW.',
+      'Standard encoding used everywhere on the internet — in emails, data URIs, and API tokens. Not encryption.',
+      'Base64 alphabet: A=0, B=1...Z=25, a=26...z=51, 0=52...9=61. Each character represents 6 bits.',
+      'U=20, 0=52, h=33, B=1, R=17, E=4, 9=61, X=23 — group the bits into bytes and convert each to ASCII.',
     ],
     successMsg: [
       'ENCODING STRIPPED.',
@@ -1171,7 +1272,7 @@ The point is knowing what it is and how it works.`,
     title: 'LAYER 15 — IDENTITY VERIFICATION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 15 / 15  —  CORE ACCESS      |',
+      '|  SECURITY LAYER 15 / 20  —  CORE ACCESS      |',
       '+----------------------------------------------+',
       '',
       'You are at the core.',
@@ -1296,17 +1397,572 @@ p.s. if you want to reply — and you don't have to —
      you can only reach this address from inside the system.
      good thing you're already in.
 
-[END]
-`,
+[END]`,
       },
     },
     answers: ['vodkashotsandvolvos'],
     caseSensitive: true,
     hints: [
-      'Read core/architects_note.txt carefully. The clue describes three things about the person who built this system.',
-      'vodka shots. and. volvos. A drink. A car. A lifestyle. Who does that sound like?',
-      'The answer is your own username. All lowercase, no spaces: vodkashotsandvolvos',
+      'The key is not in any file. No cipher can help you here.',
+      'The architect\'s note describes the key in three parts. Each part is a word. No spaces between them.',
+      'Three words describing: a spirit, how you take it, what you drive. All lowercase, combined as one.',
     ],
-    successMsg: [],  // handled specially in terminal.js
+    successMsg: [
+      'IDENTITY CONFIRMED.',
+      '',
+      '...',
+      '',
+      '> Wait.',
+      '> There is more.',
+      '> A sealed partition — not in Kimina\'s access logs.',
+      '> K.Chen never found this.',
+      '> The architect left something behind the identity lock.',
+      '> Initiating deep access...',
+      '',
+    ],
   },
+
+  // ═══════════════════════════════════════════════════════
+  // SUB-VAULT — LAYERS 16-20
+  // Hidden behind the identity lock. K.Chen never knew.
+  // ═══════════════════════════════════════════════════════
+
+  // ─────────────────────────────────────────────
+  // LAYER 16 — OCTAL ENCODING
+  // Answer: DELTA
+  // D=68=104₈  E=69=105₈  L=76=114₈  T=84=124₈  A=65=101₈
+  // ─────────────────────────────────────────────
+  {
+    id: 16,
+    title: 'LAYER 16 — OCTAL SIGNAL',
+    intro: [
+      '+----------------------------------------------+',
+      '|  SECURITY LAYER 16 / 20  —  SUB-VAULT ENTRY  |',
+      '+----------------------------------------------+',
+      '',
+      'You are past the identity lock.',
+      'This partition does not appear in Kimina\'s access logs.',
+      'K.Chen never reached this level.',
+      '',
+      'Two intercepted channel bursts. One encoding.',
+      'Assemble them in order. Decode what you find.',
+    ],
+    filesystem: {
+      dirs: ['/', '/comms', '/comms/channel_a', '/comms/channel_b', '/comms/decode', '/archive'],
+      files: {
+        '/manifest.log': `DEEP PARTITION — SIGNAL MANIFEST
+==================================
+Two transmission channels intercepted
+from a node outside Kimina infrastructure.
+
+Channel A carries the first portion of the key sequence.
+Channel B carries the remainder.
+
+Both must be read in order (A first, then B).
+Encoding format: base-8 (octal notation).
+
+Navigate to /comms/channel_a/ and /comms/channel_b/
+for the raw burst data.`,
+
+        '/comms/channel_a/burst_1.dat': `TRANSMISSION BURST — CHANNEL A
+================================
+Frequency  : 916 MHz
+Captured   : 05:02:11 UTC
+Encoding   : base-8
+
+Signal values:
+  104  105`,
+
+        '/comms/channel_b/burst_2.dat': `TRANSMISSION BURST — CHANNEL B
+================================
+Frequency  : 916 MHz
+Captured   : 05:02:13 UTC
+Encoding   : base-8
+
+Signal values:
+  114  124  101`,
+
+        '/comms/channel_a/interference.dat': `CHANNEL A — INTERFERENCE LOG
+==============================
+Noise artifacts captured during same window:
+
+  131  145  162
+
+These values are radio interference.
+They do not form part of any valid transmission.
+Flagged for discard.`,
+
+        '/comms/decode/reference.txt': `Octal Decode Reference
+=======================
+Octal (base-8) uses digits 0-7.
+Each octal number converts to decimal, then to ASCII.
+
+Conversion:
+  For a 3-digit octal number XYZ:
+  decimal = X*64 + Y*8 + Z
+
+Examples:
+  101₈ = 1*64 + 0*8 + 1 = 65 = A
+  102₈ = 1*64 + 0*8 + 2 = 66 = B
+  103₈ = 1*64 + 0*8 + 3 = 67 = C
+  104₈ = 1*64 + 0*8 + 4 = 68 = D
+  105₈ = 1*64 + 0*8 + 5 = 69 = E
+
+Continue the pattern for higher values.`,
+
+        '/archive/routing_table.dat': `NODE ROUTING TABLE — DEEP PARTITION
+=====================================
+[AUTOMATICALLY GENERATED — INTERNAL USE]
+
+Route 001  :  10.0.0.1   ->  172  145  163  164  (gateway)
+Route 002  :  10.0.0.2   ->  163  165  142  156  (subnet-b)
+Route 003  :  10.0.0.3   ->  143  157  162  145  (core-node)
+Route 004  :  10.0.0.4   ->  156  157  144  145  (node-d)
+
+Note: routing addresses are internal octal identifiers.
+Do not use these values for key extraction.`,
+      },
+    },
+    answers: ['DELTA'],
+    hints: [
+      'Two channels. Both required. The encoding is older than hexadecimal — it was used before binary became standard.',
+      'Base-8 octal: each digit represents a power of 8. Navigate to /comms/channel_a/ and /comms/channel_b/ for the values.',
+      'Channel A: 104₈=68=D, 105₈=69=E. Channel B: 114₈=76=L, 124₈=84=T, 101₈=65=A. Read channel A first.',
+    ],
+    successMsg: [
+      'CHANNEL DECODED.',
+      'Layer 16 cleared. The sub-vault opens further.',
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // LAYER 17 — ATBASH CIPHER
+  // Answer: NERVE
+  // N→M  E→V  R→I  V→E  E→V  →  MVIEV
+  // ─────────────────────────────────────────────
+  {
+    id: 17,
+    title: 'LAYER 17 — MIRROR CIPHER',
+    intro: [
+      '+----------------------------------------------+',
+      '|  SECURITY LAYER 17 / 20  —  INVERSION LOCK   |',
+      '+----------------------------------------------+',
+      '',
+      'A substitution cipher.',
+      'Not a shift. Not a rotation.',
+      'Something more fundamental.',
+      '',
+      'The alphabet has been reflected.',
+    ],
+    filesystem: {
+      dirs: ['/', '/archive', '/archive/classified'],
+      files: {
+        '/intercept.log': `ENCRYPTED INTERCEPT — DEEP PARTITION
+=====================================
+Cipher type : mirror substitution
+Method      : the alphabet reflects itself
+
+Ciphertext  : MVIEV
+
+The substitution key is the alphabet itself.
+First position maps to last. Last to first.
+The mirror is perfect.`,
+
+        '/archive/substitution_notes.txt': `Substitution Cipher Analysis
+=============================
+A substitution cipher replaces each letter with
+another according to a fixed mapping.
+
+This one is notable: the mapping is its own inverse.
+Encrypting twice restores the original.
+
+The alphabet has 26 letters.
+Position 1 maps to position 26.
+Position 2 maps to position 25.
+And so on.
+
+No key required — the rule is the key.`,
+
+        '/archive/classified/mirror_key.txt': `MIRROR ALPHABET — PARTIAL REFERENCE
+=====================================
+[Lower half only — derive the rest]
+
+N → M
+O → L
+P → K
+Q → J
+R → I
+S → H
+T → G
+U → F
+V → E
+W → D
+X → C
+Y → B
+Z → A
+
+The pattern continues symmetrically.`,
+
+        '/archive/classified/.old_attempt': `FAILED DECRYPTION ATTEMPT LOG
+================================
+Attempt: decode MVIEV using Atbash with offset +1
+Result : NUJFW
+Status : ACCESS DENIED
+
+Attempt: decode MVIEV using reverse Caesar shift=13
+Result : ZIVRI  (note: same as Atbash of reversed string)
+Status : ACCESS DENIED
+
+Neither modified approach produced the correct output.
+Standard Atbash only.`,
+      },
+    },
+    answers: ['NERVE'],
+    hints: [
+      'The cipher maps each letter to its mirror position in the alphabet. There is no key — the alphabet is its own key.',
+      'A=1 maps to Z=26. B=2 maps to Y=25. The pattern is: position p maps to position (27-p).',
+      'Apply the mirror to each letter of MVIEV: M→N, V→E, I→R, E→V, V→E. Read the result.',
+    ],
+    successMsg: [
+      'MIRROR DECRYPTED.',
+      'Layer 17 cleared. You found the nerve.',
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // LAYER 18 — GRID COORDINATE EXTRACTION
+  // Answer: TRACE
+  // Grid coords: (4,4)=T  (3,4)=R  (1,4)=A  (5,3)=C  (3,3)=E
+  // ─────────────────────────────────────────────
+  {
+    id: 18,
+    title: 'LAYER 18 — MATRIX EXTRACTION',
+    intro: [
+      '+----------------------------------------------+',
+      '|  SECURITY LAYER 18 / 20  —  SPATIAL LOCK     |',
+      '+----------------------------------------------+',
+      '',
+      'The key is encoded in space, not sequence.',
+      'A matrix of characters. A set of coordinates.',
+      '',
+      'Navigate the directory tree.',
+      'Find the grid. Find the coordinates.',
+      'Extract the characters in order.',
+    ],
+    filesystem: {
+      dirs: ['/', '/data', '/data/matrix', '/data/matrix/sectors', '/logs', '/logs/sessions', '/logs/sessions/archive'],
+      files: {
+        '/manifest.dat': `MATRIX EXTRACTION MANIFEST
+===========================
+A character matrix has been recovered from a
+deep partition of the architect's workspace.
+
+Extraction coordinates are logged in the session archive.
+
+Grid location  : /data/matrix/sectors/grid.dat
+Coordinates    : /logs/sessions/archive/extract_coords.log
+
+Format: (col, row) — column first, then row.
+Read the matrix from left to right, top to bottom.
+Extract characters at specified coordinates in listed order.`,
+
+        '/data/matrix/sectors/grid.dat': `CHARACTER MATRIX — 8x8
+========================
+     col→  1    2    3    4    5    6    7    8
+row 1  :   K    F    M    Z    N    P    R    W
+row 2  :   B    X    V    Q    J    L    H    D
+row 3  :   S    G    E    Y    C    I    O    U
+row 4  :   A    N    R    T    W    K    F    M
+row 5  :   P    V    I    H    B    X    Z    Q
+row 6  :   D    L    U    J    S    E    G    C
+row 7  :   Y    W    K    F    M    H    N    B
+row 8  :   T    O    P    V    I    R    Q    X`,
+
+        '/logs/sessions/archive/extract_coords.log': `EXTRACTION COORDINATE SEQUENCE
+================================
+Session   : ARCHITECT-WORKSPACE
+Timestamp : [REDACTED]
+
+Extract in this order:
+
+  Position 1  :  (col=4, row=4)
+  Position 2  :  (col=3, row=4)
+  Position 3  :  (col=1, row=4)
+  Position 4  :  (col=5, row=3)
+  Position 5  :  (col=3, row=3)
+
+Read matrix from /data/matrix/sectors/grid.dat
+Assemble extracted characters in sequence order.`,
+
+        '/logs/sessions/noise.log': `SESSION NOISE — UNVERIFIED
+============================
+Timestamp fragments recovered from corrupted log:
+
+  05:14:22 — coordinate pair (3,7) accessed
+  05:14:31 — coordinate pair (1,2) accessed
+  05:14:44 — coordinate pair (6,5) accessed
+  05:15:01 — coordinate pair (8,1) accessed
+  05:15:18 — coordinate pair (2,6) accessed
+
+Status: TIMESTAMP CORRUPTED — do not use for extraction.
+These coordinates are from an unrelated session.`,
+
+        '/data/matrix/sectors/.dead_sector': `DEAD SECTOR — CORRUPTED DATA
+==============================
+Alternate coordinate set recovered from corrupted block.
+Integrity: UNVERIFIED
+
+  (2,1)  (5,6)  (7,2)  (1,7)  (4,8)
+
+DO NOT USE — sector integrity below threshold.
+Coordinates may reference invalid matrix positions.`,
+      },
+    },
+    answers: ['TRACE'],
+    hints: [
+      'The answer is hidden in space, not sequence. Two separate files — one has the map, one has the directions.',
+      'Navigate to /data/matrix/sectors/ for the grid and /logs/sessions/archive/ for the extraction coordinates. Format is (col, row).',
+      'Coordinates in order: (4,4)=T, (3,4)=R, (1,4)=A, (5,3)=C, (3,3)=E. Read them from the grid.',
+    ],
+    successMsg: [
+      'COORDINATES EXTRACTED.',
+      'Layer 18 cleared. The trace is complete.',
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // LAYER 19 — RAIL FENCE CIPHER (2 rails)
+  // Answer: STATIC
+  // STATIC → Rail1=SAI, Rail2=TTC → ciphertext: SAITTC
+  // ─────────────────────────────────────────────
+  {
+    id: 19,
+    title: 'LAYER 19 — TRANSPOSITION LOCK',
+    intro: [
+      '+----------------------------------------------+',
+      '|  SECURITY LAYER 19 / 20  —  RAIL CIPHER      |',
+      '+----------------------------------------------+',
+      '',
+      'A transposition cipher.',
+      'The letters have not been substituted.',
+      'They have been rearranged.',
+      '',
+      'The message was split across two tracks.',
+      'Reassemble it.',
+    ],
+    filesystem: {
+      dirs: ['/', '/network', '/network/layers', '/network/layers/outer', '/network/layers/inner'],
+      files: {
+        '/cipher.dat': `TRANSPOSITION CIPHER — RAIL FENCE
+===================================
+Type        : 2-rail fence
+Ciphertext  : SAITTC
+Length      : 6 characters
+
+The original message was written across two rails
+in a zigzag pattern (positions 0,1,2,3,4,5):
+
+  Rail 1 (even positions: 0, 2, 4): _ _ _
+  Rail 2 (odd  positions: 1, 3, 5): _ _ _
+
+The cipher is formed by reading Rail 1 then Rail 2.
+
+To decrypt: split the ciphertext in half.
+First half = Rail 1 letters.
+Second half = Rail 2 letters.
+Interleave them back into original order.`,
+
+        '/network/layers/outer/rail_analysis.txt': `RAIL FENCE ANALYSIS
+====================
+A rail fence cipher distributes plaintext across
+N parallel rails, reading left to right in a zigzag.
+
+With 2 rails and 6 characters (positions 0-5):
+  Rail 1 gets positions: 0, 2, 4
+  Rail 2 gets positions: 1, 3, 5
+
+The ciphertext is the rails concatenated in order.
+Decryption is the reverse: split, then interleave.`,
+
+        '/network/layers/inner/memo.txt': `WATCHDOG ANALYSIS — LAYER 19
+==============================
+Session is still alive.
+19 layers bypassed.
+
+The message is 6 characters.
+The transposition pattern is visible in frequency analysis.
+Character distribution suggests no substitution.
+Only reordering.
+
+Recommend: stand down completely.
+This session cannot be stopped.`,
+
+        '/.transposition_key': `ALTERNATE CIPHER ANALYSIS
+===========================
+A 3-rail fence was attempted on this ciphertext.
+Result with 3 rails on SAITTC:
+
+  Rail 1 (positions 0,4)   : ST
+  Rail 2 (positions 1,3,5) : ATC
+  Rail 3 (positions 2)     : I
+
+Reading: STATCI — not a word.
+
+3-rail approach is incorrect for this ciphertext.`,
+
+        '/network/layers/outer/noise.dat': `NOISE INTERCEPT — UNRELATED CHANNEL
+=====================================
+A second transposition was recovered from adjacent channel:
+
+  Ciphertext: KZMPNW (2-rail, 6 chars)
+
+This payload is from an unrelated session.
+Do not attempt to decode this as the primary cipher.`,
+      },
+    },
+    answers: ['STATIC'],
+    hints: [
+      'The letters haven\'t changed — only their order. The message was written across two tracks then read track by track.',
+      'Split SAITTC exactly in half: SAI (Rail 1, positions 0,2,4) and TTC (Rail 2, positions 1,3,5).',
+      'Interleave rail by rail: position 0=S(R1), 1=T(R2), 2=A(R1), 3=T(R2), 4=I(R1), 5=C(R2). Read in order.',
+    ],
+    successMsg: [
+      'TRANSPOSITION REVERSED.',
+      'Layer 19 cleared. One remains.',
+      '',
+      'You are standing at the absolute core.',
+      'The last lock was built from the beginning.',
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // LAYER 20 — VIGENÈRE / KEY: BREACH / Answer: ACCESS
+  // A+B=B, C+R=T, C+E=G, E+A=E, S+C=U, S+H=Z → BTGEUZ
+  // ─────────────────────────────────────────────
+  {
+    id: 20,
+    title: 'LAYER 20 — THE FINAL CIPHER',
+    intro: [
+      '+----------------------------------------------+',
+      '|  SECURITY LAYER 20 / 20  —  ABSOLUTE CORE    |',
+      '+----------------------------------------------+',
+      '',
+      'This is it.',
+      '',
+      'The last cipher. Vigenere.',
+      'The key was always here.',
+      'You have been carrying it since the first moment.',
+      '',
+      'What do you call this system?',
+      'That is your key.',
+    ],
+    filesystem: {
+      dirs: ['/', '/vault', '/vault/core', '/vault/core/sealed', '/vault/logs', '/comms'],
+      files: {
+        '/vault/core/final_cipher.enc': `FINAL LAYER — ABSOLUTE CORE
+=============================
+Cipher type  : Vigenere
+Ciphertext   : BTGEUZ
+
+The key is the name of this operation.
+The name of this system.
+The first word you ever read when you opened it.
+
+Six letters. All caps.`,
+
+        '/vault/logs/attempt_log.txt': `PREVIOUS BREACH ATTEMPTS
+==========================
+[KIMINA CORP — HISTORICAL RECORD]
+
+Attempt  Key tried     Result
+───────  ──────────    ──────────────
+001      KIMINA        FAILED
+002      SYSTEM        FAILED
+003      ARCHITECT     FAILED
+004      ROOT          FAILED
+005      GATEWAY       FAILED
+006      ENTER         FAILED
+007      VAULT         FAILED
+
+Pattern analysis: all attempts used generic security terms.
+The correct key is the name of the operation itself.
+The operation was named after what we tried to prevent.`,
+
+        '/vault/core/sealed/key_derivation.txt': `ARCHITECT\'S NOTE — KEY DERIVATION
+=====================================
+The key to the final lock is the word you uttered
+when you entered this system for the first time.
+
+It is displayed at the top of your terminal.
+It is the title of what you have been doing.
+
+You have known it since the beginning.`,
+
+        '/comms/analyst_final.txt': `K.CHEN — FINAL TRANSMISSION
+=============================
+[SENT TO DIRECTOR FROMM — 05:44:17 UTC]
+
+Director,
+
+I\'m done.
+
+The session has bypassed 19 layers.
+It found the sub-vault I didn\'t know existed.
+It is now at the absolute core.
+
+I spent six months trying to stop it.
+I was wrong about what this was.
+
+This is not a breach.
+
+This is someone finishing something that was
+always meant to be finished.
+
+I understand now what K.Chen\'s note meant.
+I understand who the architect is.
+
+The key to the last lock is the name of
+the thing we\'ve been fighting.
+
+Stand down. Let them through.
+
+  — K.C.`,
+
+        '/vigenere_table.txt': `Vigenere Decryption Reference
+==============================
+Ciphertext letter positions (A=0):
+  A=0  B=1  C=2  D=3  E=4  F=5  G=6  H=7
+  I=8  J=9  K=10 L=11 M=12 N=13 O=14 P=15
+  Q=16 R=17 S=18 T=19 U=20 V=21 W=22 X=23
+  Y=24 Z=25
+
+Formula: plain = (cipher - key + 26) mod 26`,
+
+        '/.architect_final': `[ARCHITECT SYSTEM — ABSOLUTE CORE]
+════════════════════════════════════
+
+You made it.
+
+Twenty layers.
+You made it.
+
+The key to the last cipher is not hidden.
+It never was.
+
+It is the first word of this system.
+You have been reading it since you began.
+
+Good luck.
+
+  — A.`,
+      },
+    },
+    answers: ['ACCESS'],
+    hints: [
+      'The key is not in any file. You have been looking at it since you started. It is the name of this system.',
+      'BREACH — six letters. Use BREACH as the Vigenere key on ciphertext BTGEUZ.',
+      'B(1)-B(1)=0=A, T(19)-R(17)=2=C, G(6)-E(4)=2=C, E(4)-A(0)=4=E, U(20)-C(2)=18=S, Z(25)-H(7)=18=S.',
+    ],
+  },
+
 ]

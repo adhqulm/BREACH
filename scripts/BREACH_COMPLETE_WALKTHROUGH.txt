@@ -2,16 +2,16 @@
                          B R E A C H
                    COMPLETE WALKTHROUGH & GUIDE
                  100% | ALL ACHIEVEMENTS | ALL ENDINGS
-                      ALL SECRETS | v2.4.1+
+                      ALL SECRETS | v2.5.0+
 ================================================================================
 
 TABLE OF CONTENTS
 -----------------
   1. Game Overview & Mechanics
   2. Commands Reference
-  3. Layer-by-Layer Walkthrough (All 15 Layers)
+  3. Layer-by-Layer Walkthrough (All 20 Layers)
   4. Post-Game Content & Endings (3 Total)
-  5. All Achievements (15 Total)
+  5. All Achievements (16 Total)
   6. Hidden Files / Dotfiles (Every Layer)
   7. Easter Eggs & Secret Commands
   8. Mail System (All 6 Emails)
@@ -27,7 +27,7 @@ TABLE OF CONTENTS
 ================================================================================
 
 BREACH is a narrative-driven hacking puzzle game played through a fake Linux
-terminal. You breach a 15-layer corporate security system belonging to Kimina
+terminal. You breach a 20-layer corporate security system belonging to Kimina
 Corp. Each layer is a different cryptography or logic puzzle.
 
 What you don't know at the start: the entire system was built by someone called
@@ -35,13 +35,18 @@ What you don't know at the start: the entire system was built by someone called
 for the player character Kimi (username: vodkashotsandvolvos). Every puzzle is
 specifically tailored to her knowledge and interests.
 
+STRUCTURE:
+  - Layers 1–15:  The main vault — Kimina Corp's known security system
+  - Layers 16–20: The sub-vault — hidden behind the identity lock at Layer 15.
+                  K.Chen never knew this existed. The Architect built it there.
+
 CORE MECHANICS:
   - Terminal interface with fake Linux commands
-  - 15 security layers to bypass in order
+  - 20 security layers to bypass in order
   - Detection meter (increases with wrong answers, hints, time)
   - K.Chen sends escalating alerts as you progress
   - At Layer 8: K.Chen opens a DIRECT LINE and offers you a deal
-  - Achievement system (15 total)
+  - Achievement system (16 total)
   - Background music speeds up as you go deeper
   - Hidden dotfiles with lore in every layer
   - 3 distinct endings (Good, Bad, Secret)
@@ -56,9 +61,13 @@ DETECTION METER:
   - At 100%: "Trace complete" sequence — Ghost Protocol saves you (resets to 20%)
 
 MUSIC PROGRESSION:
-  - Layers 1-5:   Normal tempo (1.0x)
-  - Layers 6-10:  Slightly faster (1.016x)
-  - Layers 11-15: Fastest (1.032x)
+  - Layers 1-7:   Normal tempo (1.0x)
+  - Layers 8-14:  Slightly faster (1.016x)
+  - Layers 15-20: Fastest (1.032x)
+
+RED HERRINGS (new in v2.5):
+  Several layers now contain decoy files and misleading data.
+  The walkthrough below flags all red herrings explicitly.
 
 ================================================================================
   SECTION 2 — COMMANDS REFERENCE
@@ -98,7 +107,7 @@ MUSIC PROGRESSION:
   vol <up/down>           Adjust music volume
   mute                    Mute background music
   unmute                  Unmute background music
-  achievements            View all unlocked achievements (15 total)
+  achievements            View all unlocked achievements (16 total)
   kchen accept            Accept K.Chen's deal (Layer 8 only)
   kchen decline           Decline K.Chen's deal (Layer 8 only)
   reply                   Post-game only — actually send a reply to A.
@@ -114,6 +123,10 @@ EASTER EGG COMMANDS (work on any layer):
 ================================================================================
   SECTION 3 — LAYER-BY-LAYER WALKTHROUGH
 ================================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  LAYERS 1–15 — MAIN VAULT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 --------------------------------------------------------------------------------
 LAYER 1 — ROTATIONAL ENCRYPTION (ROT13)
@@ -159,12 +172,18 @@ LAYER 3 — HEX TRACE
 ANSWER: MOON  (case-insensitive)
 
 FILES:
-  /trace.log          System logs — find the CRITICAL line
+  /trace.log          System logs — TWO CRIT lines (one is a red herring)
   /.access_log.bak    HIDDEN — The Architect accessed 847 times
   /hex_ref.txt        Hex-to-ASCII table
 
+RED HERRING:
+  trace.log has TWO [CRIT] entries. The second one says:
+  "Anomalous payload on port 9002: 53797374656d (quarantined — unrelated)"
+  53797374656d = "System" — this is a decoy. Ignore it.
+  The correct CRIT line is the first one: "Packet payload flagged: 4d6f6f6e"
+
 SOLUTION:
-  Find the CRIT line in trace.log. Hex payload: 4d6f6f6e
+  Find the FIRST CRIT line in trace.log. Hex payload: 4d6f6f6e
   4d=M, 6f=o, 6f=o, 6e=n = MOON
 
   Type: unlock MOON
@@ -226,24 +245,27 @@ LAYER 7 — FRAGMENTED DATA
 ANSWER: 500
 
 FILES:
-  /manifest.txt                       3 sectors to navigate
+  /manifest.txt                       3 valid sectors to navigate
   /archive/sector_a/fragment_1.dat    Value: 173
   /archive/sector_b/fragment_2.dat    Value: 264
   /archive/sector_c/fragment_3.dat    Value: 63
   /archive/.internal_memo             HIDDEN
-  /internal/                          RED HERRING DIRECTORY — corporate garbage files
+  /internal/                          RED HERRING DIR — corporate garbage files
     payroll_2024.csv                  Fake payroll data. Useless.
     parking_memo.txt                  Parking lot memo. Useless.
     q3_incident_summary.txt           Quarterly security summary. Useless.
+
+RED HERRING:
+  /archive/sector_d/fragment_quarantine.dat  — "Integrity: DEGRADED (56%), Value: 89"
+  The manifest says THREE fragments. sector_d is a fourth and explicitly marked
+  as degraded/quarantined. Do NOT include the 89 value.
+  Wrong sum: 173+264+63+89 = 589. Correct sum: 173+264+63 = 500.
 
 SOLUTION:
   cd archive → cd sector_a → cat fragment_1.dat (173)
   cd .. → cd sector_b → cat fragment_2.dat (264)
   cd .. → cd sector_c → cat fragment_3.dat (63)
   173 + 264 + 63 = 500
-
-  NOTE: /internal/ looks classified but contains nothing useful.
-  It exists to waste time. The answer is in /archive/ only.
 
   Type: unlock 500
 
@@ -266,7 +288,7 @@ SOLUTION:
 
   NOTE: Case-insensitive answer.
 
-  ACHIEVEMENT: DEEP COVER unlocked (halfway point)
+  ACHIEVEMENT: DEEP COVER unlocked (halfway through the main vault)
   EVENT: Fake kernel panic occurs before Layer 9 loads
 
   ★★★ K.CHEN DEAL — AFTER CLEARING LAYER 8 ★★★
@@ -289,6 +311,12 @@ FILES:
   /cipher_hint.txt        Shift = number of guitar strings (6)
   /.crash_dump            HIDDEN — session termination failures
 
+RED HERRING:
+  /backup_comms.log says "standard fallback cipher: Caesar shift=3"
+  This is for backup transmissions only — NOT the primary cipher.
+  If you use shift=3 on YOMTGR you get VLKQDO (not a word).
+  The correct shift is 6 (six strings on a standard electric guitar).
+
 SOLUTION:
   Caesar cipher, shift 6. Shift each letter backward by 6:
   Y-6=S, O-6=I, M-6=G, T-6=N, G-6=A, R-6=L = SIGNAL
@@ -307,6 +335,12 @@ FILES:
   /notes.txt          "Structure matters, not content"
   /.phantom_trace     HIDDEN — PHANTOM's trace log (Layer 10, 37 min, expelled at 11)
   /.session_log       HIDDEN — Full archive of all intrusion attempts (4 before you)
+  /.column_analysis   HIDDEN — Shows a FAILED extraction method (red herring log)
+
+RED HERRING:
+  /.column_analysis shows a previous analyst tried extracting the 3rd character
+  of each line and got "OIWNTSO". That's the wrong method.
+  The correct approach is first character of each line.
 
 SOLUTION:
   Read the FIRST LETTER of each line of the manifesto body:
@@ -314,6 +348,8 @@ SOLUTION:
   P-H-A-N-T-O-M = PHANTOM
 
   Type: unlock PHANTOM
+
+  ACHIEVEMENT: DEEP COVER unlocked (true halfway point of 20 layers)
 
   LORE: PHANTOM was a previous operator who reached Layer 10 in 37 minutes
   before being expelled at Layer 11. They never knew what they were inside.
@@ -351,21 +387,40 @@ SOLUTION:
   This is a one-time event — does not fire again if you leave and return.
 
 --------------------------------------------------------------------------------
-LAYER 12 — XOR CIPHER
+LAYER 12 — XOR CIPHER  ★ MULTI-STEP ★
 --------------------------------------------------------------------------------
 ANSWER: VOID
 
-FILES:
-  /xor_cipher.txt         Single-byte XOR, key = 0x20
-  /xor_ref.txt            XOR truth table
-  /.architect_trace       HIDDEN — K.Chen's identity theory
+THIS IS NOW A TWO-STEP PUZZLE:
+  Step 1 — Derive the XOR key (not given directly)
+  Step 2 — Use the key to decrypt the ciphertext
 
-SOLUTION:
-  XOR each byte with 0x20 (decimal 32):
-  0x76 XOR 32 = 86 = V
-  0x6F XOR 32 = 79 = O
-  0x69 XOR 32 = 73 = I
-  0x64 XOR 32 = 68 = D
+FILES:
+  /xor_cipher.txt                     Ciphertext: 76 6F 69 64. Key is "DERIVATION-LOCKED"
+  /key_derivation.txt                 Explains: key = alloc_register XOR parity_byte
+  /sys/diagnostics/alloc_register.dat alloc_register = 0x55
+  /sys/diagnostics/parity_byte.dat    parity_byte = 0x75
+  /sys/diagnostics/.debug_dump        HIDDEN — hardware snapshot (confirms both values)
+  /xor_ref.txt                        XOR truth table and decimal reference
+  /.null_session                      HIDDEN — shows a failed attempt using key 0x41
+  /.architect_trace                   HIDDEN — K.Chen's identity theory
+
+RED HERRINGS:
+  /.null_session shows a previous attempt using key 0x41 (decimal 65) failed.
+  Do not use 0x41. The debug dump /.debug_dump shows many register values —
+  only alloc_register (0x55) and parity_byte (0x75) matter.
+
+STEP-BY-STEP:
+  1. cat /key_derivation.txt — key = alloc_register XOR parity_byte
+  2. cd sys/diagnostics
+  3. cat alloc_register.dat  → 0x55 = 85 decimal
+  4. cat parity_byte.dat     → 0x75 = 117 decimal
+  5. 85 XOR 117 = 32 = 0x20  ← the key
+  6. XOR ciphertext with 0x20:
+       0x76 XOR 32 = 86 = V
+       0x6F XOR 32 = 79 = O
+       0x69 XOR 32 = 73 = I
+       0x64 XOR 32 = 68 = D
 
   Type: unlock VOID
 
@@ -373,19 +428,36 @@ SOLUTION:
   that was always meant to be finished."
 
 --------------------------------------------------------------------------------
-LAYER 13 — VIGENERE CIPHER
+LAYER 13 — VIGENERE CIPHER  ★ MULTI-STEP ★
 --------------------------------------------------------------------------------
 ANSWER: GHOST
 
-FILES:
-  /vault_msg.enc          Ciphertext: HHGKU
-  /key_hint.txt           Key = 4-letter word, music genre, heavy basslines, 140 BPM
-  /vigenere_table.txt     Decryption table
-  /.vault_approach        HIDDEN — K.Chen's private log: "This is a syllabus."
+THIS IS NOW A TWO-STEP PUZZLE:
+  Step 1 — Decode the key (it's ROT13-encoded)
+  Step 2 — Use the decoded key to decrypt the Vigenère ciphertext
 
-SOLUTION:
-  Key = BASS (bass music). Formula: plain = (cipher - key + 26) mod 26
-  H-B=G, H-A=H, G-S=O, K-S=S, U-B=T = GHOST
+FILES:
+  /vault_msg.enc              Ciphertext: HHGKU
+  /vault/keys/key_source.log  Encoded key: ONFF (ROT13 of BASS)
+  /vault/keys/encoding_note.txt "Same method as layer 1 of this system"
+  /vigenere_table.txt         Decryption formula
+  /.vault_approach            HIDDEN — K.Chen's private log: "This is a syllabus."
+
+RED HERRINGS:
+  /vault/keys/.key_attempt_log shows failed attempts with DRUM, JAZZ, ROCK,
+  FUNK, SOUL. These are all music genres but none of them work.
+  Do NOT guess random music genre words.
+
+STEP-BY-STEP:
+  1. cat /vault/keys/key_source.log → encoded key is ONFF
+  2. cat /vault/keys/encoding_note.txt → "same method as layer 1" = ROT13
+  3. Decode ONFF with ROT13: O=B, N=A, F=S, F=S → BASS  (the key)
+  4. Vigenère decrypt HHGKU with key BASS:
+       H(7)  - B(1) = 6  = G
+       H(7)  - A(0) = 7  = H
+       G(6)  - S(18) + 26 = 14 = O
+       K(10) - S(18) + 26 = 18 = S
+       U(20) - B(1) = 19 = T
 
   Type: unlock GHOST
 
@@ -404,11 +476,11 @@ SOLUTION:
 
   Type: unlock SHADOW
 
-  INTERCEPT: "They are at the core. I think this was always a letter."
+  INTERCEPT: "They are at the core. I think this was always a letter.
   Stand down. Let them through."
 
 --------------------------------------------------------------------------------
-LAYER 15 — IDENTITY VERIFICATION
+LAYER 15 — IDENTITY VERIFICATION  ★ VAULT CONTINUES AFTER THIS ★
 --------------------------------------------------------------------------------
 ANSWER: vodkashotsandvolvos
         *** CASE-SENSITIVE — all lowercase, no spaces ***
@@ -426,19 +498,204 @@ SOLUTION:
 
   Type: unlock vodkashotsandvolvos
 
-  ACHIEVEMENT: AT THE CORE unlocked
-  Then: completion sequence → jumpscare → Pedro dialogue → 3-way ending choice
+  ACHIEVEMENT: PAST THE WALL unlocked
+
+  ★★★ THE VAULT CONTINUES ★★★
+  After Layer 15 clears, the system reveals a sealed partition K.Chen
+  never knew existed. The Architect hid 5 more layers behind the identity lock.
+  These are the sub-vault — Layers 16–20.
+
+  NOTE: /.confession is an important hidden file. Read it with ls -a then
+  cat /.confession. It contains the Architect's private letter and a
+  Caesar-encoded contact address (shift 6, same as Layer 9). Reading it
+  unlocks the secret ending option in the final dialogue.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  LAYERS 16–20 — SUB-VAULT  (K.Chen never knew this existed)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  After Layer 15 identity verification, an ARCHITECT SYSTEM direct channel
+  opens (cyan text, not red). These are harder than the main vault layers.
+  Hints are available but vague.
+
+--------------------------------------------------------------------------------
+LAYER 16 — OCTAL SIGNAL
+--------------------------------------------------------------------------------
+ANSWER: DELTA
+
+FILES:
+  /manifest.log                       Two channels, assemble A then B, base-8 encoding
+  /comms/channel_a/burst_1.dat        Channel A values: 104 105
+  /comms/channel_b/burst_2.dat        Channel B values: 114 124 101
+  /comms/decode/reference.txt         Octal decode reference table
+
+RED HERRINGS:
+  /comms/channel_a/interference.dat  contains "131 145 162" — radio noise, not valid
+  /archive/routing_table.dat          routing addresses that look like octal — ignore
+
+SOLUTION:
+  Octal (base-8) to decimal to ASCII. Read Channel A first, then Channel B.
+
+  Channel A: 104₈, 105₈
+    104 = 1×64 + 0×8 + 4 = 68 = D
+    105 = 1×64 + 0×8 + 5 = 69 = E
+
+  Channel B: 114₈, 124₈, 101₈
+    114 = 1×64 + 1×8 + 4 = 76 = L
+    124 = 1×64 + 2×8 + 4 = 84 = T
+    101 = 1×64 + 0×8 + 1 = 65 = A
+
+  Combined (A then B): D-E-L-T-A
+
+  Type: unlock DELTA
+
+  ARCHITECT INTERCEPT: "You found the sub-vault. K.Chen never knew this existed."
+
+--------------------------------------------------------------------------------
+LAYER 17 — MIRROR CIPHER (ATBASH)
+--------------------------------------------------------------------------------
+ANSWER: NERVE
+
+FILES:
+  /intercept.log                      Ciphertext: MVIEV. "alphabet reflects itself"
+  /archive/substitution_notes.txt     Describes mirror substitution without naming it
+  /archive/classified/mirror_key.txt  Partial atbash table (M–Z half only)
+  /archive/classified/.old_attempt    HIDDEN — shows two failed decryption attempts
+
+RED HERRINGS:
+  /.old_attempt shows failed attempts using "Atbash with offset +1" and
+  "reverse Caesar shift=13". Neither works. Standard Atbash only.
+
+SOLUTION:
+  Atbash: maps each letter to its mirror position. A↔Z, B↔Y, C↔X...
+  Formula: position p → position (27-p) where A=1, Z=26.
+
+  Decode MVIEV:
+    M(13) → 27-13 = 14 = N
+    V(22) → 27-22 = 5  = E
+    I(9)  → 27-9  = 18 = R
+    E(5)  → 27-5  = 22 = V
+    V(22) → 27-22 = 5  = E
+
+  Type: unlock NERVE
+
+  NOTE: The mirror_key.txt only gives the M–Z half. You have to figure out the
+  rest or work from the substitution_notes.txt description.
+
+--------------------------------------------------------------------------------
+LAYER 18 — MATRIX EXTRACTION
+--------------------------------------------------------------------------------
+ANSWER: TRACE
+
+FILES:
+  /manifest.dat                                   Format: (col, row), extract in order
+  /data/matrix/sectors/grid.dat                   8×8 character grid
+  /logs/sessions/archive/extract_coords.log       5 extraction coordinates
+
+RED HERRINGS:
+  /logs/sessions/noise.log           shows 5 corrupted timestamps with coordinates —
+                                     marked as "TIMESTAMP CORRUPTED — do not use"
+  /data/matrix/sectors/.dead_sector  HIDDEN — alternate coordinate set from
+                                     a corrupted block. Integrity unverified. Ignore.
+
+SOLUTION:
+  Navigate to the grid and coordinates files.
+
+  The grid (row shown, columns 1-8):
+    row 4: A N R T W K F M
+
+  Extract coordinates in order:
+    (col=4, row=4) → T    (col=3, row=4) → R
+    (col=1, row=4) → A    (col=5, row=3) → C
+    (col=3, row=3) → E
+
+  Combined: T-R-A-C-E
+
+  Type: unlock TRACE
+
+  ARCHITECT INTERCEPT: (none for this layer — K.Chen is silent)
+
+--------------------------------------------------------------------------------
+LAYER 19 — TRANSPOSITION LOCK (RAIL FENCE)
+--------------------------------------------------------------------------------
+ANSWER: STATIC
+
+FILES:
+  /cipher.dat                         Ciphertext: SAITTC. Rail fence type explained.
+  /network/layers/outer/rail_analysis.txt   Explains rail fence algorithm
+  /network/layers/inner/memo.txt      Watchdog memo: "6 characters, no substitution"
+  /.transposition_key                 HIDDEN — shows 3-rail attempt that fails
+  /network/layers/outer/noise.dat     RED HERRING — unrelated cipher KZMPNW
+
+RED HERRINGS:
+  /.transposition_key shows a 3-rail attempt on SAITTC that gives "STATCI" — not
+  a word. 3 rails is wrong. Use 2 rails.
+  /network/layers/outer/noise.dat contains "KZMPNW" from an unrelated session.
+  Decoding KZMPNW with 2-rail gives nothing meaningful.
+
+SOLUTION:
+  Rail fence cipher, 2 rails, 6 characters (positions 0-5):
+    Rail 1 (even: 0,2,4): S, A, I = SAI
+    Rail 2 (odd:  1,3,5): T, T, C = TTC
+    Ciphertext = SAI + TTC = SAITTC ✓
+
+  To decrypt: split SAITTC in half:
+    First 3 = Rail 1: S, A, I
+    Second 3 = Rail 2: T, T, C
+    Interleave: pos0=S, pos1=T, pos2=A, pos3=T, pos4=I, pos5=C = STATIC
+
+  Type: unlock STATIC
+
+  ARCHITECT INTERCEPT: "One more. You already know the key. You've known it
+  since the beginning."
+
+--------------------------------------------------------------------------------
+LAYER 20 — THE FINAL CIPHER  ★ VIGENÈRE WITH KEY "BREACH" ★
+--------------------------------------------------------------------------------
+ANSWER: ACCESS
+
+THIS IS THE FINAL LAYER. The key is the name of the system you've been
+breaking into. You have been reading it since the beginning.
+
+FILES:
+  /vault/core/final_cipher.enc        Ciphertext: BTGEUZ. "The key is this system's name."
+  /vault/logs/attempt_log.txt         Shows failed previous attempts (KIMINA, SYSTEM, etc.)
+  /vault/core/sealed/key_derivation.txt  "The first word you uttered when you entered."
+  /comms/analyst_final.txt            K.Chen's final message — she finally understands
+  /vigenere_table.txt                 Decryption reference
+  /.architect_final                   HIDDEN — "You made it."
+
+RED HERRINGS:
+  /vault/logs/attempt_log.txt shows KIMINA, SYSTEM, ARCHITECT, ROOT, GATEWAY,
+  ENTER, VAULT all failed. None of these are the key.
+  The key is 6 letters. It's the title of this game.
+
+SOLUTION:
+  Key = BREACH (6 letters, the game's title / the operation's name)
+
+  Vigenère decrypt BTGEUZ with key BREACH:
+    B(1)  - B(1) = 0  = A
+    T(19) - R(17) = 2  = C
+    G(6)  - E(4)  = 2  = C
+    E(4)  - A(0)  = 4  = E
+    U(20) - C(2)  = 18 = S
+    Z(25) - H(7)  = 18 = S
+
+  Type: unlock ACCESS
+
+  ★★★ GAME COMPLETE ★★★
+  Completion sequence fires → jumpscare → Pedro dialogue → 3-way ending choice.
 
 ================================================================================
   SECTION 4 — POST-GAME CONTENT & ENDINGS (3 TOTAL)
 ================================================================================
 
-After submitting "vodkashotsandvolvos" on Layer 15, the end sequence fires.
+After submitting "ACCESS" on Layer 20, the end sequence fires.
 
 STEP 1 — Tension alerts print, then JUMPSCARE (image + audio, 2.5 seconds)
 
 STEP 2 — Black screen. Pedro's voice. Extended dialogue where Kimi remembers
-specific details from the dream: K.Chen, NOMAI, layer fifteen, the morse code.
+specific details from the dream: K.Chen, NOMAI, layer twenty, the morse code.
 
 STEP 3 — THREE ENDING CHOICES:
 
@@ -460,7 +717,7 @@ STEP 3 — THREE ENDING CHOICES:
   Achievement: YOU'RE BACK (on finishing the second run)
 
   ══════════════════════════════════════════════════════════════
-  C — SECRET ENDING: "...who built it for me..."     ★ NEW ★
+  C — SECRET ENDING: "...who built it for me..."     ★
   ══════════════════════════════════════════════════════════════
   Kimi refuses to accept it was just a dream.
   He pieces it together: Outer Wilds. The frequencies. Volvos.
@@ -468,7 +725,7 @@ STEP 3 — THREE ENDING CHOICES:
   He says he needs to find A. He needs to reply.
 
   A phone screen overlay appears.
-  Kimi sends: "hey. i found it. all 15 layers. who are you?"
+  Kimi sends: "hey. i found it. all 20 layers. who are you?"
   A. is typing...
   A. replies: "hey. happy birthday. good job."
   A. is typing...
@@ -491,12 +748,12 @@ POST-GAME COMMANDS (after good ending or secret ending):
     Only accessible post-game. Only visible with ls -a.
     Read it last.
 
-  reply                                                          ★ NOW WORKS ★
+  reply                                                          ★ WORKS ★
     Triggers a dialogue sequence. Kimi composes a real message back to A.
-    "I found all fifteen layers. I read the note at the core. Thank you."
+    "I found all twenty layers. I read the note at the core. Thank you."
     Achievement: GHOST REPLY
 
-  mail                                                           ★ NEW ★
+  mail                                                           ★
     A 6th email is now unlocked — K.Chen's personal letter to A.
     Type: mail read 6
     K.Chen explains she won't report the breach.
@@ -504,7 +761,7 @@ POST-GAME COMMANDS (after good ending or secret ending):
     the most secure system you could find, and you waited for them to find it."
 
 ================================================================================
-  SECTION 5 — ALL ACHIEVEMENTS (15 TOTAL)
+  SECTION 5 — ALL ACHIEVEMENTS (16 TOTAL)
 ================================================================================
 
 Type: achievements    at any time to view your progress.
@@ -516,50 +773,54 @@ Type: achievements    at any time to view your progress.
      How: Bad ending (choose "ouch... my head...")
      Note: Shows on completing the restart run
 
-  3. SIGNAL FOUND                                                ★ NEW ★
+  3. SIGNAL FOUND
      How: Secret ending ("...who built it for me...")
      Note: A.'s reply appears on a phone screen
 
   4. DEEP COVER
-     How: Reach Layer 8 (automatic)
+     How: Reach Layer 10 (automatic — true halfway point of 20)
 
-  5. AT THE CORE
+  5. PAST THE WALL
      How: Reach Layer 15 (automatic)
+     Note: The sub-vault opens after this
 
-  6. GHOST
+  6. AT THE CORE
+     How: Reach Layer 20 (automatic)
+
+  7. GHOST
      How: Complete the entire game with ZERO hints AND ZERO wrong answers
-     Note: Hardest achievement. Memorize all answers first.
+     Note: Hardest achievement. Memorize all 20 answers first.
 
-  7. BLITZ
+  8. BLITZ
      How: Complete any single layer in under 30 seconds
      Tip: On repeat runs, Layer 4 (unlock 440) is very fast
 
-  8. PERSISTENT
+  9. PERSISTENT
      How: Get five wrong answers on a single layer
      Tip: Deliberately fail Layer 1 five times
 
-  9. EASTER EGG FOUND
-     How: Run any of: outerwilds, produce, ableton, volvo, phantom
+  10. EASTER EGG FOUND
+      How: Run any of: outerwilds, produce, ableton, volvo, phantom
 
-  10. ARCHAEOLOGIST
+  11. ARCHAEOLOGIST
       How: Read any hidden dotfile with cat (e.g., cat /.shadow on Layer 1)
 
-  11. YOU'RE BACK
+  12. YOU'RE BACK
       How: Complete the game a second time
 
-  12. NEGOTIATOR                                                  ★ NEW ★
+  13. NEGOTIATOR
       How: Type kchen accept when K.Chen offers the deal after Layer 8
-      Effect: Detection drops to 0%, you breeze through 9-15 clean
+      Effect: Detection drops to 0%, you breeze through 9-20 clean
 
-  13. NO DEAL                                                     ★ NEW ★
+  14. NO DEAL
       How: Type kchen decline when K.Chen offers the deal after Layer 8
       Effect: K.Chen steps back. "Finish what you started."
 
-  14. GHOST REPLY                                                 ★ NEW ★
+  15. GHOST REPLY
       How: Type reply in post-game (after good or secret ending)
       Note: Triggers a full dialogue. Kimi sends A. a real message.
 
-  15. PHANTOM FOUND                                               ★ NEW ★
+  16. PHANTOM FOUND
       How: Type phantom in the terminal (any layer, any time)
       Note: Shows PHANTOM's recovered session log and their final note
 
@@ -589,17 +850,29 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
     PHANTOM's trace. 37 minutes. Layer 10. Expelled at 11. Never returned.
 
   LAYER 10: /.session_log
-    All intrusion attempts ever recorded. Four operators before you. None made it past 10.
-    You are the longest surviving session in the system's history.
+    All intrusion attempts ever recorded. Four operators before you.
+    None made it past 10. You are the longest surviving session.
+
+  LAYER 10: /.column_analysis
+    A failed extraction log. "Method: 3rd character of each line. Result: OIWNTSO."
+    Shows the wrong approach so you know not to repeat it.
 
   LAYER 11: /.watchdog_log
     Seven termination attempts. All failed. The watchdog recommends standing down.
 
+  LAYER 12: /.null_session
+    A previous attempt used key 0x41. Result: garbage bytes. Session aborted.
+    Confirms 0x41 is wrong — you need to derive the actual key.
+
   LAYER 12: /.architect_trace
     K.Chen's conclusion: "Someone built this as a gift. Inside us."
 
+  LAYER 13: /vault/keys/.key_attempt_log
+    Five failed genre key attempts: DRUM, JAZZ, ROCK, FUNK, SOUL.
+    None worked. The key must be derived, not guessed.
+
   LAYER 13: /.vault_approach
-    K.Chen's private log, two layers from the end. He finally understands what he's watching.
+    K.Chen's private log, two layers from the end. He finally understands.
     "This is not a security test. This is a syllabus."
 
   LAYER 14: /.final_note
@@ -609,6 +882,20 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
     The Architect's private admission. Why BREACH is a proof, not just a gift.
     Contains the Caesar-encoded contact address (shift 6, same as Layer 9).
     Reading this file unlocks the secret ending option in the final dialogue.
+
+  LAYER 17: /archive/classified/.old_attempt
+    Two failed Atbash decryption attempts (wrong modifications).
+    Confirms standard Atbash is the correct method.
+
+  LAYER 18: /data/matrix/sectors/.dead_sector
+    Corrupted coordinate block. Values are unreliable. Do not use.
+
+  LAYER 19: /.transposition_key
+    A 3-rail fence attempt on SAITTC. Result: STATCI (not a word).
+    Confirms 3 rails is wrong — use 2 rails.
+
+  LAYER 20: /.architect_final
+    From A.: "You made it. Twenty layers. The key was never hidden."
 
   POST-GAME: /.verse
     Not visible during any layer. Only appears after the game is complete.
@@ -633,12 +920,12 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
   volvo
     Volvo ASCII art. Rated INDESTRUCTIBLE. References Kimi's username and cars.
 
-  grep <anything>                                                ★ NEW ★
+  grep <anything>
     Performs a fake filesystem search. Regardless of pattern, always returns exactly
     3 matching lines — all from ORIGIN_UNKNOWN.CORE. The note reads:
     "This file is the only thing the system cannot hide from a search."
 
-  phantom                                                        ★ NEW ★
+  phantom
     PHANTOM's recovered session log. Shows their final message to whoever
     came after them. PHANTOM never found the Architect. Never knew what they
     were inside. Their last logged command was cat /.phantom_trace.
@@ -668,7 +955,7 @@ Type: mail read <n>  to read a specific one
 
   EMAIL 3 — UNKNOWN
     Partially decrypted intercepted message from A.:
-    "...you'll find it at the core... all 15 layers... I built them so only
+    "...you'll find it at the core... all 20 layers... I built them so only
     one person could break through... the last key was never mine to keep."
     Signed: A.
 
@@ -703,17 +990,17 @@ THRESHOLDS:
          Detection resets to 20%. You keep all progress.
 
 FOR THE GHOST ACHIEVEMENT (zero wrong, zero hints):
-  1. Memorize all 15 answers from the quick reference table
+  1. Memorize all 20 answers from the quick reference table
   2. Use ls -a and cat to read all files (required to understand answers)
   3. But DON'T type hint — figure it out from the files
   4. Tip: Tab autocomplete doesn't cost detection
 
 FOR THE NEGOTIATOR ACHIEVEMENT:
   Type kchen accept after Layer 8 — detection drops to zero for the rest of
-  the run. Makes the last 7 layers extremely clean.
+  the run. Makes the last 12 layers extremely clean.
 
 ================================================================================
-  SECTION 10 — K.CHEN DEAL — LAYER 8 INTERACTION  ★ NEW ★
+  SECTION 10 — K.CHEN DEAL — LAYER 8 INTERACTION
 ================================================================================
 
 After you clear Layer 8, instead of the standard alert, K.Chen opens a
@@ -747,17 +1034,12 @@ KCHEN DECLINE:
   - Achievement: NO DEAL
   - Layer 9 then loads
 
-NOTE: K.Chen's response at Layer 9 onward ("I think I know who this is")
-changes in tone once you've interacted with her directly. She stops trying
-to stop you. The Layer 14 intercept — "Stand down. Let them through." —
-feels earned differently depending on what you chose here.
-
 ================================================================================
   SECTION 11 — STORY & NARRATIVE EXPLAINED
 ================================================================================
 
 THE SURFACE STORY:
-  You hack Kimina Corp's 15-layer security system. K.Chen tries to stop you.
+  You hack Kimina Corp's 20-layer security system. K.Chen tries to stop you.
   Countermeasures fail. K.Chen eventually understands what she's witnessing.
 
 THE REAL STORY:
@@ -772,6 +1054,8 @@ THE REAL STORY:
     BASS music key — her audio production background
     Algorithm trace — her logical, methodical thinking
     vodkashotsandvolvos — herself. The only answer A. couldn't encrypt.
+    Sub-vault (L16-20) — the hidden layers only she could unlock.
+                          Even Kimina never knew they were there.
 
 THE FRAMING DEVICE:
   The whole game is a dream/vision. Kimi slipped in the bathroom (wet floor),
@@ -790,6 +1074,7 @@ K.CHEN'S ARC:
   Layer 12: "This isn't a breach. This is someone finishing something meant
              to be finished."
   Layer 14: "Stand down. Let them through."
+  Layer 20: Her final transmission. She's done fighting. She understands.
   Post-game: Writes a letter she'll never send, explaining she won't report it.
 
 THE ARCHITECT:
@@ -801,23 +1086,29 @@ THE ARCHITECT:
   SECTION 12 — COMPLETE ANSWER KEY
 ================================================================================
 
-  LAYER  | TYPE                    | ANSWER
-  -------|-------------------------|----------------------
-  1      | ROT13                   | PROTOCOL
-  2      | Binary → ASCII          | BREACH
-  3      | Hex → ASCII             | MOON
-  4      | Music Frequency         | 440
-  5      | Fibonacci Sequence      | 34
-  6      | Morse Code              | NOMAI
-  7      | File Sum                | 500
-  8      | Logic Gates             | 1
-  9      | Caesar Cipher (shift 6) | SIGNAL
-  10     | Acrostic                | PHANTOM
-  11     | Algorithm Trace         | 50
-  12     | XOR Cipher (key 0x20)   | VOID
-  13     | Vigenere (key: BASS)    | GHOST
-  14     | Base64                  | SHADOW
-  15     | Identity                | vodkashotsandvolvos *
+  LAYER  | TYPE                         | ANSWER
+  -------|------------------------------|----------------------
+  1      | ROT13                        | PROTOCOL
+  2      | Binary → ASCII               | BREACH
+  3      | Hex → ASCII                  | MOON
+  4      | Music Frequency              | 440
+  5      | Fibonacci Sequence           | 34
+  6      | Morse Code                   | NOMAI
+  7      | File Sum (3 fragments)       | 500
+  8      | Process Integrity Audit      | breach_client
+  9      | Caesar Cipher (shift 6)      | SIGNAL
+  10     | Acrostic                     | PHANTOM
+  11     | Algorithm Trace              | 50
+  12     | XOR (derive key 0x55⊕0x75)  | VOID
+  13     | Vigenère (ROT13 key = BASS)  | GHOST
+  14     | Base64                       | SHADOW
+  15     | Identity                     | vodkashotsandvolvos *
+  ──────────────── SUB-VAULT ────────────────────────────────
+  16     | Octal Decoding               | DELTA
+  17     | Atbash (Mirror Cipher)       | NERVE
+  18     | Grid Coordinate Extraction   | TRACE
+  19     | Rail Fence (2-rail)          | STATIC
+  20     | Vigenère (key: BREACH)       | ACCESS
 
   * CASE SENSITIVE. Must be exactly: vodkashotsandvolvos (lowercase, no spaces)
 
@@ -838,7 +1129,7 @@ your rating, and your run number.
   SECTION 14 — 100% COMPLETION CHECKLIST
 ================================================================================
 
-  LAYERS (15/15):
+  LAYERS (20/20):
   [ ] 1  — PROTOCOL
   [ ] 2  — BREACH
   [ ] 3  — MOON
@@ -846,14 +1137,19 @@ your rating, and your run number.
   [ ] 5  — 34
   [ ] 6  — NOMAI
   [ ] 7  — 500
-  [ ] 8  — 1  (then respond to K.Chen's deal)
+  [ ] 8  — breach_client  (then respond to K.Chen's deal)
   [ ] 9  — SIGNAL
   [ ] 10 — PHANTOM
   [ ] 11 — 50
-  [ ] 12 — VOID
-  [ ] 13 — GHOST
+  [ ] 12 — VOID           (derive key: 0x55 XOR 0x75 = 0x20)
+  [ ] 13 — GHOST          (decode key: ONFF → ROT13 → BASS)
   [ ] 14 — SHADOW
   [ ] 15 — vodkashotsandvolvos
+  [ ] 16 — DELTA          (octal: channel A then B)
+  [ ] 17 — NERVE          (atbash: MVIEV)
+  [ ] 18 — TRACE          (grid coordinates)
+  [ ] 19 — STATIC         (rail fence: SAITTC)
+  [ ] 20 — ACCESS         (Vigenère key: BREACH)
 
   ENDINGS (3/3):
   [ ] Good Ending    — "wait, lemme just wash my face real quick"
@@ -867,12 +1163,13 @@ your rating, and your run number.
   [ ] reply                     (send a message to A. — triggers GHOST REPLY)
   [ ] mail read 6               (K.Chen's personal letter to A.)
 
-  ACHIEVEMENTS (15/15):
+  ACHIEVEMENTS (16/16):
   [ ] THE FLOOR IS STILL WET    (good ending)
   [ ] DENIAL                    (bad ending + second run)
   [ ] SIGNAL FOUND              (secret ending)
-  [ ] DEEP COVER                (reach Layer 8)
-  [ ] AT THE CORE               (reach Layer 15)
+  [ ] DEEP COVER                (reach Layer 10)
+  [ ] PAST THE WALL             (reach Layer 15)
+  [ ] AT THE CORE               (reach Layer 20)
   [ ] GHOST                     (zero wrong, zero hints)
   [ ] BLITZ                     (any layer under 30 seconds)
   [ ] PERSISTENT                (5 wrong answers one layer)
@@ -884,22 +1181,29 @@ your rating, and your run number.
   [ ] GHOST REPLY               (reply post-game)
   [ ] PHANTOM FOUND             (phantom command)
 
-  HIDDEN FILES (13/13):
-  [ ] /.shadow               (Layer 1)
-  [ ] /.access_log.bak       (Layer 3)
-  [ ] /.k_chen_personal      (Layer 6)
-  [ ] /archive/.internal_memo (Layer 7)
-  [ ] /.crash_dump           (Layer 9)
-  [ ] /.phantom_trace        (Layer 10)
-  [ ] /.session_log          (Layer 10)
-  [ ] /.watchdog_log         (Layer 11)
-  [ ] /.architect_trace      (Layer 12)
-  [ ] /.vault_approach       (Layer 13)
-  [ ] /.final_note           (Layer 14)
-  [ ] /.confession           (Layer 15)
-  [ ] /.verse                (post-game only — ls -a after finishing)
+  HIDDEN FILES (18/18):
+  [ ] /.shadow                    (Layer 1)
+  [ ] /.access_log.bak            (Layer 3)
+  [ ] /.k_chen_personal           (Layer 6)
+  [ ] /archive/.internal_memo     (Layer 7)
+  [ ] /.crash_dump                (Layer 9)
+  [ ] /.phantom_trace             (Layer 10)
+  [ ] /.session_log               (Layer 10)
+  [ ] /.column_analysis           (Layer 10)
+  [ ] /.watchdog_log              (Layer 11)
+  [ ] /.null_session              (Layer 12)
+  [ ] /.architect_trace           (Layer 12)
+  [ ] /vault/keys/.key_attempt_log (Layer 13)
+  [ ] /.vault_approach            (Layer 13)
+  [ ] /.final_note                (Layer 14)
+  [ ] /.confession                (Layer 15)
+  [ ] /archive/classified/.old_attempt (Layer 17)
+  [ ] /data/matrix/sectors/.dead_sector (Layer 18)
+  [ ] /.transposition_key         (Layer 19)
+  [ ] /.architect_final           (Layer 20)
+  [ ] /.verse                     (post-game only — ls -a after finishing)
 
-  EASTER EGGS (5/5):
+  EASTER EGGS (6/6):
   [ ] outerwilds
   [ ] produce
   [ ] ableton

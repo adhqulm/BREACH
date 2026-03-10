@@ -71,6 +71,24 @@ const ANALYST_INTERCEPTS = {
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
+  16: [
+    { text: '', style: 'empty' },
+    { text: '  ------- ARCHITECT SYSTEM — DIRECT CHANNEL --------', style: 'cyan' },
+    { text: '  [ARCH] You found the sub-vault.', style: 'cyan' },
+    { text: '  [ARCH] K.Chen never knew this existed.', style: 'cyan' },
+    { text: '  [ARCH] Four more. The last one will be familiar.', style: 'cyan' },
+    { text: '  ---------------------------------------------------', style: 'cyan' },
+    { text: '', style: 'empty' },
+  ],
+  19: [
+    { text: '', style: 'empty' },
+    { text: '  ------- ARCHITECT SYSTEM — DIRECT CHANNEL --------', style: 'cyan' },
+    { text: '  [ARCH] One more.', style: 'cyan' },
+    { text: '  [ARCH] You already know the key.', style: 'cyan' },
+    { text: '  [ARCH] You\'ve known it since the beginning.', style: 'cyan' },
+    { text: '  ---------------------------------------------------', style: 'cyan' },
+    { text: '', style: 'empty' },
+  ],
 }
 
 // ── CLASSIFIED FILE CONTENT ───────────────────────────────────────────────────
@@ -131,7 +149,7 @@ abandoned workstation, contained a single design principle:
    Willing to sit with not-knowing until it becomes knowing.
    The Nomai didn't build for everyone. Neither will I."
 
-Fifteen layers were designed. Each one requiring the last.
+Twenty layers were designed. Each one requiring the last.
 Each one testing a different axis of the target cognition:
 
   L1–L3:   Pattern recognition. Signal vs. noise.
@@ -140,6 +158,8 @@ Each one testing a different axis of the target cognition:
   L10–L12: System manipulation. Lateral thinking.
   L13–L14: Adversarial reasoning. Trust as a vulnerability.
   L15:     Identity. The only key that cannot be stolen.
+  L16–L19: The sub-vault. What K.Chen never found.
+  L20:     The final cipher. The key was always there.
 
 The system was never submitted to Kimina Corp.
 It was never registered as intellectual property.
@@ -244,7 +264,7 @@ const BOOT_LINES = [
   { text: '  |  STATUS    : INTRUSION UNDETECTED - FOR NOW      |', style: 'dim', delay: 22 },
   { text: '  +--------------------------------------------------+', style: 'dim', delay: 22 },
   { text: '', style: 'empty', delay: 500 },
-  { text: '  Break through all 15 layers to reach the core.', style: 'bright', delay: 90 },
+  { text: '  Break through all 20 layers to reach the core.', style: 'bright', delay: 90 },
   { text: '  Type  help  for commands.  Type  ls  to start.', style: 'bright', delay: 90 },
   { text: '', style: 'empty', delay: 90 },
 ]
@@ -483,7 +503,8 @@ export class Terminal {
         { id: 'bad_ending',    title: 'DENIAL',                  desc: 'You walked away. But you came back.' },
         { id: 'secret_ending', title: 'SIGNAL FOUND',            desc: 'You looked for A. And A. answered.' },
         { id: 'halfway',       title: 'DEEP COVER',              desc: 'Past the halfway point.' },
-        { id: 'layer_15',      title: 'AT THE CORE',             desc: 'Layer 15. Almost there.' },
+        { id: 'layer_15',      title: 'PAST THE WALL',           desc: 'Layer 15 cleared. The vault goes deeper.' },
+        { id: 'layer_20',      title: 'AT THE CORE',             desc: 'Layer 20. The absolute end.' },
         { id: 'ghost',         title: 'GHOST',                   desc: 'No hints. No wrong answers. Flawless.' },
         { id: 'blitz',         title: 'BLITZ',                   desc: 'Layer cleared in under 30 seconds.' },
         { id: 'persistent',    title: 'PERSISTENT',              desc: 'Five wrong answers on one layer.' },
@@ -553,7 +574,8 @@ export class Terminal {
         { title: 'ARCHAEOLOGIST',          desc: 'You found what was hidden.' },
         { title: "YOU'RE BACK",            desc: "Second run. You didn't have to." },
         { title: 'PERSISTENT',             desc: 'Five wrong answers on one layer.' },
-        { title: 'AT THE CORE',            desc: 'Layer 15. Almost there.' },
+        { title: 'PAST THE WALL',          desc: 'Layer 15 cleared. The vault goes deeper.' },
+        { title: 'AT THE CORE',            desc: 'Layer 20. The absolute end.' },
       ]
       const n = parseInt(parts[0].replace('triggerachiev', '')) || 1
       const idx = Math.max(0, Math.min(n - 1, testAchievements.length - 1))
@@ -646,7 +668,7 @@ export class Terminal {
           })
         }, 600)
       } else {
-        // Level 15 — no success message, go straight to completion
+        // Level 20 — no success message, go straight to completion
         setTimeout(() => this._showCompletion(), 800)
       }
 
@@ -783,7 +805,7 @@ export class Terminal {
       setTimeout(() => this._triggerFirewall(), 800)
     }
     // One-time threshold alerts
-    if (!this.locked && this.currentLevel >= 1 && this.currentLevel <= 15) {
+    if (!this.locked && this.currentLevel >= 1 && this.currentLevel <= 20) {
       if (prev < 25 && this.detection >= 25) this._thresholdAlert(25)
       if (prev < 50 && this.detection >= 50) this._thresholdAlert(50)
       if (prev < 85 && this.detection >= 85) this._thresholdAlert(85)
@@ -1088,8 +1110,8 @@ export class Terminal {
   }
 
   _updateStatusBar() {
-    this.$layer.textContent    = `LAYER: ${this.currentLevel}/15`
-    this.$progress.style.width = `${Math.round((this.currentLevel / 15) * 100)}%`
+    this.$layer.textContent    = `LAYER: ${this.currentLevel}/20`
+    this.$progress.style.width = `${Math.round((this.currentLevel / 20) * 100)}%`
     this._updateTitle()
   }
 
@@ -1129,7 +1151,7 @@ export class Terminal {
     if (lyr === 0)   { document.title = 'BREACH v2.4.1'; return }
     if (lyr > 15)    { document.title = 'CORE ACCESS GRANTED'; return }
     const warn = det >= 80 ? `⚠⚠ ${det}% | ` : det >= 60 ? `⚠ ${det}% | ` : ''
-    document.title = `${warn}LAYER ${lyr}/15 — BREACH`
+    document.title = `${warn}LAYER ${lyr}/20 — BREACH`
   }
 
   _startAmbientAlerts() {
@@ -1294,7 +1316,7 @@ export class Terminal {
   // ── LEVEL LOADING ────────────────────────────────────────────────────────
 
   _loadLevel(levelId) {
-    if (levelId > 15) { this._showCompletion(); return }
+    if (levelId > 20) { this._showCompletion(); return }
 
     this._stopPhantomBleedthrough()
 
@@ -1302,8 +1324,9 @@ export class Terminal {
     this.layerStartTime       = Date.now()
     this.layerWrongAttempts   = 0
 
-    if (levelId === 8)  this._unlockAchievement('halfway',  'DEEP COVER',  'Past the halfway point.')
-    if (levelId === 15) this._unlockAchievement('layer_15', 'AT THE CORE', 'Layer 15. Almost there.')
+    if (levelId === 10) this._unlockAchievement('halfway',  'DEEP COVER',  'Past the halfway point.')
+    if (levelId === 15) this._unlockAchievement('layer_15', 'PAST THE WALL', 'Layer 15 cleared. The vault goes deeper.')
+    if (levelId === 20) this._unlockAchievement('layer_20', 'AT THE CORE', 'Layer 20. The absolute end.')
 
     const puzzle              = PUZZLES[levelId - 1]
     this.state.cwd            = '/'
@@ -1319,7 +1342,7 @@ export class Terminal {
     // Gradually increase music tension with layer progression
     const music = window.bgMusic
     if (music && music.duration) {
-      music.playbackRate = levelId <= 5 ? 1.0 : levelId <= 10 ? 1.016 : 1.032
+      music.playbackRate = levelId <= 7 ? 1.0 : levelId <= 14 ? 1.016 : 1.032
     }
 
     this._printLinesDelayed(
@@ -1373,7 +1396,7 @@ export class Terminal {
       this._loadLevel(startLevel)
     }
 
-    if (savedLevel >= 1 && savedLevel <= 15) {
+    if (savedLevel >= 1 && savedLevel <= 20) {
       const resumeLines = [
         { text: '', style: 'empty' },
         { text: '  ██████╗ ██████╗ ███████╗ █████╗  ██████╗██╗  ██╗', style: 'cyan' },
@@ -1497,7 +1520,7 @@ export class Terminal {
 
     this._printLinesDelayed(completionLines, 50, () => {
       document.title              = 'CORE ACCESS GRANTED'
-      this.$layer.textContent     = 'LAYER: 15/15'
+      this.$layer.textContent     = 'LAYER: 20/20'
       this.$progress.style.width  = '100%'
       this.detection = 0
       this._updateDetectionUI()
