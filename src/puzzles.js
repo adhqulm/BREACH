@@ -23,7 +23,7 @@ export const PUZZLES = [
     title: 'LAYER 1 — ROTATIONAL ENCRYPTION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 1 / 20  —  PERIMETER BREACH  |',
+      '|  SECURITY LAYER 1 / 15  —  PERIMETER BREACH  |',
       '+----------------------------------------------+',
       '',
       'You are in. The outer perimeter is down.',
@@ -46,9 +46,7 @@ Status       : ENCRYPTED
 
 An outbound payload was intercepted on the edge router.
 The encryption method appears rotational in nature.
-The sender clearly thought "rotation" was still secure.
-
-Check comms.enc for the raw payload.`,
+The sender clearly thought "rotation" was still secure.`,
 
         '/comms.enc': `=== TRANSMISSION INTERCEPTED ===
 Encryption : ROTATIONAL SUBSTITUTION
@@ -72,8 +70,7 @@ They were wrong.
 The core file predates the company by years.
 It was waiting here long before the breach protocols were added.
 
-If you're reading this you already know more than they do.
-Keep going.`,
+If you're reading this you already know more than they do.`,
       },
     },
     answers: ['PROTOCOL'],
@@ -97,12 +94,11 @@ Keep going.`,
     title: 'LAYER 2 — BINARY SIGNAL',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 2 / 20  —  SIGNAL ANALYSIS   |',
+      '|  SECURITY LAYER 2 / 15  —  SIGNAL ANALYSIS   |',
       '+----------------------------------------------+',
       '',
       'You hit a signal interceptor on the internal subnet.',
       'It captured a raw binary transmission before the session closed.',
-      'The data is sitting in the buffer — decode it.',
       '',
       'Submit with:  unlock <answer>',
     ],
@@ -126,7 +122,6 @@ END OF BUFFER`,
 ----------------------
 Binary encoding: standard 8-bit per character.
 Each group of 8 bits maps to one ASCII character.
-Convert each byte to its decimal value, then to ASCII.
 
 ASCII reference:
   65=A  66=B  67=C  68=D  69=E  70=F  71=G  72=H
@@ -157,14 +152,13 @@ ASCII reference:
     title: 'LAYER 3 — HEX TRACE',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 3 / 20  —  DEEP PACKET LOG   |',
+      '|  SECURITY LAYER 3 / 15  —  DEEP PACKET LOG   |',
       '+----------------------------------------------+',
       '',
       'You are inside the packet logging layer.',
       'The logs are mostly noise — but something is buried in there.',
-      'A single critical packet was flagged. Its payload is hex-encoded.',
+      'A single critical packet was flagged.',
       '',
-      'Find it. Decode it.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -217,6 +211,19 @@ Hex table (partial):
   67=103=g  68=104=h  69=105=i  6a=106=j
   6b=107=k  6c=108=l  6d=109=m  6e=110=n
   6f=111=o  70=112=p  71=113=q  72=114=r`,
+
+        '/.nomai_fragment': `[RECOVERED FRAGMENT — PARTIALLY CORRUPTED]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Source    : UNKNOWN
+Timestamp : [VALUE EXCEEDS INTEGER BOUNDS]
+Language  : [UNRECOGNIZED — PARTIAL TRANSLATION ONLY]
+
+...we have found it...
+...the signal predates the formation of...
+...it was already there before the first...
+...it is not a place. it is more like a...
+
+[REMAINDER UNRECOVERABLE — CORRUPTION THRESHOLD EXCEEDED]`,
       },
     },
     answers: ['MOON', 'moon'],
@@ -227,7 +234,7 @@ Hex table (partial):
     ],
     successMsg: [
       'PAYLOAD DECODED.',
-      'Layer 3 cleared. Something left a breadcrumb. Follow it.',
+      'Layer 3 cleared. Something left a breadcrumb.',
     ],
   },
 
@@ -240,11 +247,10 @@ Hex table (partial):
     title: 'LAYER 4 — FREQUENCY LOCK',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 4 / 20  —  AUDIO SUBSYSTEM   |',
+      '|  SECURITY LAYER 4 / 15  —  AUDIO SUBSYSTEM   |',
       '+----------------------------------------------+',
       '',
       'The next security layer is locked to a specific frequency.',
-      'The system is tuned like an instrument.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -259,10 +265,8 @@ used for standard tuning and concert pitch calibration.
 
 This note is in the 4th octave.
 Its letter name is the first letter of the alphabet.
-It is the international standard. Every instrument is
-tuned to it. Every producer knows it.
+It is the international standard.`,
 
-Enter the numeric frequency to unlock this layer.`,
 
         '/tuning_notes.txt': `Acoustic Security Notes
 ------------------------
@@ -292,47 +296,131 @@ Standard tuning reference: ISO 16 (1975)`,
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 5 — FIBONACCI SEQUENCE
-  // Answer: 34
+  // LAYER 5 — DERIVED CAESAR SHIFT
+  // Answer: NOISE
+  // Ciphertext: YZTDP  Shift: 11
+  // Daemon readings: 29+41+33+27+11 = 141, 141 mod 26 = 11
+  // Y-11=N, Z-11=O, T-11=I, D-11=S, P-11=E → NOISE
   // ─────────────────────────────────────────────
   {
     id: 5,
-    title: 'LAYER 5 — SEQUENCE LOCK',
+    title: 'LAYER 5 — DERIVED SHIFT',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 5 / 20  —  PATTERN ANALYSIS  |',
+      '|  SECURITY LAYER 5 / 15  —  PATTERN ANALYSIS  |',
       '+----------------------------------------------+',
       '',
-      'A numeric sequence generator guards this layer.',
-      'One value has been deliberately redacted.',
+      'This node has an authentication cipher.',
+      'The shift is not fixed.',
+      'It is derived from this system\'s own telemetry.',
+      '',
+      'Read everything.',
+      'Not all numbers are what they seem.',
     ],
     filesystem: {
-      dirs: ['/'],
+      dirs: ['/', '/auth', '/telemetry', '/telemetry/daemon_a', '/telemetry/daemon_b', '/telemetry/daemon_c', '/monitoring'],
       files: {
-        '/sequence.dat': `=== SECURITY SEQUENCE GENERATOR ===
-Algorithm  : CLASSIFIED
-Key format : INTEGER
+        '/auth/auth_header.txt': `AUTHENTICATION MODULE — LAYER 5
+================================
+Cipher type  : Caesar (single-byte shift)
+Key format   : INTEGER (0-25)
 
-Sequence output:
+The shift for this node is NOT hardcoded.
+It is derived dynamically from system telemetry.
 
-  0, 1, 1, 2, 3, 5, 8, 13, 21, [REDACTED], 55, 89, 144
+DERIVATION FORMULA:
+  shift = (sum of all active daemon load readings) mod 26
 
-One value has been removed from the sequence.
-Identify it. Submit it.
+Five monitoring daemons are active on this node.
+Their load readings are distributed across the
+/telemetry/ and /monitoring/ directories.
 
-The pattern is well-known. Think recursively.
-Each number is derived from the two before it.`,
+Retrieve all five. Sum them. Reduce modulo 26.
+Apply the resulting shift to decrypt the ciphertext.`,
+
+        '/auth/cipher.enc': `ENCRYPTED AUTHENTICATION TOKEN
+================================
+Ciphertext  : YZTDP
+Encoding    : Caesar shift
+Key format  : Derived from daemon telemetry`,
+
+        '/telemetry/daemon_a/sensor_a.log': `DAEMON A — LOAD MONITOR
+========================
+Daemon ID    : sys.monitor.A
+Status       : ACTIVE
+Timestamp    : 04:02:11 UTC
+
+Current load reading  :  29
+Unit                  :  normalized load units (NLU)`,
+
+        '/telemetry/daemon_b/sensor_b.log': `DAEMON B — LOAD MONITOR
+========================
+Daemon ID    : sys.monitor.B
+Status       : ACTIVE
+Timestamp    : 04:02:14 UTC
+
+Current load reading  :  41
+Unit                  :  normalized load units (NLU)`,
+
+        '/telemetry/daemon_c/sensor_c.log': `DAEMON C — LOAD MONITOR
+========================
+Daemon ID    : sys.monitor.C
+Status       : ACTIVE
+Timestamp    : 04:02:17 UTC
+
+Current load reading  :  33
+Unit                  :  normalized load units (NLU)`,
+
+        '/monitoring/daemon_stats.log': `MONITORING SUMMARY — DAEMONS D & E
+=====================================
+Generated   : 04:02:20 UTC
+Source      : /proc/monitor/aggregate
+
+Daemon D — sys.monitor.D
+  Status       : ACTIVE
+  Load reading : 27
+
+Daemon E — sys.monitor.E
+  Status       : ACTIVE
+  Load reading : 11
+
+[2 of 5 active daemons shown — see /telemetry/ for A, B, C]`,
+
+        '/monitoring/interference.log': `INTERFERENCE LOG — EXCLUDED VALUES
+=====================================
+The following readings were captured from ambient
+RF interference on this node's sensor array.
+
+These values are NOT daemon load readings.
+DO NOT include them in the shift derivation.
+
+  Ambient channel 1 : 88
+  Ambient channel 2 : 53
+  Ambient channel 3 : 17
+
+Status: EXCLUDED — flagged as non-daemon noise.`,
+
+        '/.baseline_record': `HISTORICAL BASELINE — ARCHIVED
+================================
+[KIMINA INTERNAL — DO NOT DISTRIBUTE]
+
+A static shift of 3 was tested on this node in 2021.
+The ciphertext at that time was: BRLQG
+That shift has since been replaced with the
+dynamic telemetry-derived system.
+
+Note: BRLQG is not the current ciphertext.`,
       },
     },
-    answers: ['34'],
+    answers: ['NOISE'],
     hints: [
-      'A famous sequence named after a 13th century Italian mathematician. It appears in sunflowers, shells, and fractals.',
-      'Each term equals the sum of the two before it. You have 21 on the left of the gap and 55 on the right.',
-      'The missing number N satisfies: 21 + [previous term] = N, and N + 21 = 55. What is N?',
+      'The shift is not in any file directly. It must be calculated. Five daemons are running — each has a load reading somewhere on this node.',
+      'Check /telemetry/daemon_a/, /daemon_b/, /daemon_c/ for three readings. Check /monitoring/daemon_stats.log for the other two. Sum all five. Then: shift = sum mod 26.',
+      'Readings: 29, 41, 33, 27, 11. Sum = 141. 141 mod 26 = 11. Apply shift 11 to YZTDP: Y-11=N, Z-11=O, T-11=I, D-11=S, P-11=E.',
     ],
     successMsg: [
-      'SEQUENCE VALIDATED.',
-      'Layer 5 cleared. The pattern is broken open.',
+      'SHIFT DERIVED. CIPHER BROKEN.',
+      'Layer 5 cleared. Signal confirmed.',
     ],
   },
 
@@ -345,14 +433,11 @@ Each number is derived from the two before it.`,
     title: 'LAYER 6 — MORSE TRANSMISSION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 6 / 20  —  SIGNAL DECODE     |',
+      '|  SECURITY LAYER 6 / 15  —  SIGNAL DECODE     |',
       '+----------------------------------------------+',
       '',
       'A transmission is looping on a legacy radio channel.',
-      'It is Morse. Old protocol. Almost forgotten.',
-      'Decode it. The key is a proper noun.',
       '',
-      'One word. All caps.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -365,24 +450,21 @@ Source    : UNKNOWN — deep signal
 
 === REPEATING ===`,
 
-        '/morse_table.txt': `MORSE CODE REFERENCE TABLE
-===========================
-A  .-      N  -.
-B  -...    O  ---
-C  -.-.    P  .--.
-D  -..     Q  --.-
-E  .       R  .-.
-F  ..-.    S  ...
-G  --.     T  -
-H  ....    U  ..-
-I  ..      V  ...-
-J  .---    W  .--
-K  -.-     X  -..-
-L  .-..    Y  -.--
-M  --      Z  --..
-
-Separator: single space between letters
-           triple space between words`,
+        '/morse_table.txt': `
+  .-        -.
+  -...      ---
+  -.-.      .--.
+  -..       --.-
+  .         .-.
+  ..-.      ...
+  --.       -
+  ....      ..-
+  ..        ...-
+  .---      .--
+  -.-       -..-
+  .-..      -.--
+  --        --..
+`,
 
         '/.k_chen_personal': `RECOVERED PERSONAL MESSAGE — K.CHEN OUTBOX
 [UNSENT — DRAFT SAVED 04:31:22]
@@ -421,227 +503,250 @@ I will not be sending this message.
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 7 — FILESYSTEM NAVIGATION + FRAGMENT SUM
-  // Answer: 500
+  // LAYER 7 — PROCESS SURVEILLANCE DIFF
+  // Answer: SPECTER
+  // Present in snapshot_a, terminated by snapshot_b
+  // Red herring: /.proc_diff shows B→C diff (netwatch gone)
+  // Red herring: snapshot_c in /surveillance/archive/
   // ─────────────────────────────────────────────
   {
     id: 7,
-    title: 'LAYER 7 — FRAGMENTED DATA',
+    title: 'LAYER 7 — PROCESS SURVEILLANCE',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 7 / 20  —  DATA RECOVERY     |',
+      '|  SECURITY LAYER 7 / 15  —  PROCESS AUDIT     |',
       '+----------------------------------------------+',
       '',
-      'The key was shredded and scattered across the file system.',
-      'Three fragments. Three sectors. One sum.',
+      'This node runs a watchdog surveillance system.',
+      'Process snapshots are taken at regular intervals.',
       '',
-      'Navigate the directory tree. Find every piece.',
-      'Add the values. That is your key.',
+      'Something was running that shouldn\'t have been.',
+      'Now it\'s gone.',
     ],
     filesystem: {
-      dirs: ['/', '/archive', '/archive/sector_a', '/archive/sector_b', '/archive/sector_c', '/archive/sector_d', '/internal'],
+      dirs: ['/', '/surveillance', '/surveillance/archive', '/sys'],
       files: {
-        '/manifest.txt': `DATA RECOVERY MANIFEST
-=======================
-The access key was split into three numeric fragments
-and distributed across isolated sectors.
+        '/surveillance/criteria.txt': `AUTHENTICATION MECHANISM — WATCHDOG PROTOCOL
+=============================================
+This node uses a dynamic authentication key
+derived from process surveillance data.
 
-Fragment locations:
-  /archive/sector_a/
-  /archive/sector_b/
-  /archive/sector_c/
+KEY DERIVATION:
+  The authentication key is the name of the process
+  that was active during window A but had TERMINATED
+  by window B.`,
 
-Recovery method: locate all fragment files.
-Extraction key : sum of all fragment values.`,
+        '/surveillance/snapshot_a.log': `PROCESS SNAPSHOT — WINDOW A
+============================
+Timestamp : 03:17:04 UTC
+Source    : /proc/watchdog/snapshot
 
-        '/archive/sector_a/fragment_1.dat': `FRAGMENT 1 OF 3
-================
-Sector    : ALPHA
-Integrity : OK
-Value     : 173`,
+PID    NAME               STATUS    UPTIME
+─────  ─────────────────  ────────  ──────────
+    1  init               running   847d 04h
+   44  sshd               running   847d 04h
+  201  security_daemon    running   12d 07h
+  389  logger             running   12d 07h
+  412  db_engine          running   12d 07h
+  887  intrusion_detect   running   8d 14h
+ 1203  specter            running   3d 22h
+ 1547  netwatch           running   1d 06h`,
 
-        '/archive/sector_b/fragment_2.dat': `FRAGMENT 2 OF 3
-================
-Sector    : BETA
-Integrity : OK
-Value     : 264`,
+        '/surveillance/snapshot_b.log': `PROCESS SNAPSHOT — WINDOW B
+============================
+Timestamp : 04:02:09 UTC
+Source    : /proc/watchdog/snapshot
 
-        '/archive/.internal_memo': `INTERNAL MEMO — Kimina Corp [RESTRICTED]
-========================================
-FROM : Dr. K. Chen, Systems Architecture
-TO   : Director R. Fromm
-RE   : Data fragmentation protocol
+PID    NAME               STATUS    UPTIME
+─────  ─────────────────  ────────  ──────────
+    1  init               running   847d 05h
+   44  sshd               running   847d 05h
+  201  security_daemon    running   12d 08h
+  389  logger             running   12d 08h
+  412  db_engine          running   12d 08h
+  887  intrusion_detect   running   8d 15h
+ 1547  netwatch           running   1d 07h
+ 1891  watchdog           running   0d 00h
+ 1904  alert_relay        running   0d 00h`,
 
-The fragmentation system is holding.
-No single sector contains enough information
-to reconstruct the original key.
+        '/surveillance/archive/snapshot_c.log': `PROCESS SNAPSHOT — WINDOW C
+============================
+Timestamp : 05:44:31 UTC
+Source    : /proc/watchdog/snapshot
 
-However — I need to flag something.
-The fragmentation pattern itself is recognisable
-to anyone who knows what they're looking for.
-Anyone trained in data recovery would find
-all three sectors within minutes.
+PID    NAME               STATUS    UPTIME
+─────  ─────────────────  ────────  ──────────
+    1  init               running   847d 06h
+   44  sshd               running   847d 06h
+  201  security_daemon    running   12d 09h
+  389  logger             running   12d 09h
+  412  db_engine          running   12d 09h
+  887  intrusion_detect   running   8d 16h
+ 1891  watchdog           running   0d 01h
+ 1904  alert_relay        running   0d 01h
+ 2011  breach_monitor     running   0d 00h`,
 
-I designed this system assuming our adversary
-would be unsophisticated.
-I am no longer confident in that assumption.
+        '/sys/process_notes.dat': `NODE PROCESS REGISTRY — DOCUMENTATION
+======================================
+[KIMINA CORP — INTERNAL SYSTEMS]
 
-  — K.C.`,
+init              System initialisation. Core process.
+sshd              SSH daemon. Remote access handler.
+security_daemon   Kimina security monitoring layer.
+logger            System event logger.
+db_engine         Database server (port 5432).
+intrusion_detect  Active threat detection.
+netwatch          Network traffic monitor.
+watchdog          Process health checker (recently deployed).
+alert_relay       Alert forwarding to Director Fromm terminal.
+breach_monitor    Intrusion response agent (auto-deployed).
 
-        '/archive/sector_c/fragment_3.dat': `FRAGMENT 3 OF 3
-================
-Sector    : GAMMA
-Integrity : OK
-Value     : 63`,
+specter           [NO DOCUMENTATION FOUND]
+                  Process origin : unregistered
+                  Deployed by   : unknown
+                  Function      : unclassified`,
 
-        '/archive/sector_d/fragment_quarantine.dat': `FRAGMENT — QUARANTINE SECTOR D
-================================
-Sector    : DELTA
-Integrity : DEGRADED (56%)
-Value     : 89
+        '/.proc_diff': `PROCESS DIFF — WATCHDOG ANALYSIS
+==================================
+[AUTOMATED REPORT — WINDOW B → WINDOW C]
 
-Sector integrity below threshold.
-Data reliability: UNVERIFIED.
-Flagged for review — do not include in key recovery.`,
+TERMINATED since last snapshot:
+  PID 1547  netwatch
 
-        '/internal/payroll_2024.csv': `KIMINA CORP — PAYROLL REGISTER Q4 2024
-========================================
-[CONFIDENTIAL — HR USE ONLY]
+NEW since last snapshot:
+  PID 2011  breach_monitor
 
-NAME                DEPT                  SALARY (EUR/yr)
-──────────────────  ────────────────────  ───────────────
-R. Fromm            Executive             [REDACTED]
-D. Holst            Operations                84,200
-K. Chen             Engineering               91,750
-L. Mayer            Engineering               87,400
-S. Okeke            Security                  78,900
-A. van der Berg     IT Infrastructure         76,300
-J. Bauer            Systems                   74,100
-P. Reyes            Data Architecture         88,600
-M. Okafor           Security Ops              79,200
-T. Lindqvist        Network Engineering       81,500
-
-...[TRUNCATED — 847 RECORDS TOTAL]
-
-This file is for HR and Director-level use only.
-Unauthorised access will be logged and reported.`,
-
-        '/internal/parking_memo.txt': `FROM   : Facilities Management
-TO     : All Staff
-RE     : Parking Allocation Changes — Effective 01 Jan 2025
-DATE   : 12 Dec 2024
-
-Following the completion of the east wing expansion, parking
-spaces in Lot B will be reallocated effective January 1st.
-
-Staff with electric vehicles will be prioritised for spots
-near the charging stations on Level 1 (spaces E1 through E12).
-
-Please collect your new parking permit from reception before
-the 20th of December.
-
-Contact facilities@KIMINA-corp.int with any questions.
-
-  — Facilities Management, Kimina Corp`,
-
-        '/internal/q3_incident_summary.txt': `SECURITY INCIDENT SUMMARY — Q3
-================================
-[DRAFT — NOT FOR EXTERNAL DISTRIBUTION]
-Prepared by: K. Chen, Engineering
-
-Total incidents flagged : 14
-Resolved               : 11
-Under review           :  3
-
-Notable incidents this quarter:
-  — Node 44.7.x experienced repeated unauthorised access attempts
-    (ongoing as of report date — escalated to Director Fromm 14.09)
-  — Phishing attempt via spoofed vendor email (resolved 08.07)
-  — Unregistered device found on guest VLAN (resolved 21.08)
-
-No confirmed data exfiltration this quarter.
-
-Full report pending Director Fromm sign-off.
-Distribution: Executive and Security only.`,
+Note: this diff covers window B → C only.
+      See /surveillance/ for complete snapshot history.`,
       },
     },
-    answers: ['500'],
+    answers: ['SPECTER'],
     hints: [
-      'The key was fragmented. The manifest tells you which sectors matter. Navigate carefully — not everything you find is part of the key.',
-      'Three valid sectors. Navigate into each using cd. The key is a mathematical operation on the three fragment values.',
-      'Find the three integrity-verified fragments in sector_a, sector_b, and sector_c. Add the values together.',
+      'Something was running in window A that wasn\'t there by window B. The criteria file tells you exactly what you\'re looking for. Compare the two primary snapshots carefully.',
+      'Count the processes: window A has 8, window B has 9 — but they\'re not the same 9. Two new processes appeared. One old one vanished. You want the one that vanished.',
+      'Present in snapshot_a but missing from snapshot_b: PID 1203. Cross-reference /sys/process_notes.dat for its name.',
     ],
     successMsg: [
-      'FRAGMENTS ASSEMBLED.',
-      'Layer 7 cleared. Data reconstructed. No sector was safe.',
+      'PROCESS IDENTIFIED.',
+      'Layer 7 cleared. SPECTER is gone. But you found the ghost.',
     ],
   },
 
   // ─────────────────────────────────────────────
-  // LAYER 8 — PROCESS INTEGRITY AUDIT
-  // Answer: breach_client
+  // LAYER 8 — PROCESS INTEGRITY AUDIT (v2)
+  // Answer: vault_proxy
+  // Logic: 3 mismatches in table. 2 are explained by
+  //        patch_manifest.txt (logger + net_relay).
+  //        vault_proxy has no patch entry — it's the rootkit.
+  // Red herring: anomaly_flags.txt flags logger as
+  //        behaviorally suspicious → bait wrong answer.
   // ─────────────────────────────────────────────
   {
     id: 8,
     title: 'LAYER 8 — INTEGRITY AUDIT',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 8 / 20  —  INTEGRITY AUDIT   |',
+      '|  SECURITY LAYER 8 / 15  —  INTEGRITY AUDIT   |',
       '+----------------------------------------------+',
       '',
-      'The security daemon has flagged a checksum anomaly.',
-      'One active process is masking its identity.',
+      'The security daemon completed its audit cycle.',
+      'Multiple checksum mismatches flagged.',
+      'Not all of them are threats.',
       '',
-      'Audit the process registry. Find the impostor.',
-      'Submit the process name.',
     ],
     filesystem: {
-      dirs: ['/'],
+      dirs: ['/', '/sys', '/var', '/var/log'],
       files: {
         '/integrity_report.log': `PROCESS INTEGRITY REPORT
 =========================
 KIMINA CORP — SECURITY DAEMON v4.1
-SCAN TIME : 04:31:22 UTC
-NODE      : 10.44.7.9
+SCAN TIME  : 04:31:22 UTC
+NODE       : 10.44.7.9
 
-─────────────────────────────────────────────────────────
 LEGEND:
   REPORTED_CRC — checksum submitted by process at boot
   ACTUAL_CRC   — checksum recalculated by audit engine
   STATUS       — match ✓ / mismatch ✗
 
-─────────────────────────────────────────────────────────
+PID    PROCESS          REPORTED_CRC   ACTUAL_CRC     STATUS
+────  ────────────── ────────────  ────────────  ──────
+ 0001  init               9A2C0001      9A2C0001        ✓
+ 0144  sshd               CC441F30      CC441F30        ✓
+ 0201  security_daemon    A3F70022      A3F70022        ✓
+ 0389  logger             5C8B1104      88F3A210        ✗
+ 0412  db_engine          887D3309      887D3309        ✓
+ 0887  net_relay          B30041CC      09E7F554        ✗
+ 0912  trace_agent        2B90CC78      2B90CC78        ✓
+ 1203  vault_proxy        4F00A831      C9112E77        ✗
+ 1891  bash               F441AB30      F441AB30        ✓
 
-PID    PROCESS               REPORTED_CRC  ACTUAL_CRC    STATUS
-─────  ──────────────────    ────────────  ────────────  ──────
- 0001  init                  9A2C0001      9A2C0001        ✓
- 0144  sshd                  CC441F30      CC441F30        ✓
- 0201  security_daemon       A3F70022      A3F70022        ✓
- 0389  logger                5C8B1104      5C8B1104        ✓
- 0412  db_engine             887D3309      887D3309        ✓
- 0887  intrusion_detect      E10F4451      E10F4451        ✓
- 0912  trace_agent           2B90CC78      2B90CC78        ✓
- 1891  bash                  F441AB30      F441AB30        ✓
- 1892  breach_client         00000000      F992D7A5        ✗
+ANOMALY: 3 processes report CRC mismatches.
+Elevated risk. Manual review required.`,
 
-─────────────────────────────────────────────────────────
-ANOMALY: 1 process reporting null checksum (00000000).
-Null CRC is a known evasion signature — this process is
-deliberately masking its identity from the audit engine.
+        '/sys/patch_manifest.txt': `AUTHORIZED PATCH MANIFEST
+==========================
+KIMINA CORP — SECURITY OPS
+Issued     : 04:10:22 UTC
+Authorized : security-ops@kimina.corp
 
-Submit the name of the process evading audit.`,
+The following processes received authorized updates
+prior to this audit cycle. CRC changes for these
+processes are expected and do not indicate compromise.
+
+  PROCESS  : logger
+  OLD CRC  : 5C8B1104
+  NEW CRC  : 88F3A210
+  CHANGE   : v2.1 → v2.2  (log rotation fix, ticket #4471)
+
+  PROCESS  : net_relay
+  OLD CRC  : B30041CC
+  NEW CRC  : 09E7F554
+  CHANGE   : sec-patch-0441  (CVE-2024-8801 mitigation)
+
+Any CRC mismatch NOT covered by this manifest
+is UNAUTHORIZED and requires immediate escalation.`,
+
+        '/var/log/anomaly_flags.txt': `BEHAVIORAL ANOMALY LOG — HEURISTIC ENGINE
+==========================================
+Scan window: 03:00 — 04:31 UTC
+
+[WARN]  logger  (PID 0389)
+        Excessive write calls detected: 4,221 in 91 minutes
+        Threshold: 500/min
+        Classification: SUSPICIOUS BEHAVIOR
+
+[INFO]  vault_proxy  (PID 1203)
+        No behavioral anomalies detected.
+        Activity within normal operating bounds.
+
+────────────────────────────────────────────
+NOTE: Behavioral anomalies do not confirm
+compromise. Integrity mismatches are the
+authoritative threat indicator for this node.`,
+
+        '/.audit_meta': `AUDIT ENGINE — INTERNAL NOTES
+==============================
+Policy: patch_manifest.txt supersedes the integrity
+table for all whitelisted process entries.
+
+A mismatch covered by the manifest = expected.
+A mismatch NOT in the manifest = unauthorized.
+
+Behavioral flags in anomaly_flags.txt are
+supplementary only. Do not use them as the
+sole basis for escalation.`,
       },
     },
-    answers: ['breach_client'],
+    answers: ['vault_proxy'],
     caseSensitive: false,
     hints: [
-      'One process in the registry is lying. The audit engine caught it. Read the log carefully — every row tells you something.',
-      'Compare the STATUS column for every process. Most have ✓. One has something different.',
-      'The anomalous process reports 00000000 as its CRC — a null signature. Its actual checksum is different. What is its name?',
+      'Three processes failed the integrity check. That doesn\'t mean all three are threats. Check /sys/ — there may be context that clears some of them.',
+      'The patch manifest in /sys/ lists processes that received authorized updates before the audit ran. Their CRC changes are legitimate. Cross-reference.',
+      'Two mismatches are explained by the patch manifest. One isn\'t. The behavioral log is a distraction — trust the manifest policy, not the anomaly flags.',
     ],
     successMsg: [
-      'INTEGRITY VIOLATION CONFIRMED.',
-      'Layer 8 cleared. You found yourself in the logs.',
+      'UNAUTHORIZED PROCESS CONFIRMED.',
+      'Layer 8 cleared. vault_proxy had no patch record. It was never supposed to be there.',
     ],
   },
 
@@ -654,32 +759,24 @@ Submit the name of the process evading audit.`,
     title: 'LAYER 9 — CAESAR CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 9 / 20  —  SHIFT ENCRYPTION  |',
+      '|  SECURITY LAYER 9 / 15  —  SHIFT ENCRYPTION  |',
       '+----------------------------------------------+',
       '',
       'A Caesar cipher. Simple in theory.',
       'The shift value is not given directly.',
-      'You have to work it out.',
       '',
-      'Decode the message. Submit the plaintext.',
     ],
     filesystem: {
       dirs: ['/'],
       files: {
         '/encrypted_msg.txt': `CAESAR CIPHER — OUTBOUND MESSAGE
 =================================
-The message below was encrypted using a Caesar cipher.
-The shift value is encoded in the hint file.
-
 Ciphertext:  YOMTGR`,
 
         '/cipher_hint.txt': `Cipher Key Derivation
 ----------------------
 The shift value equals the number of strings
 on a standard electric guitar.
-
-Decode the message in encrypted_msg.txt
-using this shift value.
 
 Caesar decryption: shift each letter BACKWARD
 by the shift amount through the alphabet.
@@ -737,14 +834,13 @@ Status: UNRELATED TO PRIMARY CIPHER — archived only.`,
     title: 'LAYER 10 — HIDDEN TRANSMISSION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 10 / 20  —  STEGANOGRAPHY    |',
+      '|  SECURITY LAYER 10 / 15  —  STEGANOGRAPHY    |',
       '+----------------------------------------------+',
       '',
       'Someone left a manifesto on this node.',
       'It reads like philosophy. But nothing here is accidental.',
       'The message is hidden in plain sight.',
       '',
-      'Read carefully. Look at structure, not content.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -787,7 +883,7 @@ Notes       : PHANTOM was fast. Faster than anyone before.
               You made it here too.
               You're past where PHANTOM stopped.
 
-              Whoever you are — you're better than PHANTOM.`,
+              Whoever you are — you're better.`,
 
         '/.session_log': `SESSION LOG — ARCHIVED INTRUSIONS
 ===================================
@@ -818,6 +914,28 @@ Result: OIWNTSO
 Access denied — not the correct extraction method.
 
 Filed under: wrong approaches.`,
+
+        '/.kimina_classified_001': `[KIMINA CORP — RESTRICTION PROTOCOL 7]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Classification : BEYOND TOP SECRET
+Filed          : 2019.09.14
+Filed by       : Research Division (Dr. [REDACTED])
+
+A persistent signal was detected originating from
+coordinates outside the observable solar system.
+
+Signal age (estimated) : pre-universal
+Signal duration        : continuous — has not ceased
+
+The signal predates this node.
+The signal predates this company.
+The signal predates the formation of the planet
+on which this server physically stands.
+
+Further research into signal origin has been
+suspended under Restriction Protocol 7.
+
+No researcher is authorized to access this record.`,
       },
     },
     answers: ['PHANTOM'],
@@ -842,10 +960,9 @@ Filed under: wrong approaches.`,
     title: 'LAYER 11 — ALGORITHM TRACE',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 11 / 20  —  CODE EXECUTION   |',
+      '|  SECURITY LAYER 11 / 15  —  CODE EXECUTION   |',
       '+----------------------------------------------+',
       '',
-      'The key is the output of an algorithm.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -869,10 +986,8 @@ ALGORITHM:
         '/exec_notes.txt': `Execution Notes
 ----------------
 This is a standard iterative algorithm.
-Execute each step in order.
 Variables persist between iterations.
-'temp' is a temporary swap variable.
-Trace each iteration carefully — one mistake propagates.`,
+'temp' is a temporary swap variable.`,
 
         '/.watchdog_log': `WATCHDOG MODULE — TERMINATION ATTEMPT LOG
 ==========================================
@@ -902,7 +1017,7 @@ Watchdog internal note (not for distribution):
     },
     answers: ['50'],
     hints: [
-      'Execute the algorithm with paper and pencil. There is no shortcut — trace every single iteration precisely.',
+      'Execute the algorithm.',
       'After iteration 1: temp=5, x=5+2=7, y=5. After iteration 2: temp=7, x=7+5=12, y=7.',
       'Iteration 3: x=19, y=12. Iteration 4: x=31, y=19. Run iteration 5 yourself.',
     ],
@@ -922,14 +1037,13 @@ Watchdog internal note (not for distribution):
     title: 'LAYER 12 — XOR CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 12 / 20  —  BINARY CRYPTO    |',
+      '|  SECURITY LAYER 12 / 15  —  BINARY CRYPTO    |',
       '+----------------------------------------------+',
       '',
-      'XOR encryption. Simple, fast, and everywhere.',
+      'XOR encryption.',
       'The ciphertext is here.',
       'The key is not.',
       '',
-      'Find the key. Then decrypt.',
     ],
     filesystem: {
       dirs: ['/', '/sys', '/sys/diagnostics'],
@@ -953,8 +1067,7 @@ It is computed at runtime from two hardware values.
 Formula:
   key = alloc_register XOR parity_byte
 
-Both values are stored in the system diagnostics directory.
-Locate them, compute the key, then decrypt the ciphertext.`,
+Both values are stored in the system diagnostics directory.`,
 
         '/sys/diagnostics/alloc_register.dat': `SYSTEM ALLOCATION REGISTER
 ===========================
@@ -1031,7 +1144,6 @@ What K.Chen said in his final internal report:
   "This is not corporate espionage.
    This is personal. Someone built this as a gift.
    A very elaborate, very technical gift.
-   For someone they clearly know extremely well.
    I feel like we were never the intended audience."
 
 The trace ends here.
@@ -1062,15 +1174,12 @@ The architect IS the system.`,
     title: 'LAYER 13 — VIGENERE CIPHER',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 13 / 20  —  POLYALPHABETIC   |',
+      '|  SECURITY LAYER 13 / 15  —  POLYALPHABETIC   |',
       '+----------------------------------------------+',
       '',
       'You have reached the inner vault antechamber.',
       'A Vigenere cipher. Stronger than Caesar.',
-      'Multiple shifting alphabets, one cycling key.',
       '',
-      'The encryption key is here — but not in plaintext.',
-      'Decode the key first. Then decode the message.',
     ],
     filesystem: {
       dirs: ['/', '/vault', '/vault/keys'],
@@ -1134,8 +1243,6 @@ Formula: plain = (cipher - key + 26) mod 26`,
 ========================================
 [K.CHEN PRIVATE LOG — DO NOT DISTRIBUTE]
 
-Two layers left.
-
 I keep reading the access logs.
 The order they opened the files.
 The files they chose to read, and when.
@@ -1146,7 +1253,7 @@ Process integrity. Caesar shift. XOR. Vigenere.
 This is not a security test.
 This is a syllabus.
 
-The person who designed these 15 layers
+The person who designed these layers
 knew exactly who would be solving them.
 Not "a skilled operator."
 One specific person.
@@ -1158,7 +1265,6 @@ Someone was teaching someone something.
 I don't know what the recipient learned on the way through.
 But I think they know now.
 
-Two layers remain.
 I'm done trying to stop them.
 
   — K.C.`,
@@ -1185,15 +1291,12 @@ I'm done trying to stop them.
     title: 'LAYER 14 — BASE64 ENCODING',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 14 / 20  —  ENCODING LAYER   |',
+      '|  SECURITY LAYER 14 / 15  —  ENCODING LAYER   |',
       '+----------------------------------------------+',
       '',
       'You are one step from the core.',
       'This layer uses Base64 encoding — a standard encoding scheme.',
-      'It is not encryption. It is obfuscation.',
-      'But you still have to decode it.',
       '',
-      'The answer is a 6-letter English word.',
     ],
     filesystem: {
       dirs: ['/'],
@@ -1203,10 +1306,7 @@ I'm done trying to stop them.
 Encoding : Base64 (RFC 4648)
 Payload  :
 
-U0hBRE9X
-
-Decode this string to retrieve the plaintext key.
-The result is a common English word, 6 characters.`,
+U0hBRE9X`,
 
         '/.final_note': `TO: WHOEVER REACHES THIS LAYER
 ================================
@@ -1232,7 +1332,6 @@ You've always known it.
         '/b64_notes.txt': `Base64 Notes
 -------------
 Base64 encodes binary data as ASCII text.
-It is NOT encryption — it is reversible by anyone.
 
 Alphabet: A-Z (0-25), a-z (26-51), 0-9 (52-61), + (62), / (63)
 
@@ -1240,10 +1339,7 @@ To decode manually:
   1. Convert each base64 char to its 6-bit value
   2. Concatenate all bits
   3. Split into groups of 8 bits
-  4. Convert each byte to ASCII
-
-Or: use your brain, a reference, or any online tool.
-The point is knowing what it is and how it works.`,
+  4. Convert each byte to ASCII`,
       },
     },
     answers: ['SHADOW'],
@@ -1272,7 +1368,7 @@ The point is knowing what it is and how it works.`,
     title: 'LAYER 15 — IDENTITY VERIFICATION',
     intro: [
       '+----------------------------------------------+',
-      '|  SECURITY LAYER 15 / 20  —  CORE ACCESS      |',
+      '|  SECURITY LAYER 15 / 15  —  CORE ACCESS      |',
       '+----------------------------------------------+',
       '',
       'You are at the core.',
@@ -1314,12 +1410,9 @@ Not your real name. Not a password.
 The handle. The one that tells everyone
 exactly who you are and what you're about.
 
-Three words, no spaces:
   — a spirit that gets the night started
   — how you take it
   — what you drive
-
-All lowercase. One word. No spaces. No tricks.
 
 You know who you are.`,
 
@@ -1343,7 +1436,7 @@ I don't know if this system is a gift or a proof.
 
 I built it telling myself it was a gift.
 Something worthy of the mind that would solve it.
-Fourteen months of evenings, learning XOR and hex and the
+3 weeks of mornings and evenings, learning XOR and hex and the
 particular way a shell script fails at 1am.
 
 But somewhere around Layer 9 — when I had the cipher
@@ -1413,10 +1506,15 @@ p.s. if you want to reply — and you don't have to —
       '...',
       '',
       '> Wait.',
-      '> There is more.',
-      '> A sealed partition — not in Kimina\'s access logs.',
-      '> K.Chen never found this.',
-      '> The architect left something behind the identity lock.',
+      '> Something else is here.',
+      '> A partition that doesn\'t exist in Kimina\'s index.',
+      '> The architect didn\'t build this data.',
+      '> They found it. And they hid it here for you.',
+      '>',
+      '> A signal. Older than the server.',
+      '> Older than the company.',
+      '> Older than anything.',
+      '>',
       '> Initiating deep access...',
       '',
     ],
@@ -1441,11 +1539,14 @@ p.s. if you want to reply — and you don't have to —
       '+----------------------------------------------+',
       '',
       'You are past the identity lock.',
-      'This partition does not appear in Kimina\'s access logs.',
-      'K.Chen never reached this level.',
+      'This partition does not appear in Kimina\'s logs.',
+      'It never did.',
+      '',
+      'Kimina Corp found the Nomai expedition data in 2019.',
+      'They classified it. Buried it. Didn\'t understand what they had.',
+      'The architect did.',
       '',
       'Two intercepted channel bursts. One encoding.',
-      'Assemble them in order. Decode what you find.',
     ],
     filesystem: {
       dirs: ['/', '/comms', '/comms/channel_a', '/comms/channel_b', '/comms/decode', '/archive'],
@@ -1458,11 +1559,8 @@ from a node outside Kimina infrastructure.
 Channel A carries the first portion of the key sequence.
 Channel B carries the remainder.
 
-Both must be read in order (A first, then B).
-Encoding format: base-8 (octal notation).
-
-Navigate to /comms/channel_a/ and /comms/channel_b/
-for the raw burst data.`,
+Both must be read in order.
+Encoding format: base-8 (octal notation).`,
 
         '/comms/channel_a/burst_1.dat': `TRANSMISSION BURST — CHANNEL A
 ================================
@@ -1521,6 +1619,32 @@ Route 004  :  10.0.0.4   ->  156  157  144  145  (node-d)
 
 Note: routing addresses are internal octal identifiers.
 Do not use these values for key extraction.`,
+
+        '/.nomai_log_001': `[NOMAI TEXT LOG — RECOVERED FROM EXPEDITION ARCHIVE]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Translation confidence: 94%]
+
+[POKE → CLARY]
+Sister. I have found the signal.
+It is real. It predates the formation of the solar system.
+I do not think it was made by anyone.
+I think it simply... is.
+
+[CLARY → POKE]
+What does it want?
+
+[POKE → CLARY]
+I don't think it wants anything.
+That is what frightens me.
+Something that old, that does not want —
+it simply exists. And we have found it.
+
+[CLARY → POKE]
+Then what do we do?
+
+[POKE → CLARY]
+We go to it.
+What else could we do?`,
       },
     },
     answers: ['DELTA'],
@@ -1551,6 +1675,10 @@ Do not use these values for key extraction.`,
       'A substitution cipher.',
       'Not a shift. Not a rotation.',
       'Something more fundamental.',
+      '',
+      'The Nomai had a concept for something that reflects',
+      'everything back at you without being seen itself.',
+      'They called it the Eye.',
       '',
       'The alphabet has been reflected.',
     ],
@@ -1585,7 +1713,7 @@ No key required — the rule is the key.`,
 
         '/archive/classified/mirror_key.txt': `MIRROR ALPHABET — PARTIAL REFERENCE
 =====================================
-[Lower half only — derive the rest]
+[Lower half only]
 
 N → M
 O → L
@@ -1599,9 +1727,7 @@ V → E
 W → D
 X → C
 Y → B
-Z → A
-
-The pattern continues symmetrically.`,
+Z → A`,
 
         '/archive/classified/.old_attempt': `FAILED DECRYPTION ATTEMPT LOG
 ================================
@@ -1615,6 +1741,24 @@ Status : ACCESS DENIED
 
 Neither modified approach produced the correct output.
 Standard Atbash only.`,
+
+        '/.nomai_log_002': `[NOMAI TEXT LOG — RECOVERED FROM EXPEDITION ARCHIVE]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Translation confidence: 81% — single author, no response branch]
+
+[SOLANUM → unknown]
+I am alone on this moon.
+The quantum nature of this place means I cannot be
+observed and remembered simultaneously.
+
+I write this knowing it may not persist when I am
+not here to observe it.
+
+If you find this — you are looking for the same thing
+I was looking for.
+
+I hope you make it to the Eye.
+I did not.`,
       },
     },
     answers: ['NERVE'],
@@ -1643,11 +1787,14 @@ Standard Atbash only.`,
       '+----------------------------------------------+',
       '',
       'The key is encoded in space, not sequence.',
-      'A matrix of characters. A set of coordinates.',
       '',
-      'Navigate the directory tree.',
-      'Find the grid. Find the coordinates.',
-      'Extract the characters in order.',
+      'The Nomai encoded their most important findings',
+      'in coordinates. Not because it was secure —',
+      'but because where something is',
+      'matters as much as what it is.',
+      '',
+      'The Eye has coordinates.',
+      'Navigate.',
     ],
     filesystem: {
       dirs: ['/', '/data', '/data/matrix', '/data/matrix/sectors', '/logs', '/logs/sessions', '/logs/sessions/archive'],
@@ -1747,8 +1894,12 @@ Coordinates may reference invalid matrix positions.`,
       'The letters have not been substituted.',
       'They have been rearranged.',
       '',
+      'The Nomai believed some truths cannot be hidden.',
+      'Only scrambled. Put out of order.',
+      'The signal is still there.',
+      'You just have to read it correctly.',
+      '',
       'The message was split across two tracks.',
-      'Reassemble it.',
     ],
     filesystem: {
       dirs: ['/', '/network', '/network/layers', '/network/layers/outer', '/network/layers/inner'],
@@ -1853,6 +2004,11 @@ Do not attempt to decode this as the primary cipher.`,
       'The key was always here.',
       'You have been carrying it since the first moment.',
       '',
+      'Beyond this lock: the Nomai data.',
+      'The Eye signal.',
+      'What Kimina buried. What the architect preserved.',
+      'What was always meant for you.',
+      '',
       'What do you call this system?',
       'That is your key.',
     ],
@@ -1866,9 +2022,7 @@ Ciphertext   : BTGEUZ
 
 The key is the name of this operation.
 The name of this system.
-The first word you ever read when you opened it.
-
-Six letters. All caps.`,
+The first word you ever read when you opened it.`,
 
         '/vault/logs/attempt_log.txt': `PREVIOUS BREACH ATTEMPTS
 ==========================
@@ -1944,7 +2098,21 @@ Formula: plain = (cipher - key + 26) mod 26`,
 You made it.
 
 Twenty layers.
-You made it.
+You made it through.
+
+What's here — the Nomai records, the expedition logs,
+the Eye signal data — Kimina found all of it and buried it.
+
+I couldn't let that happen.
+Not when someone I know would understand exactly
+what it means.
+
+The Nomai crossed an impossible distance to reach the Eye.
+They did it because they loved the idea of what was out there.
+I built twenty layers because I love you.
+
+Both of those things are the same kind of crazy.
+Both of those things are worth it.
 
 The key to the last cipher is not hidden.
 It never was.
@@ -1952,9 +2120,86 @@ It never was.
 It is the first word of this system.
 You have been reading it since you began.
 
-Good luck.
+Go find it.
 
   — A.`,
+
+        '/vault/core/sealed/eye_signal.dat': `EYE OF THE UNIVERSE — SIGNAL RECORD
+======================================
+[KIMINA CORP — BEYOND TOP SECRET]
+[SOURCE: OUTER SYSTEM EXPEDITION DATA RECOVERY, 2019]
+
+Signal origin   : estimated coordinates 0, 0, 0
+Signal age      : pre-universal (instrument limits exceeded)
+Signal type     : unknown — no known classification applies
+Reception date  : continuous — signal has not ceased
+
+────────────────────────────────────────────────────
+
+The signal predates all observable matter.
+The signal predates the formation of the solar system.
+The signal was present before the first stars.
+
+────────────────────────────────────────────────────
+
+HEARTHIAN EXPEDITION — PERSONAL RECORDER TRANSCRIPT:
+
+  "We've found it. We've actually found it.
+
+   I don't know how to describe what I'm looking at.
+   It's not a place. It's more like...
+   a possibility.
+
+   Like the universe has been waiting this whole time
+   to see what we do with it.
+
+   I think the Nomai knew.
+   I think that's why they came all this way.
+
+   I think that's why we did too."
+
+────────────────────────────────────────────────────
+[CLASSIFICATION NOTE: The above was recovered from
+ the personal recorder of [REDACTED], Hearthian
+ expedition. Access restricted under Protocol 7.
+ Researcher access: NONE.
+ Reason: Kimina Corp does not yet know what to do
+ with something older than the universe.]`,
+
+        '/.nomai_final': `[NOMAI TEXT LOG — FINAL RECOVERED ENTRY]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Translation confidence: 97%]
+
+[POKE → CLARY]
+We have reached the end of our journey.
+
+The Eye is here.
+
+I am writing this knowing we will not survive
+to see what happens next. The loop will not
+save us this time.
+
+But it doesn't matter.
+We found it.
+
+[CLARY → POKE]
+Was it worth it?
+
+[POKE → CLARY]
+Yes.
+
+Everything worth doing ends this way.
+You find what you were looking for
+and you realize the finding was never the point.
+
+The going was the point.
+The love of going.
+
+[CLARY → POKE]
+Then we went well.
+
+[POKE → CLARY]
+We went very well.`,
       },
     },
     answers: ['ACCESS'],

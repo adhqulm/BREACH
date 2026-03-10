@@ -65,7 +65,7 @@ I recommend we initiate PHANTOM PROTOCOL immediately.
 
 ...you'll find it at the core...
 
-...all 15 layers...I built them so only one person
+...all 20 layers...I built them so only one person
 could break through...
 
 ...the last key is the only one I couldn't encrypt...
@@ -120,32 +120,57 @@ p.s. the glazed ones are already going`,
     postGameOnly: true,
     body: `To whoever you are —
 
-I spent six days trying to stop the person who just
-walked through our entire security system.
+After the breach ended, I went into the sub-vault.
+The partition that didn't exist in our logs.
 
-I built countermeasures. They didn't work.
-I offered a deal. They didn't need it (or they took it —
-either way, they made it to the end).
+I read everything.
 
-I kept looking at the logs. The access patterns.
-The specific files they opened, in the specific order
-they opened them.
+The Nomai expedition records. The Eye signal data.
+The logs the Hearthian explorers left behind.
+The architect's annotations in the margins.
 
-This wasn't a hack.
+I understand now what Kimina was really sitting on.
+Not proprietary research. Not classified intelligence.
+A frequency. Something impossibly old. Something that
+has been transmitting since before there was anything
+to transmit to.
 
-You built a puzzle for someone you love, and you hid it
-inside the most secure system you could find, and you
-waited for them to find it.
+The Nomai crossed their entire solar system for it.
+They built a time loop. They died trying to reach it.
+The signal kept going anyway.
 
-I don't know if they made it.
-I hope they did.
+And the architect found the data, and instead of
+reporting it — they hid it inside a puzzle.
+A puzzle built for exactly one person.
+
+I don't know your name.
+I know you made it to the Eye.
+That's enough.
 
 I won't report this breach.
+The data stays buried — for now.
+But someone should know it exists.
+
+Now you do.
 
   — Dr. K. Chen, Systems Architecture, Kimina Corp
 
-P.S. The NOMAI reference was a nice touch.
-     Outer Wilds. Good game.`,
+P.S. I read everything about the Eye.
+     About what the Nomai believed it could do.
+     About what the Hearthians found at the end.
+
+     I don't know if any of it is real.
+     But I hope it is.
+
+     Outer Wilds was right about everything that matters.`,
+  },
+  {
+    id: 7,
+    from: 'adhqulm@gmail.com',
+    to: 'vodkashotsandvolvos',
+    subject: 'hello boobger i lvoe you YAYYY :D',
+    date: 'just now',
+    body: `hello boobger i lvoe you YAYYY :D`,
   },
 ]
 
@@ -162,7 +187,7 @@ const PS_OUTPUT = [
   'db_admin          412   1.2   1.8  /opt/KIMINA/db_engine --port=5432 --encrypt',
   'KIMINA_sec         887   3.1   0.1  /opt/KIMINA/intrusion_detect --sensitivity=HIGH',
   'vodkashotsandvolvos  1891   0.1   0.1  -bash',
-  'vodkashotsandvolvos  1892   0.3   0.2  breach_client --stealth --layers=15',
+  'vodkashotsandvolvos  1892   0.3   0.2  breach_client --stealth --layers=20',
   '',
 ]
 
@@ -211,7 +236,7 @@ function generateNetmap(levelId) {
 
   const outer = s(1, 5, 5)
   const mid   = s(6, 10, 10)
-  const core  = s(11, 15, 15)
+  const core  = s(11, 20, 20)
 
   const pad = (str, style) => ({ text: str, style })
 
@@ -226,11 +251,11 @@ function generateNetmap(levelId) {
     pad('                          │                  │                │', 'dim'),
     pad('               ┌─────────┴───────┐ ┌──────┴───────┐ ┌─────┴──────────┐', 'dim'),
     { text: `               │     OUTER SHELL   │ │  INNER VAULT  │ │       CORE       │`, style: 'dim' },
-    { text: `               │     Layers  1-5   │ │  Layers 6-10  │ │   Layers 11-15   │`, style: 'dim' },
+    { text: `               │     Layers  1-5   │ │  Layers 6-10  │ │   Layers 11-20   │`, style: 'dim' },
     { text: `               │      ${outer.label}   │ │   ${mid.label}  │ │     ${core.label}   │`, style: 'white' },
     pad('               └─────────────────┘ └──────────────┘ └────────────────┘', 'dim'),
     pad('', 'empty'),
-    { text: `  Current layer: ${levelId > 0 ? levelId : '--'}/15`, style: 'dim' },
+    { text: `  Current layer: ${levelId > 0 ? levelId : '--'}/20`, style: 'dim' },
     pad('', 'empty'),
   ]
 }
@@ -280,7 +305,7 @@ export function processCommand(input, state, onUnlock) {
         { text: '  analyze <file>    show file metadata and analyst notes', style: 'green' },
         { text: '  mail              read intercepted mail', style: 'green' },
         { text: '  man <cmd>         show command manual', style: 'green' },
-        { text: '  theme <name>      change terminal theme  (green/amber/blue/red)', style: 'green' },
+        { text: '  theme <name>      change terminal theme  (green/amber/blue/red/yellow)', style: 'green' },
         { text: '  vol <up|down>     adjust background music volume', style: 'green' },
         { text: '  mute              mute background music', style: 'green' },
         { text: '  unmute            unmute background music', style: 'green' },
@@ -438,7 +463,7 @@ export function processCommand(input, state, onUnlock) {
         scan:     'scan            —  Run a vulnerability scan on this node.',
         analyze:  'analyze <FILE>  —  Display metadata and analyst notes for a file. Does not reveal answers.',
         mail:    'mail            —  Read intercepted internal mail. Use: mail read <n>',
-        theme:   'theme <name>    —  Change terminal color theme. Options: green amber blue red',
+        theme:   'theme <name>    —  Change terminal color theme. Options: green amber blue red yellow',
         vol:     'vol <up|down>   —  Adjust background music volume.',
         mute:    'mute            —  Mute background music.',
         unmute:  'unmute          —  Unmute background music (restores default volume).',
@@ -485,6 +510,14 @@ export function processCommand(input, state, onUnlock) {
       return []
     }
 
+    // ── DEVSKIP ─────────────────────────────────────────
+    case 'devskip': {
+      const n = parseInt(arg1)
+      if (!arg1 || isNaN(n) || n < 1 || n > 20)
+        return [{ text: 'Usage: devskip <1-20>', style: 'yellow' }]
+      return [{ text: `__DEVSKIP__ ${n}`, style: 'internal' }]
+    }
+
     // ── PS ──────────────────────────────────────────────
     case 'ps':
       return PS_OUTPUT.map(t => ({
@@ -526,7 +559,7 @@ export function processCommand(input, state, onUnlock) {
 
     // ── MAIL ────────────────────────────────────────────
     case 'mail': {
-      const isPostGame = state.levelId === 16
+      const isPostGame = state.levelId === 21
       const visibleMail = MAIL.filter(m => !m.postGameOnly || isPostGame)
       if (arg1 === 'read') {
         const id = parseInt(argArr[1])
@@ -559,7 +592,7 @@ export function processCommand(input, state, onUnlock) {
         { text: '  ─  ────────────────────────── ──────────────────────  ────────────', style: 'dim' },
         ...visibleMail.map(m => ({
           text: `  ${m.id}  ${m.from.slice(0, 29).padEnd(30)} ${m.subject.slice(0, 25).padEnd(26)} ${m.date}`,
-          style: m.id === 4 ? 'yellow' : m.id === 6 ? 'cyan' : 'green',
+          style: m.id === 4 || m.id === 7 ? 'yellow' : m.id === 6 ? 'cyan' : 'green',
         })),
         { text: '', style: 'empty' },
         { text: '  Use: mail read <number>', style: 'dim' },
@@ -601,7 +634,7 @@ export function processCommand(input, state, onUnlock) {
           type: 'ENCRYPTED — SINGLE-BYTE XOR CIPHER',
           created: '2021.11.30  03:15:11 UTC',
           size: '512 bytes',
-          note: 'Key byte is provided in the file. XOR is self-inverse — the same operation decrypts.',
+          note: 'Key byte must be derived — check /sys/diagnostics/ for the component values. XOR is self-inverse.',
         },
         'vault_msg.enc': {
           type: 'ENCRYPTED — POLYALPHABETIC VIGENERE CIPHER',
@@ -869,7 +902,7 @@ export function processCommand(input, state, onUnlock) {
           { text: `  grep: scanning filesystem for "${pattern}"...`, style: 'dim' },
           { text: '', style: 'empty' },
           { text: '  /ORIGIN_UNKNOWN.CORE:1:   BREACH is a letter.', style: 'green' },
-          { text: '  /ORIGIN_UNKNOWN.CORE:2:   The fifteen layers are not obstacles.', style: 'green' },
+          { text: '  /ORIGIN_UNKNOWN.CORE:2:   The twenty layers are not obstacles.', style: 'green' },
           { text: '  /ORIGIN_UNKNOWN.CORE:3:   They are sentences.', style: 'green' },
           { text: '', style: 'empty' },
           { text: '  grep: 3 matches — /ORIGIN_UNKNOWN.CORE', style: 'dim' },

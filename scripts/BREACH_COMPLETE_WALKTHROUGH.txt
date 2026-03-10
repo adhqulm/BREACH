@@ -14,7 +14,7 @@ TABLE OF CONTENTS
   5. All Achievements (16 Total)
   6. Hidden Files / Dotfiles (Every Layer)
   7. Easter Eggs & Secret Commands
-  8. Mail System (All 6 Emails)
+  8. Mail System (All 7 Emails)
   9. Detection Meter Guide
   10. K.Chen Deal — Layer 8 Interaction
   11. Story & Narrative Explained
@@ -206,18 +206,48 @@ SOLUTION:
   Type: unlock 440
 
 --------------------------------------------------------------------------------
-LAYER 5 — FIBONACCI SEQUENCE
+LAYER 5 — DERIVED SHIFT
 --------------------------------------------------------------------------------
-ANSWER: 34
+ANSWER: NOISE
 
 FILES:
-  /sequence.dat       Sequence with one value redacted
+  /auth/auth_header.txt                    Explains cipher + formula:
+                                           shift = (sum of all daemon load
+                                           readings) mod 26
+  /auth/cipher.enc                         Ciphertext: YZTDP
+  /telemetry/daemon_a/sensor_a.log         Load reading: 29
+  /telemetry/daemon_b/sensor_b.log         Load reading: 41
+  /telemetry/daemon_c/sensor_c.log         Load reading: 33
+  /monitoring/daemon_stats.log             Daemon D: 27, Daemon E: 11
+  /monitoring/interference.log             RED HERRING: ambient values 88, 53, 17
+                                           (explicitly excluded)
+  /.baseline_record                        HIDDEN: shows old static shift of 3
+                                           was used before (red herring)
+
+RED HERRINGS:
+  /monitoring/interference.log has ambient values 88, 53, 17 labeled
+  "EXCLUDED — do not use". These are not daemon load readings.
+  /.baseline_record shows an old shift=3 with ciphertext BRLQG — this was
+  the previous static method, no longer valid. Do not use shift 3.
 
 SOLUTION:
-  0, 1, 1, 2, 3, 5, 8, 13, 21, [?], 55, 89, 144
-  Each term = sum of previous two. 13+21=34. 21+34=55 (confirms).
+  Navigate to /telemetry/daemon_a/ → daemon_b/ → daemon_c/ for readings 29, 41, 33
+  Navigate to /monitoring/daemon_stats.log for readings 27 and 11
+  Sum: 29 + 41 + 33 + 27 + 11 = 141
+  141 mod 26 = 11  (the shift)
+  Decrypt YZTDP with shift 11 (shift each letter backward by 11):
+    Y-11=N, Z-11=O, T-11=I, D-11=S, P-11=E
 
-  Type: unlock 34
+  Type: unlock NOISE
+
+HINTS:
+  Hint 1: The shift is not in any file directly. Five daemons are running —
+          each has a load reading somewhere on this node.
+  Hint 2: Check /telemetry/daemon_a/, /daemon_b/, /daemon_c/ for three
+          readings. Check /monitoring/daemon_stats.log for the other two.
+          Sum all five. Then: shift = sum mod 26.
+  Hint 3: Readings: 29, 41, 33, 27, 11. Sum = 141. 141 mod 26 = 11.
+          Apply shift 11 to YZTDP: Y-11=N, Z-11=O, T-11=I, D-11=S, P-11=E.
 
 --------------------------------------------------------------------------------
 LAYER 6 — MORSE TRANSMISSION
@@ -234,40 +264,66 @@ SOLUTION:
 
   Type: unlock NOMAI
 
-  NOTE: NOMAI is from the game Outer Wilds. Intentional Easter egg.
+  NOTE: NOMAI is from the game Outer Wilds. This layer is explicitly Nomai/
+  Outer Wilds themed — the transmission answer spells NOMAI, the name of the
+  ancient alien civilization at the heart of the game. Intentional Easter egg.
   The game plays this Morse code as audio on this layer.
 
   INTERCEPT: "Conventional countermeasures are not working."
 
 --------------------------------------------------------------------------------
-LAYER 7 — FRAGMENTED DATA
+LAYER 7 — PROCESS SURVEILLANCE
 --------------------------------------------------------------------------------
-ANSWER: 500
+ANSWER: SPECTER
 
 FILES:
-  /manifest.txt                       3 valid sectors to navigate
-  /archive/sector_a/fragment_1.dat    Value: 173
-  /archive/sector_b/fragment_2.dat    Value: 264
-  /archive/sector_c/fragment_3.dat    Value: 63
-  /archive/.internal_memo             HIDDEN
-  /internal/                          RED HERRING DIR — corporate garbage files
-    payroll_2024.csv                  Fake payroll data. Useless.
-    parking_memo.txt                  Parking lot memo. Useless.
-    q3_incident_summary.txt           Quarterly security summary. Useless.
+  /surveillance/criteria.txt              Explains: key = name of process active
+                                          in window A but terminated by window B
+  /surveillance/snapshot_a.log           8 processes: init, sshd,
+                                          security_daemon, logger, db_engine,
+                                          intrusion_detect, specter (PID 1203),
+                                          netwatch
+  /surveillance/snapshot_b.log           9 processes: same minus specter, plus
+                                          watchdog (PID 1891) and
+                                          alert_relay (PID 1904)
+  /surveillance/archive/snapshot_c.log   RED HERRING: window C snapshot,
+                                          netwatch is gone here instead
+  /sys/process_notes.dat                 Documents all processes; specter entry
+                                          says [NO DOCUMENTATION FOUND],
+                                          origin unregistered
+  /.proc_diff                            HIDDEN RED HERRING: automated diff
+                                          showing B→C window (says netwatch
+                                          terminated — wrong window)
 
-RED HERRING:
-  /archive/sector_d/fragment_quarantine.dat  — "Integrity: DEGRADED (56%), Value: 89"
-  The manifest says THREE fragments. sector_d is a fourth and explicitly marked
-  as degraded/quarantined. Do NOT include the 89 value.
-  Wrong sum: 173+264+63+89 = 589. Correct sum: 173+264+63 = 500.
+RED HERRINGS:
+  /.proc_diff looks like it solves the puzzle but covers the WRONG window
+  (B→C, not A→B). Following it gives "netwatch" — wrong answer.
+  /surveillance/archive/snapshot_c.log is a different snapshot pair entirely
+  (window C, not window B). Do not use it.
+  Two new processes appear in window B (watchdog, alert_relay) — players might
+  look for what appeared instead of what disappeared. The criteria file is
+  explicit: you want what was TERMINATED, not what was added.
 
 SOLUTION:
-  cd archive → cd sector_a → cat fragment_1.dat (173)
-  cd .. → cd sector_b → cat fragment_2.dat (264)
-  cd .. → cd sector_c → cat fragment_3.dat (63)
-  173 + 264 + 63 = 500
+  Read /surveillance/criteria.txt — key = process terminated between window A
+  and window B.
+  Compare snapshot_a.log and snapshot_b.log.
+  Window A has 8 processes, window B has 9 — but specter (PID 1203) is missing
+  from B. Two new processes appeared (watchdog, alert_relay) but specter is gone.
+  Cross-reference /sys/process_notes.dat — specter has no documentation,
+  origin unregistered.
 
-  Type: unlock 500
+  Type: unlock SPECTER
+
+HINTS:
+  Hint 1: Something was running in window A that wasn't there by window B. The
+          criteria file tells you exactly what you're looking for. Compare the
+          two primary snapshots carefully.
+  Hint 2: Count the processes: window A has 8, window B has 9 — but they're not
+          the same 9. Two new processes appeared. One old one vanished. You want
+          the one that vanished.
+  Hint 3: Present in snapshot_a but missing from snapshot_b: PID 1203.
+          Cross-reference /sys/process_notes.dat for its name.
 
 --------------------------------------------------------------------------------
 LAYER 8 — INTEGRITY AUDIT  ★ K.CHEN DEAL LAYER ★
@@ -837,11 +893,24 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
   LAYER 3:  /.access_log.bak
     "THE ARCHITECT" accessed 847 times before vanishing. No logs explain it.
 
+  LAYER 3:  /.nomai_fragment
+    A corrupted fragment of Nomai text — partial translation only. The timestamp
+    on the file exceeds standard integer bounds. Origin unknown.
+
+  LAYER 5:  /.baseline_record
+    Shows the old static shift of 3 that was used in a previous version of this
+    cipher. Ciphertext under that scheme: BRLQG. No longer valid — red herring.
+
   LAYER 6:  /.k_chen_personal
     K.Chen's private draft. The intruder feels like someone with permission.
 
   LAYER 7:  /archive/.internal_memo
     The Architect knew Kimina's own systems better than Kimina's engineers.
+
+  LAYER 7:  /.proc_diff
+    An automated diff covering the B→C process window — NOT the A→B window the
+    puzzle requires. Says netwatch terminated. This is the wrong window.
+    Red herring. Do not follow it.
 
   LAYER 9:  /.crash_dump
     Every session termination attempt was silently rejected.
@@ -856,6 +925,11 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
   LAYER 10: /.column_analysis
     A failed extraction log. "Method: 3rd character of each line. Result: OIWNTSO."
     Shows the wrong approach so you know not to repeat it.
+
+  LAYER 10: /.kimina_classified_001
+    Kimina Corp's internal Restriction Protocol 7 record. Documents the
+    pre-universal signal detected in 2019 and the classified data that followed.
+    This is the record the Architect digitized before it could be destroyed.
 
   LAYER 11: /.watchdog_log
     Seven termination attempts. All failed. The watchdog recommends standing down.
@@ -883,9 +957,17 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
     Contains the Caesar-encoded contact address (shift 6, same as Layer 9).
     Reading this file unlocks the secret ending option in the final dialogue.
 
+  LAYER 16: /.nomai_log_001
+    Poke and Clary's exchange about finding the Eye signal. Two Nomai voices
+    recorded at the moment of discovery. Digitized from Kimina's classified archive.
+
   LAYER 17: /archive/classified/.old_attempt
     Two failed Atbash decryption attempts (wrong modifications).
     Confirms standard Atbash is the correct method.
+
+  LAYER 17: /.nomai_log_002
+    Solanum alone on the quantum moon. A single log entry. No response came.
+    One of the last Nomai records in the archive.
 
   LAYER 18: /data/matrix/sectors/.dead_sector
     Corrupted coordinate block. Values are unreliable. Do not use.
@@ -896,6 +978,10 @@ Reading any dotfile unlocks the ARCHAEOLOGIST achievement.
 
   LAYER 20: /.architect_final
     From A.: "You made it. Twenty layers. The key was never hidden."
+
+  LAYER 20: /.nomai_final
+    Poke and Clary's last exchange. The final entry in the Nomai archive.
+    Ends with: "We went very well."
 
   POST-GAME: /.verse
     Not visible during any layer. Only appears after the game is complete.
@@ -938,7 +1024,7 @@ ALSO NOTABLE:
   - whoami always returns vodkashotsandvolvos (it's identity-locked)
 
 ================================================================================
-  SECTION 8 — MAIL SYSTEM (ALL 6 EMAILS)
+  SECTION 8 — MAIL SYSTEM (ALL 7 EMAILS)
 ================================================================================
 
 Type: mail           to list
@@ -973,6 +1059,14 @@ Type: mail read <n>  to read a specific one
     secure system you could find, and you waited for them to find it."
     "The NOMAI reference was a nice touch. Outer Wilds. Good game."
     Available only after completing the game. Type: mail read 6
+
+  EMAIL 7 — adhqulm@gmail.com     ★ DISPLAYED IN YELLOW ★
+    From: adhqulm@gmail.com
+    To:   vodkashotsandvolvos
+    Subject: hello boobger i lvoe you YAYYY :D
+    Body: hello boobger i lvoe you YAYYY :D
+    Available at all times (not post-game only). Displayed in yellow in the
+    mail list. Type: mail read 7
 
 ================================================================================
   SECTION 9 — DETECTION METER GUIDE
@@ -1047,6 +1141,44 @@ THE REAL STORY:
   years before the game starts. Every layer was designed around one person:
   Kimi (vodkashotsandvolvos). On her birthday, he "dreams" the entire thing.
 
+THE OUTER WILDS / NOMAI LAYER:
+  BREACH is now framed as a spiritual sequel to Outer Wilds. The game has
+  deep Nomai lore woven throughout its architecture.
+
+  In 2019, Kimina Corp secretly discovered Nomai expedition data and detected
+  the Eye of the Universe signal. The discovery was classified under Restriction
+  Protocol 7 — the record of which is buried in /.kimina_classified_001 on
+  Layer 10. The data was ordered destroyed.
+
+  The Architect was a Nomai researcher embedded at Kimina. Before the archive
+  could be wiped, he digitized everything. He then built BREACH around it —
+  hiding the full Nomai archive inside the sub-vault (Layers 16–20), behind an
+  identity lock that only one person could solve.
+
+  The sub-vault is not just "bonus layers." It is Kimina's buried Nomai data.
+  K.Chen never knew it was there. The Architect hid it inside the most secure
+  system he had access to, and waited.
+
+  NOMAI LORE TRACES THROUGH THE GAME:
+    L3:  /.nomai_fragment — corrupted partial Nomai text, timestamp out of bounds
+    L6:  The Morse transmission spells NOMAI — the civilization's name. The layer
+         is explicitly Nomai/Outer Wilds themed.
+    L9:  K.Chen's intercept echoes the tone of the Nomai logs
+    L10: /.kimina_classified_001 — Kimina's Protocol 7 record of the Eye signal
+    L12: K.Chen's intercept: "someone finishing something meant to be finished"
+    L14: K.Chen's intercept: "Stand down. Let them through."
+    L16: /.nomai_log_001 — Poke and Clary find the Eye signal
+    L17: /.nomai_log_002 — Solanum alone on the quantum moon
+    L20: /.nomai_final — Poke and Clary's last exchange: "We went very well."
+         /vault/core/sealed/eye_signal.dat — the Eye of the Universe signal data
+
+  K.CHEN'S ANALYST_INTERCEPTS now reference the Nomai at key intervals (L3,
+  L6, L9, L12, L14). The ORIGIN_UNKNOWN.CORE file has an addendum about the
+  Eye of the Universe signal. The completion screen says "EYE SIGNAL ACQUIRED"
+  instead of "CORE ACCESS GRANTED." K.Chen's post-game email references the
+  Nomai data, the Eye, and ends with: "Outer Wilds was right about everything
+  that matters."
+
   WHAT EACH LAYER REPRESENTS:
     ROT13, binary, hex, XOR, Base64 — ciphers he'd know how to break
     440 Hz — music knowledge, concert pitch
@@ -1054,8 +1186,8 @@ THE REAL STORY:
     BASS music key — her audio production background
     Algorithm trace — her logical, methodical thinking
     vodkashotsandvolvos — herself. The only answer A. couldn't encrypt.
-    Sub-vault (L16-20) — the hidden layers only she could unlock.
-                          Even Kimina never knew they were there.
+    Sub-vault (L16-20) — the hidden Nomai archive. The real thing he saved.
+                          Even Kimina never knew it was there.
 
 THE FRAMING DEVICE:
   The whole game is a dream/vision. Kimi slipped in the bathroom (wet floor),
@@ -1076,11 +1208,15 @@ K.CHEN'S ARC:
   Layer 14: "Stand down. Let them through."
   Layer 20: Her final transmission. She's done fighting. She understands.
   Post-game: Writes a letter she'll never send, explaining she won't report it.
+             References the Nomai data, the Eye of the Universe, and ends with:
+             "Outer Wilds was right about everything that matters."
 
 THE ARCHITECT:
   Signed only as "A." Identity deliberately left ambiguous. Could be a
   romantic partner, a close friend, someone from Kimi's past. The letter at the
   core doesn't explain who — only why. The puzzle IS the answer to who.
+  He was also a Nomai researcher. He saved what Kimina tried to destroy.
+  He hid it where only she could find it.
 
 ================================================================================
   SECTION 12 — COMPLETE ANSWER KEY
@@ -1092,9 +1228,9 @@ THE ARCHITECT:
   2      | Binary → ASCII               | BREACH
   3      | Hex → ASCII                  | MOON
   4      | Music Frequency              | 440
-  5      | Fibonacci Sequence           | 34
+  5      | Derived Shift (mod 26)       | NOISE
   6      | Morse Code                   | NOMAI
-  7      | File Sum (3 fragments)       | 500
+  7      | Process Surveillance         | SPECTER
   8      | Process Integrity Audit      | breach_client
   9      | Caesar Cipher (shift 6)      | SIGNAL
   10     | Acrostic                     | PHANTOM
@@ -1134,9 +1270,9 @@ your rating, and your run number.
   [ ] 2  — BREACH
   [ ] 3  — MOON
   [ ] 4  — 440
-  [ ] 5  — 34
+  [ ] 5  — NOISE
   [ ] 6  — NOMAI
-  [ ] 7  — 500
+  [ ] 7  — SPECTER
   [ ] 8  — breach_client  (then respond to K.Chen's deal)
   [ ] 9  — SIGNAL
   [ ] 10 — PHANTOM
@@ -1161,7 +1297,8 @@ your rating, and your run number.
   [ ] ls -a                     (look for what's hidden)
   [ ] cat /.verse               (the last thing)
   [ ] reply                     (send a message to A. — triggers GHOST REPLY)
-  [ ] mail read 6               (K.Chen's personal letter to A.)
+  [ ] mail read 6               (K.Chen's letter to A. — post-game only)
+  [ ] mail read 7               (hello boobger i lvoe you YAYYY :D)
 
   ACHIEVEMENTS (16/16):
   [ ] THE FLOOR IS STILL WET    (good ending)
@@ -1181,15 +1318,19 @@ your rating, and your run number.
   [ ] GHOST REPLY               (reply post-game)
   [ ] PHANTOM FOUND             (phantom command)
 
-  HIDDEN FILES (18/18):
+  HIDDEN FILES (25/25):
   [ ] /.shadow                    (Layer 1)
   [ ] /.access_log.bak            (Layer 3)
+  [ ] /.nomai_fragment            (Layer 3)
+  [ ] /.baseline_record           (Layer 5)
   [ ] /.k_chen_personal           (Layer 6)
   [ ] /archive/.internal_memo     (Layer 7)
+  [ ] /.proc_diff                 (Layer 7)
   [ ] /.crash_dump                (Layer 9)
   [ ] /.phantom_trace             (Layer 10)
   [ ] /.session_log               (Layer 10)
   [ ] /.column_analysis           (Layer 10)
+  [ ] /.kimina_classified_001     (Layer 10)
   [ ] /.watchdog_log              (Layer 11)
   [ ] /.null_session              (Layer 12)
   [ ] /.architect_trace           (Layer 12)
@@ -1197,10 +1338,13 @@ your rating, and your run number.
   [ ] /.vault_approach            (Layer 13)
   [ ] /.final_note                (Layer 14)
   [ ] /.confession                (Layer 15)
+  [ ] /.nomai_log_001             (Layer 16)
   [ ] /archive/classified/.old_attempt (Layer 17)
+  [ ] /.nomai_log_002             (Layer 17)
   [ ] /data/matrix/sectors/.dead_sector (Layer 18)
   [ ] /.transposition_key         (Layer 19)
   [ ] /.architect_final           (Layer 20)
+  [ ] /.nomai_final               (Layer 20)
   [ ] /.verse                     (post-game only — ls -a after finishing)
 
   EASTER EGGS (6/6):
@@ -1211,13 +1355,14 @@ your rating, and your run number.
   [ ] phantom
   [ ] grep <anything>
 
-  MAIL (6/6):
+  MAIL (7/7):
   [ ] mail read 1  (Director Fromm)
   [ ] mail read 2  (K.Chen urgent report)
   [ ] mail read 3  (UNKNOWN — message from A.)
   [ ] mail read 4  (Automated alert)
   [ ] mail read 5  (Jake and the donuts)
   [ ] mail read 6  (K.Chen's letter to A. — post-game only)
+  [ ] mail read 7  (hello boobger i lvoe you YAYYY :D)
 
   K.CHEN DEAL (both outcomes require separate runs):
   [ ] kchen accept   → NEGOTIATOR

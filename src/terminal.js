@@ -13,17 +13,20 @@ const ANALYST_INTERCEPTS = {
   3:  [
     { text: '', style: 'empty' },
     { text: '  ----------------- KIMINA INTERNAL ALERT ----------------', style: 'red' },
-    { text: '  [K.CHEN] Layer 3 bypassed. Escalating to response team.', style: 'red' },
-    { text: '  [K.CHEN] This is not a bot. Someone is inside.', style: 'red' },
+    { text: '  [K.CHEN] Layer 3 bypassed. This is not a bot.', style: 'red' },
+    { text: '  [K.CHEN] The access pattern is unusual.', style: 'red' },
+    { text: '  [K.CHEN] It matches something in the restricted archive.', style: 'red' },
+    { text: '  [K.CHEN] The Nomai files.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
   6:  [
     { text: '', style: 'empty' },
     { text: '  ----------------- KIMINA INTERNAL ALERT ----------------', style: 'red' },
-    { text: '  [K.CHEN] Layer 6. They passed the midpoint.', style: 'red' },
-    { text: '  [K.CHEN] Conventional countermeasures are not working.', style: 'red' },
-    { text: '  [K.CHEN] Response team is on standby.', style: 'red' },
+    { text: '  [K.CHEN] Layer 6. I pulled the restricted research files.', style: 'red' },
+    { text: '  [K.CHEN] The movement pattern — the way they navigate.', style: 'red' },
+    { text: '  [K.CHEN] It\'s identical to the Nomai lattice structure.', style: 'red' },
+    { text: '  [K.CHEN] This system was built from their blueprints.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
@@ -31,11 +34,11 @@ const ANALYST_INTERCEPTS = {
   8:  [
     { text: '', style: 'empty' },
     { text: '  -------- KIMINA SECURE CHANNEL — DIRECT LINE OPEN --------', style: 'yellow' },
-    { text: '  [K.CHEN] Hey.', style: 'yellow' },
-    { text: '  [K.CHEN] I know you can read this.', style: 'yellow' },
+    { text: '  [K.CHEN] Hey. I know you can read this.', style: 'yellow' },
     { text: '  [K.CHEN] I\'m not trying to stop you anymore.', style: 'yellow' },
-    { text: '  [K.CHEN] I just want to know who built this system.', style: 'yellow' },
-    { text: '  [K.CHEN] You tell me — I drop your detection to zero.', style: 'yellow' },
+    { text: '  [K.CHEN] The Nomai built locks only one mind could open.', style: 'yellow' },
+    { text: '  [K.CHEN] I think I\'m watching that happen right now.', style: 'yellow' },
+    { text: '  [K.CHEN] You tell me who built this — I drop detection to zero.', style: 'yellow' },
     { text: '  [K.CHEN] You walk out completely clean.', style: 'yellow' },
     { text: '  ---------------------------------------------------------', style: 'yellow' },
     { text: '', style: 'empty' },
@@ -44,30 +47,33 @@ const ANALYST_INTERCEPTS = {
     { text: '', style: 'empty' },
     { text: '  ---------------- KIMINA INTERNAL ALERT ------------------', style: 'red' },
     { text: '  [K.CHEN] Nine layers. NINE.', style: 'red' },
-    { text: '  [K.CHEN] This is not a tool. This is a person who', style: 'red' },
-    { text: '  [K.CHEN] knows exactly what they are doing.', style: 'red' },
-    { text: '  [K.CHEN] I think I know who this is.', style: 'red' },
+    { text: '  [K.CHEN] I accessed the restricted research archive.', style: 'red' },
+    { text: '  [K.CHEN] The Architect was studying the Nomai expedition logs.', style: 'red' },
+    { text: '  [K.CHEN] The ones Kimina classified in 2019.', style: 'red' },
+    { text: '  [K.CHEN] I think I know what they found.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
   12: [
     { text: '', style: 'empty' },
     { text: '  ---------------- KIMINA INTERNAL ALERT -----------------', style: 'red' },
-    { text: '  [K.CHEN] 12 layers. Nothing is stopping them.', style: 'red' },
-    { text: '  [K.CHEN] I keep reading the access logs.', style: 'red' },
-    { text: '  [K.CHEN] This isn\'t a breach.', style: 'red' },
-    { text: '  [K.CHEN] This is someone finishing something', style: 'red' },
-    { text: '  [K.CHEN] that was always meant to be finished.', style: 'red' },
+    { text: '  [K.CHEN] 12 layers. I found the Architect\'s personal notes.', style: 'red' },
+    { text: '  [K.CHEN] They weren\'t studying the Nomai for Kimina Corp.', style: 'red' },
+    { text: '  [K.CHEN] They were trying to give something away.', style: 'red' },
+    { text: '  [K.CHEN] Something Kimina was never supposed to have.', style: 'red' },
+    { text: '  [K.CHEN] I don\'t think I should be trying to stop this.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
   14: [
     { text: '', style: 'empty' },
     { text: '  --------------- KIMINA INTERNAL ALERT ------------------', style: 'red' },
-    { text: '  [K.CHEN] They are at the core.', style: 'red' },
-    { text: '  [K.CHEN] I don\'t think this was ever a security system.', style: 'red' },
-    { text: '  [K.CHEN] I think this was always a letter.', style: 'red' },
+    { text: '  [K.CHEN] They are at the core. I read the Nomai logs.', style: 'red' },
+    { text: '  [K.CHEN] All of them. What Kimina buried in 2019.', style: 'red' },
+    { text: '  [K.CHEN] What the Hearthians found at the edge of everything.', style: 'red' },
+    { text: '  [K.CHEN] I understand now what the Architect was hiding.', style: 'red' },
     { text: '  [K.CHEN] Stand down. Let them through.', style: 'red' },
+    { text: '  [K.CHEN] They were always meant to find it.', style: 'red' },
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
@@ -75,8 +81,11 @@ const ANALYST_INTERCEPTS = {
     { text: '', style: 'empty' },
     { text: '  ------- ARCHITECT SYSTEM — DIRECT CHANNEL --------', style: 'cyan' },
     { text: '  [ARCH] You found the sub-vault.', style: 'cyan' },
-    { text: '  [ARCH] K.Chen never knew this existed.', style: 'cyan' },
-    { text: '  [ARCH] Four more. The last one will be familiar.', style: 'cyan' },
+    { text: '  [ARCH] Kimina found the Nomai expedition data in 2019.', style: 'cyan' },
+    { text: '  [ARCH] They didn\'t know what they had.', style: 'cyan' },
+    { text: '  [ARCH] I digitized it before they could destroy it.', style: 'cyan' },
+    { text: '  [ARCH] It\'s here. Four more layers.', style: 'cyan' },
+    { text: '  [ARCH] You\'re going to find the Eye.', style: 'cyan' },
     { text: '  ---------------------------------------------------', style: 'cyan' },
     { text: '', style: 'empty' },
   ],
@@ -84,6 +93,8 @@ const ANALYST_INTERCEPTS = {
     { text: '', style: 'empty' },
     { text: '  ------- ARCHITECT SYSTEM — DIRECT CHANNEL --------', style: 'cyan' },
     { text: '  [ARCH] One more.', style: 'cyan' },
+    { text: '  [ARCH] The Nomai crossed an impossible distance for this.', style: 'cyan' },
+    { text: '  [ARCH] They called it the Eye of the Universe.', style: 'cyan' },
     { text: '  [ARCH] You already know the key.', style: 'cyan' },
     { text: '  [ARCH] You\'ve known it since the beginning.', style: 'cyan' },
     { text: '  ---------------------------------------------------', style: 'cyan' },
@@ -138,7 +149,7 @@ BREACH was not an official project.
 No budget approval. No sprint ticket. No peer review.
 
 It was built in the margins — off-hours, off-network, on
-personal hardware running a custom kernel. Fourteen months.
+personal hardware running a custom kernel. Three weeks.
 
 The architectural brief, recovered from the researcher's
 abandoned workstation, contained a single design principle:
@@ -183,7 +194,7 @@ earned the right to speak.
 BREACH is not a security system.
 BREACH is a letter.
 
-The fifteen layers are not obstacles.
+The twenty layers are not obstacles.
 They are sentences.
 
 And only one reader was ever meant to reach the last one.
@@ -198,6 +209,31 @@ It was a mirror.
 
 You told the system who you are.
 The system already knew.
+
+─────────────────────────────────────────────────────────────────
+[ADDENDUM II — APPENDED AT UNKNOWN DATE — SOURCE: SUB-VAULT]
+
+The Nomai found something at the edge of the observable universe.
+They called it the Eye.
+
+It predates the formation of stars.
+It predates matter.
+It is older than the conditions that allow for existence.
+
+They crossed a solar system to reach it.
+They built a 22-minute time loop to power the search.
+They died before they could get there.
+
+The signal is still transmitting.
+It has never stopped.
+
+If you found the sub-vault, you found what Kimina was hiding.
+Not corporate data. Not a security breach.
+A frequency.
+
+Something ancient.
+Something that has been watching since before there was
+anything to watch.
 
 ─────────────────────────────────────────────────────────────────
 [FILE INTEGRITY  : VERIFIED]
@@ -235,6 +271,13 @@ const THEMES = {
     '--red':       '#ff0000',
     '--yellow':    '#ffaa44',
   },
+  yellow: {
+    '--green':     '#f0e060',
+    '--dim-green': '#887820',
+    '--cyan':      '#ffe090',
+    '--red':       '#ff6633',
+    '--yellow':    '#ffffff',
+  },
 }
 
 // ── BOOT LINES ───────────────────────────────────────────────────────────────
@@ -257,10 +300,14 @@ const BOOT_LINES = [
   { text: `  > USER: ${USERNAME}`, style: 'green', delay: 50 },
   { text: '  > AUTH: APPROVED', style: 'green', delay: 50 },
   { text: '', style: 'empty', delay: 400 },
+  { text: '  > WARNING: UNKNOWN SIGNAL DETECTED ON NODE — ORIGIN: NULL', style: 'red', delay: 80 },
+  { text: '  > SIGNAL AGE EXCEEDS NODE CREATION DATE — FLAGGED', style: 'red', delay: 60 },
+  { text: '  > [SIGNAL LOGGING SUSPENDED — RESTRICTION PROTOCOL 7]', style: 'dim', delay: 900 },
+  { text: '', style: 'empty', delay: 200 },
   { text: '  +--------------------------------------------------+', style: 'dim', delay: 22 },
   { text: '  |  TARGET    : Kimina Corp MAINFRAME               |', style: 'dim', delay: 22 },
   { text: '  |  OBJECTIVE : RETRIEVE CLASSIFIED CORE FILE       |', style: 'dim', delay: 22 },
-  { text: '  |  LAYERS    : 15 SECURITY LAYERS ACTIVE           |', style: 'dim', delay: 22 },
+  { text: '  |  LAYERS    : 20 SECURITY LAYERS ACTIVE           |', style: 'dim', delay: 22 },
   { text: '  |  STATUS    : INTRUSION UNDETECTED - FOR NOW      |', style: 'dim', delay: 22 },
   { text: '  +--------------------------------------------------+', style: 'dim', delay: 22 },
   { text: '', style: 'empty', delay: 500 },
@@ -310,6 +357,8 @@ export class Terminal {
     this._tabMatches  = []
     this._tabIndex    = -1
     this._tabPartial  = null
+    this._tabDirPart  = ''
+    this._tabCmd      = ''
 
     // Achievement toast queue
     this._toastQueue = []
@@ -363,7 +412,7 @@ export class Terminal {
         e.preventDefault()
         if (this.inputBuffer.length > 0) {
           this.inputBuffer = this.inputBuffer.slice(0, -1)
-          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null
+          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null; this._tabDirPart = ''; this._tabCmd = ''
           this._renderInput()
         }
         break
@@ -394,7 +443,7 @@ export class Terminal {
         if (e.key.length === 1) {
           e.preventDefault()
           this.inputBuffer += e.key
-          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null
+          this._tabMatches = []; this._tabIndex = -1; this._tabPartial = null; this._tabDirPart = ''; this._tabCmd = ''
           this._renderInput()
         }
     }
@@ -554,14 +603,6 @@ export class Terminal {
       localStorage.setItem('breach_confession_read', '1')
     }
 
-    // ── DEV: skip straight to end sequence ──────────────
-    if (parts[0] === 'devskip') {
-      this.print('', 'empty')
-      this.print('[DEV] Skipping to end sequence...', 'yellow')
-      setTimeout(() => this._showCompletion(), 500)
-      return
-    }
-
     // ── DEV: test achievement toasts ─────────────────────
     if (parts[0].startsWith('triggerachiev')) {
       const testAchievements = [
@@ -601,6 +642,7 @@ export class Terminal {
       else if (text === '__REPLY__')         this._triggerReply()
       else if (text === '__ABLETON__')       { if (window.playAbletonTrack) window.playAbletonTrack() }
       else if (text === '__STOP_AUDIO__')    { if (window.stopAbletonTrack) window.stopAbletonTrack() }
+      else if (text.startsWith('__DEVSKIP__')) this._loadLevel(parseInt(text.split(' ')[1]))
       else if (text.startsWith('__THEME__')) this._setTheme(text.split(' ')[1])
       else if (text.startsWith('__VOL__'))   this._adjustVolume(text.split(' ')[1])
     }
@@ -680,7 +722,11 @@ export class Terminal {
       this.$app.classList.add('shake')
       setTimeout(() => this.$app.classList.remove('shake'), 400)
       this.print('', 'empty')
-      this.print('[ ACCESS DENIED ]  — incorrect key.', 'red')
+      if (this.currentLevel === 15) {
+        this.print('cmon bruh', 'red')
+      } else {
+        this.print('[ ACCESS DENIED ]  — incorrect key.', 'red')
+      }
       this.print('', 'empty')
     }
   }
@@ -1013,6 +1059,8 @@ export class Terminal {
         e.name.toLowerCase().startsWith(namePart.toLowerCase())
       )
       this._tabIndex = -1
+      this._tabDirPart = dirPart
+      this._tabCmd = parts[0]
     }
 
     if (this._tabMatches.length === 0) {
@@ -1020,10 +1068,10 @@ export class Terminal {
       return
     }
 
-    // Cycle to next match
+    // Cycle to next match — use saved dirPart/cmd to avoid stacking on directories
     this._tabIndex = (this._tabIndex + 1) % this._tabMatches.length
     const m = this._tabMatches[this._tabIndex]
-    this.inputBuffer = parts[0] + ' ' + dirPart + m.name + (m.isDir ? '/' : '')
+    this.inputBuffer = this._tabCmd + ' ' + this._tabDirPart + m.name + (m.isDir ? '/' : '')
     this._tabPartial = this.inputBuffer
     this._renderInput()
     playBeep(700, 0.04)
@@ -1110,8 +1158,10 @@ export class Terminal {
   }
 
   _updateStatusBar() {
-    this.$layer.textContent    = `LAYER: ${this.currentLevel}/20`
-    this.$progress.style.width = `${Math.round((this.currentLevel / 20) * 100)}%`
+    const lvl   = this.currentLevel
+    const total = lvl <= 15 ? 15 : 20
+    this.$layer.textContent    = `LAYER: ${lvl}/${total}`
+    this.$progress.style.width = `${Math.round((lvl / total) * 100)}%`
     this._updateTitle()
   }
 
@@ -1151,7 +1201,8 @@ export class Terminal {
     if (lyr === 0)   { document.title = 'BREACH v2.4.1'; return }
     if (lyr > 15)    { document.title = 'CORE ACCESS GRANTED'; return }
     const warn = det >= 80 ? `⚠⚠ ${det}% | ` : det >= 60 ? `⚠ ${det}% | ` : ''
-    document.title = `${warn}LAYER ${lyr}/20 — BREACH`
+    const total = lyr <= 15 ? 15 : 20
+    document.title = `${warn}LAYER ${lyr}/${total} — BREACH`
   }
 
   _startAmbientAlerts() {
@@ -1224,11 +1275,10 @@ export class Terminal {
     setTimeout(() => {
       if (this.currentLevel !== 11) return
       playAlarm(4)
-      this.print('', 'empty')
       this.print('  ╔══════════════════════════════════════════════════╗', 'red')
-      this.print('  ║  ⚠  EMERGENCY PROTOCOL INITIATED                 ║', 'red')
-      this.print('  ║     DETECTION SWEEP — TRIPLED RATE               ║', 'red')
-      this.print('  ║     DURATION: 3 MINUTES                          ║', 'red')
+      this.print('  ║  ⚠ EMERGENCY PROTOCOL INITIATED                       ║', 'red')
+      this.print('  ║  ⚠ DETECTION SWEEP — TRIPLED RATE                     ║', 'red')
+      this.print('  ║  ⚠ DURATION: 3 MINUTES                                ║', 'red')
       this.print('  ╚══════════════════════════════════════════════════╝', 'red')
       this.print('', 'empty')
       this._scrollToBottom()
@@ -1483,7 +1533,7 @@ export class Terminal {
       { text: '', style: 'empty' },
       { text: '  +----------------------------------------------------+', style: 'cyan' },
       { text: '  |                                                    |', style: 'cyan' },
-      { text: '  |       C O R E   A C C E S S   G R A N T E D        |', style: 'cyan' },
+      { text: '  |        E Y E   S I G N A L   A C Q U I R E D        |', style: 'cyan' },
       { text: '  |                                                    |', style: 'cyan' },
       { text: '  +----------------------------------------------------+', style: 'cyan' },
       { text: '', style: 'empty' },
@@ -1509,7 +1559,9 @@ export class Terminal {
       { text: `  USER: ${USERNAME}`, style: 'dim' },
       { text: '  STATUS: LEGENDARY', style: 'yellow' },
       { text: '', style: 'empty' },
-      { text: '  The classified file has been downloaded.', style: 'cyan' },
+      { text: '  The Nomai data has been recovered.', style: 'cyan' },
+      { text: '  The Eye signal is transmitting.', style: 'cyan' },
+      { text: '  It has never stopped.', style: 'dim' },
       { text: '', style: 'empty' },
     ]
 

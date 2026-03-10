@@ -166,7 +166,7 @@ function triggerSecretEnding(onDone) {
   setTimeout(() => {
     overlay.style.opacity = '1'
     // Kimi's sent message types out
-    const msg = 'hey. i found it. all 15 layers. who are you?'
+    const msg = 'hey. i found it. all 20 layers. who are you?'
     let i = 0
     const typeMsg = setInterval(() => {
       i++
