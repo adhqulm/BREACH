@@ -419,7 +419,7 @@ function triggerDialogue(script, onDone) {
       textEl.style.color = 'var(--dim-green)'
       advEl.style.opacity = '0'
       box.style.opacity = '1'
-      const msgs = ["You didn't find out.", '', '...', '']
+      const msgs = ["You let it go.", '', '...', '']
       let i = 0
       const next = () => {
         if (i >= msgs.length) {
