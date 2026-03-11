@@ -11,10 +11,10 @@ TABLE OF CONTENTS
   2. Commands Reference
   3. Layer-by-Layer Walkthrough (All 20 Layers)
   4. Post-Game Content & Endings (3 Total)
-  5. All Achievements (16 Total)
+  5. All Achievements (15 Total)
   6. Hidden Files / Dotfiles (Every Layer)
   7. Easter Eggs & Secret Commands
-  8. Mail System (All 7 Emails)
+  8. Mail System (All 9 Emails)
   9. Detection Meter Guide
   10. K.Chen Deal — Layer 8 Interaction
   11. Story & Narrative Explained
@@ -33,7 +33,7 @@ Corp. Each layer is a different cryptography or logic puzzle.
 What you don't know at the start: the entire system was built by someone called
 "The Architect" (signed as "A.") as an elaborate, personalized birthday gift
 for the player character Kimi (username: vodkashotsandvolvos). Every puzzle is
-specifically tailored to her knowledge and interests.
+specifically tailored to his knowledge and interests.
 
 STRUCTURE:
   - Layers 1–15:  The main vault — Kimina Corp's known security system
@@ -46,7 +46,7 @@ CORE MECHANICS:
   - Detection meter (increases with wrong answers, hints, time)
   - K.Chen sends escalating alerts as you progress
   - At Layer 8: K.Chen opens a DIRECT LINE and offers you a deal
-  - Achievement system (16 total)
+  - Achievement system (15 total)
   - Background music speeds up as you go deeper
   - Hidden dotfiles with lore in every layer
   - 3 distinct endings (Good, Bad, Secret)
@@ -100,14 +100,14 @@ RED HERRINGS (new in v2.5):
   scan                    Run a vulnerability scan
   analyze <file>          Show file metadata and analyst notes (no spoilers)
   mail                    List intercepted emails
-  mail read <number>      Read a specific email (1-6, #6 post-game only)
+  mail read <number>      Read a specific email (1-9, #7 post-game only)
   unlock <answer>         Submit your answer for the current layer
   hint                    Get a hint (+10% detection, max 3 per layer)
   theme <name>            Change terminal color (green/amber/blue/red)
   vol <up/down>           Adjust music volume
   mute                    Mute background music
   unmute                  Unmute background music
-  achievements            View all unlocked achievements (16 total)
+  achievements            View all unlocked achievements (15 total)
   kchen accept            Accept K.Chen's deal (Layer 8 only)
   kchen decline           Decline K.Chen's deal (Layer 8 only)
   reply                   Post-game only — actually send a reply to A.
@@ -328,23 +328,41 @@ HINTS:
 --------------------------------------------------------------------------------
 LAYER 8 — INTEGRITY AUDIT  ★ K.CHEN DEAL LAYER ★
 --------------------------------------------------------------------------------
-ANSWER: breach_client
+ANSWER: vault_proxy
 
 FILES:
-  /integrity_report.log   Process audit table — one process has a null CRC checksum
+  /integrity_report.log        Process audit table — 3 mismatches flagged (✗)
+  /sys/patch_manifest.txt      Authorized patch list — covers 2 of the 3 mismatches
+  /var/log/anomaly_flags.txt   RED HERRING: behavioral flag log
+  /.audit_meta                 HIDDEN — audit engine policy notes
+
+RED HERRINGS:
+  /var/log/anomaly_flags.txt flags logger (PID 0389) as behaviorally suspicious
+  (4,221 write calls, threshold 500/min). vault_proxy shows "no behavioral
+  anomalies detected." This baits players into unlocking logger — wrong answer.
+  /.audit_meta explicitly states: behavioral flags are supplementary only.
+  The authoritative indicator is the integrity mismatch, not behavior.
 
 SOLUTION:
-  Run: cat integrity_report.log
-  Look at the STATUS column. One process shows ✗ instead of ✓.
-  PID 1892 — breach_client — reports CRC 00000000 (null = evasion signature).
-  Its actual CRC is F992D7A5. The mismatch means it's hiding its identity.
-  The anomaly IS you. You are the process evading the audit.
+  Step 1: cat /integrity_report.log
+          Three processes show ✗: logger (0389), net_relay (0887), vault_proxy (1203)
 
-  Type: unlock breach_client
+  Step 2: cat /sys/patch_manifest.txt
+          Two entries: logger (v2.1→v2.2, ticket #4471) and net_relay (CVE patch).
+          Their CRC changes are authorized. The manifest says: any mismatch NOT
+          listed here is unauthorized and requires immediate escalation.
+
+  Step 3: Cross-reference — vault_proxy (PID 1203) has NO manifest entry.
+          Its mismatch is unauthorized. That's the rootkit.
+
+  Step 4 (optional trap): anomaly_flags.txt makes logger look suspicious and
+          vault_proxy look clean. This is the red herring. Trust the manifest,
+          not the behavioral log.
+
+  Type: unlock vault_proxy
 
   NOTE: Case-insensitive answer.
 
-  ACHIEVEMENT: DEEP COVER unlocked (halfway through the main vault)
   EVENT: Fake kernel panic occurs before Layer 9 loads
 
   ★★★ K.CHEN DEAL — AFTER CLEARING LAYER 8 ★★★
@@ -404,8 +422,6 @@ SOLUTION:
   P-H-A-N-T-O-M = PHANTOM
 
   Type: unlock PHANTOM
-
-  ACHIEVEMENT: DEEP COVER unlocked (true halfway point of 20 layers)
 
   LORE: PHANTOM was a previous operator who reached Layer 10 in 37 minutes
   before being expelled at Layer 11. They never knew what they were inside.
@@ -767,25 +783,36 @@ STEP 3 — THREE ENDING CHOICES:
   ══════════════════════════════════════════════════════════════
   B — BAD ENDING: "ouch... my head..."
   ══════════════════════════════════════════════════════════════
-  You go to the bar. You forget it. The file stays unknown.
-  Game restarts from Layer 1.
-  Achievement: DENIAL (on completing the restart run)
-  Achievement: YOU'RE BACK (on finishing the second run)
+  Pedro: "Come on, let's go"
+  Kimi: "*sigh*... okay..."
+  Kimi thinks: "What even was that...? Twenty layers... Whatever."
+  Credits roll on a black screen. Dialogue music continues playing.
+  Achievement: DENIAL
 
   ══════════════════════════════════════════════════════════════
   C — SECRET ENDING: "...who built it for me..."     ★
   ══════════════════════════════════════════════════════════════
   Kimi refuses to accept it was just a dream.
   He pieces it together: Outer Wilds. The frequencies. Volvos.
-  The key to layer 15 was HER USERNAME.
+  The key to layer 15 was HIS USERNAME.
   He says he needs to find A. He needs to reply.
 
-  A phone screen overlay appears.
-  Kimi sends: "hey. i found it. all 20 layers. who are you?"
-  A. is typing...
-  A. replies: "hey. happy birthday. good job."
-  A. is typing...
-  A. replies: "i knew you'd find it."
+  A phone screen appears on the black background. Full exchange:
+
+    Kimi sends:   "hey. i found it. all 20 layers. who are you?"
+                  [Delivered]
+    A. replies:   "hey"
+    A. replies:   "happy birthday!!"
+    A. replies:   "i knew you'd find it"
+    A. replies:   "the nomai logs..."
+    A. replies:   "kimina classified them in 2019. nobody was supposed to know."
+    A. replies:   "i thought you should."
+    A. replies:   "..."
+    A. replies:   "the eye signal is still transmitting"
+    A. replies:   "has been, since before everything"
+    A. replies:   "i think you already knew that"
+    A. replies:   "good job, kimi"
+    A. replies:   "seriously"
 
   Achievement: SIGNAL FOUND
   Then completion stats screen loads.
@@ -805,19 +832,38 @@ POST-GAME COMMANDS (after good ending or secret ending):
     Read it last.
 
   reply                                                          ★ WORKS ★
-    Triggers a dialogue sequence. Kimi composes a real message back to A.
-    "I found all twenty layers. I read the note at the core. Thank you."
+    Triggers a full dialogue sequence. Kimi thinks through the Nomai lore,
+    decodes the postscript contact address from the confession file (Caesar
+    shift 6), and composes a real message to A. — interrupted by Pedro before
+    he hits send. Full sequence:
+
+      Kimi reflects on the "no reply needed" postscript. Decides to ignore it.
+      Kimi (thoughts): "Twenty layers, Pedro. Someone mapped the inside of my
+        head and built a twenty-floor vault out of it. And then hid Nomai
+        expedition records inside it. Real ones."
+      Kimi (thoughts): "I'm not just walking away from that."
+      Kimi decodes the postscript contact address (Caesar shift 6).
+      Pedro catches Kimi texting and asks who it's for.
+      Kimi: "...the architect."  Pedro: "the what?"  Kimi: "never mind."
+      Kimi composes the message — talks about the sub-vault, Nomai logs,
+        Poke and Clary, the Eye signal, the last key being his own name.
+      Kimi: "That's either the most romantic thing anyone has ever done.
+              Or the most deranged."
+      Kimi: "thank you. you didn't have to. but you did. and I found it."
+      Kimi (thoughts): "Send."
+
     Achievement: GHOST REPLY
 
   mail                                                           ★
-    A 6th email is now unlocked — K.Chen's personal letter to A.
-    Type: mail read 6
-    K.Chen explains she won't report the breach.
-    "You built a puzzle for someone you love, and you hid it inside
-    the most secure system you could find, and you waited for them to find it."
+    A 7th email is now unlocked — K.Chen's personal letter to A.
+    Type: mail read 7
+    K.Chen won't report the breach. Explains they read everything in
+    the sub-vault — the Nomai logs, Eye signal data, Hearthian records.
+    "I don't know your name. I know you made it to the Eye. That's enough."
+    Ends with: "Outer Wilds was right about everything that matters."
 
 ================================================================================
-  SECTION 5 — ALL ACHIEVEMENTS (16 TOTAL)
+  SECTION 5 — ALL ACHIEVEMENTS (15 TOTAL)
 ================================================================================
 
 Type: achievements    at any time to view your progress.
@@ -827,56 +873,55 @@ Type: achievements    at any time to view your progress.
 
   2. DENIAL
      How: Bad ending (choose "ouch... my head...")
-     Note: Shows on completing the restart run
+     Note: Credits roll on black screen. Dialogue music keeps playing.
 
   3. SIGNAL FOUND
      How: Secret ending ("...who built it for me...")
      Note: A.'s reply appears on a phone screen
 
-  4. DEEP COVER
-     How: Reach Layer 10 (automatic — true halfway point of 20)
-
-  5. PAST THE WALL
+  4. PAST THE WALL
      How: Reach Layer 15 (automatic)
      Note: The sub-vault opens after this
 
-  6. AT THE CORE
+  5. AT THE CORE
      How: Reach Layer 20 (automatic)
 
-  7. GHOST
+  6. GHOST
      How: Complete the entire game with ZERO hints AND ZERO wrong answers
      Note: Hardest achievement. Memorize all 20 answers first.
 
-  8. BLITZ
+  7. BLITZ
      How: Complete any single layer in under 30 seconds
-     Tip: On repeat runs, Layer 4 (unlock 440) is very fast
+     Note: FIRST RUN ONLY — does not unlock after the Ash Twin loop resets.
+           On a fresh run, Layer 4 (unlock 440) is the easiest target.
 
-  9. PERSISTENT
+  8. PERSISTENT
      How: Get five wrong answers on a single layer
      Tip: Deliberately fail Layer 1 five times
 
-  10. EASTER EGG FOUND
-      How: Run any of: outerwilds, produce, ableton, volvo, phantom
+  9. EASTER EGG FOUND
+     How: Run any of: outerwilds, produce, ableton, volvo, phantom
 
-  11. ARCHAEOLOGIST
+  10. ARCHAEOLOGIST
       How: Read any hidden dotfile with cat (e.g., cat /.shadow on Layer 1)
 
-  12. YOU'RE BACK
+  11. YOU'RE BACK
       How: Complete the game a second time
 
-  13. NEGOTIATOR
+  12. NEGOTIATOR
       How: Type kchen accept when K.Chen offers the deal after Layer 8
       Effect: Detection drops to 0%, you breeze through 9-20 clean
 
-  14. NO DEAL
+  13. NO DEAL
       How: Type kchen decline when K.Chen offers the deal after Layer 8
       Effect: K.Chen steps back. "Finish what you started."
 
-  15. GHOST REPLY
+  14. GHOST REPLY
       How: Type reply in post-game (after good or secret ending)
-      Note: Triggers a full dialogue. Kimi sends A. a real message.
+      Note: Long dialogue. Kimi decodes the postscript, talks to Pedro,
+            composes a full message to A. and hits send.
 
-  16. PHANTOM FOUND
+  15. PHANTOM FOUND
       How: Type phantom in the terminal (any layer, any time)
       Note: Shows PHANTOM's recovered session log and their final note
 
@@ -1024,11 +1069,11 @@ ALSO NOTABLE:
   - whoami always returns vodkashotsandvolvos (it's identity-locked)
 
 ================================================================================
-  SECTION 8 — MAIL SYSTEM (ALL 7 EMAILS)
+  SECTION 8 — MAIL SYSTEM (ALL 9 EMAILS)
 ================================================================================
 
 Type: mail           to list
-Type: mail read <n>  to read a specific one
+Type: mail read <n>  to read a specific one (1-9, #7 post-game only)
 
   EMAIL 1 — r.fromm@KIMINA-corp.int
     Director Fromm demands the anomalies be investigated immediately.
@@ -1037,7 +1082,7 @@ Type: mail read <n>  to read a specific one
   EMAIL 2 — k.chen@KIMINA-corp.int
     K.Chen's urgent report. "This is not a script. This is not automated."
     "They know the architecture. They understand the ciphers."
-    She suspects it may be the Architect returning.
+    Suspects it may be the Architect returning.
 
   EMAIL 3 — UNKNOWN
     Partially decrypted intercepted message from A.:
@@ -1052,21 +1097,31 @@ Type: mail read <n>  to read a specific one
   EMAIL 5 — intern_01@KIMINA-corp.int
     Jake: there are donuts in the breakroom. The glazed ones are going fast.
 
-  EMAIL 6 — k.chen@KIMINA-corp.int     ★ POST-GAME ONLY ★
-    K.Chen's personal letter to A. after the breach concludes.
-    "I won't report this breach."
-    "You built a puzzle for someone you love, and you hid it inside the most
-    secure system you could find, and you waited for them to find it."
-    "The NOMAI reference was a nice touch. Outer Wilds. Good game."
-    Available only after completing the game. Type: mail read 6
-
-  EMAIL 7 — adhqulm@gmail.com     ★ DISPLAYED IN YELLOW ★
+  EMAIL 6 — adhqulm@gmail.com     ★ DISPLAYED IN YELLOW ★
     From: adhqulm@gmail.com
     To:   vodkashotsandvolvos
-    Subject: hello boobger i lvoe you YAYYY :D
-    Body: hello boobger i lvoe you YAYYY :D
+    Subject: hello boobger :D
+    Body: hello boobger i lvoe you YAYYY HAPPY BIRTHDAY YAYYYY:D
     Available at all times (not post-game only). Displayed in yellow in the
-    mail list. Type: mail read 7
+    mail list. Type: mail read 6
+
+  EMAIL 7 — k.chen@KIMINA-corp.int     ★ POST-GAME ONLY ★
+    Subject: I think I understand now
+    To: [IDENTITY REDACTED]
+    Unlocked after completing the breach. K.Chen read everything in the
+    sub-vault — Nomai logs, Eye signal data, Hearthian records.
+    Won't report the breach. "I know you made it to the Eye. That's enough."
+    Signs off: "Outer Wilds was right about everything that matters."
+    Type: mail read 7
+
+  EMAIL 8 — noreply@glovo.com     (spam)
+    Your McDonald's order is on its way. Rider: Tomasz K. ★★★★☆
+    Type: mail read 8
+
+  EMAIL 9 — deals@temu.com     (spam)
+    🔥 Items in your cart are SELLING OUT. 47 items. Code: TEMU50OFF
+    "You are receiving this because you exist."
+    Type: mail read 9
 
 ================================================================================
   SECTION 9 — DETECTION METER GUIDE
@@ -1134,12 +1189,12 @@ KCHEN DECLINE:
 
 THE SURFACE STORY:
   You hack Kimina Corp's 20-layer security system. K.Chen tries to stop you.
-  Countermeasures fail. K.Chen eventually understands what she's witnessing.
+  Countermeasures fail. K.Chen eventually understands what they're witnessing.
 
 THE REAL STORY:
   The Architect (A.) embedded a personalized puzzle system inside Kimina Corp
   years before the game starts. Every layer was designed around one person:
-  Kimi (vodkashotsandvolvos). On her birthday, he "dreams" the entire thing.
+  Kimi (vodkashotsandvolvos). On his birthday, A. "dreams" the entire thing.
 
 THE OUTER WILDS / NOMAI LAYER:
   BREACH is now framed as a spiritual sequel to Outer Wilds. The game has
@@ -1182,21 +1237,21 @@ THE OUTER WILDS / NOMAI LAYER:
   WHAT EACH LAYER REPRESENTS:
     ROT13, binary, hex, XOR, Base64 — ciphers he'd know how to break
     440 Hz — music knowledge, concert pitch
-    NOMAI — her love of Outer Wilds
-    BASS music key — her audio production background
-    Algorithm trace — her logical, methodical thinking
-    vodkashotsandvolvos — herself. The only answer A. couldn't encrypt.
+    NOMAI — his love of Outer Wilds
+    BASS music key — his audio production background
+    Algorithm trace — his logical, methodical thinking
+    vodkashotsandvolvos — himself. The only answer A. couldn't encrypt.
     Sub-vault (L16-20) — the hidden Nomai archive. The real thing he saved.
                           Even Kimina never knew it was there.
 
 THE FRAMING DEVICE:
   The whole game is a dream/vision. Kimi slipped in the bathroom (wet floor),
-  hit her head, and hallucinated the entire breach. Pedro finds her. He wakes.
+  hit his head, and hallucinated the entire breach. Pedro finds him. He wakes.
 
 THE THREE ENDINGS:
   Good:   He slips again. The wet floor. He accepted the dream as real.
   Bad:    He goes to the bar. He never knows. But he keeps thinking about it.
-  Secret: He refuses to dismiss it. He finds A. A. was waiting for her reply.
+  Secret: He refuses to dismiss it. He finds A. A. was waiting for his reply.
 
 K.CHEN'S ARC:
   Layer 3:  Suspicious, escalating. "This is not a bot."
@@ -1206,8 +1261,8 @@ K.CHEN'S ARC:
   Layer 12: "This isn't a breach. This is someone finishing something meant
              to be finished."
   Layer 14: "Stand down. Let them through."
-  Layer 20: Her final transmission. She's done fighting. She understands.
-  Post-game: Writes a letter she'll never send, explaining she won't report it.
+  Layer 20: Final transmission. Done fighting. Understands.
+  Post-game: Writes a letter, explaining they won't report it.
              References the Nomai data, the Eye of the Universe, and ends with:
              "Outer Wilds was right about everything that matters."
 
@@ -1216,7 +1271,7 @@ THE ARCHITECT:
   romantic partner, a close friend, someone from Kimi's past. The letter at the
   core doesn't explain who — only why. The puzzle IS the answer to who.
   He was also a Nomai researcher. He saved what Kimina tried to destroy.
-  He hid it where only she could find it.
+  He hid it where only he could find it.
 
 ================================================================================
   SECTION 12 — COMPLETE ANSWER KEY
@@ -1231,7 +1286,7 @@ THE ARCHITECT:
   5      | Derived Shift (mod 26)       | NOISE
   6      | Morse Code                   | NOMAI
   7      | Process Surveillance         | SPECTER
-  8      | Process Integrity Audit      | breach_client
+  8      | Process Integrity Audit      | vault_proxy
   9      | Caesar Cipher (shift 6)      | SIGNAL
   10     | Acrostic                     | PHANTOM
   11     | Algorithm Trace              | 50
@@ -1273,7 +1328,7 @@ your rating, and your run number.
   [ ] 5  — NOISE
   [ ] 6  — NOMAI
   [ ] 7  — SPECTER
-  [ ] 8  — breach_client  (then respond to K.Chen's deal)
+  [ ] 8  — vault_proxy  (then respond to K.Chen's deal)
   [ ] 9  — SIGNAL
   [ ] 10 — PHANTOM
   [ ] 11 — 50
@@ -1297,18 +1352,19 @@ your rating, and your run number.
   [ ] ls -a                     (look for what's hidden)
   [ ] cat /.verse               (the last thing)
   [ ] reply                     (send a message to A. — triggers GHOST REPLY)
-  [ ] mail read 6               (K.Chen's letter to A. — post-game only)
-  [ ] mail read 7               (hello boobger i lvoe you YAYYY :D)
+  [ ] mail read 6               (hello boobger i lvoe you YAYYY :D)
+  [ ] mail read 7               (K.Chen's letter to A. — post-game only)
+  [ ] mail read 8               (Glovo spam — McDonald's order)
+  [ ] mail read 9               (Temu spam — 47 items in your cart)
 
-  ACHIEVEMENTS (16/16):
+  ACHIEVEMENTS (15/15):
   [ ] THE FLOOR IS STILL WET    (good ending)
-  [ ] DENIAL                    (bad ending + second run)
+  [ ] DENIAL                    (bad ending)
   [ ] SIGNAL FOUND              (secret ending)
-  [ ] DEEP COVER                (reach Layer 10)
   [ ] PAST THE WALL             (reach Layer 15)
   [ ] AT THE CORE               (reach Layer 20)
   [ ] GHOST                     (zero wrong, zero hints)
-  [ ] BLITZ                     (any layer under 30 seconds)
+  [ ] BLITZ                     (any layer under 30 seconds — first run only)
   [ ] PERSISTENT                (5 wrong answers one layer)
   [ ] EASTER EGG FOUND          (outerwilds / produce / ableton / volvo / phantom)
   [ ] ARCHAEOLOGIST             (cat a dotfile — e.g., cat /.shadow on Layer 1)
@@ -1355,14 +1411,16 @@ your rating, and your run number.
   [ ] phantom
   [ ] grep <anything>
 
-  MAIL (7/7):
+  MAIL (9/9):
   [ ] mail read 1  (Director Fromm)
   [ ] mail read 2  (K.Chen urgent report)
   [ ] mail read 3  (UNKNOWN — message from A.)
   [ ] mail read 4  (Automated alert)
   [ ] mail read 5  (Jake and the donuts)
-  [ ] mail read 6  (K.Chen's letter to A. — post-game only)
-  [ ] mail read 7  (hello boobger i lvoe you YAYYY :D)
+  [ ] mail read 6  (hello boobger i lvoe you YAYYY :D)
+  [ ] mail read 7  (K.Chen's letter to A. — post-game only)
+  [ ] mail read 8  (Glovo spam)
+  [ ] mail read 9  (Temu spam)
 
   K.CHEN DEAL (both outcomes require separate runs):
   [ ] kchen accept   → NEGOTIATOR

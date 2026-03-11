@@ -739,3 +739,16 @@ a, button, select { cursor: pointer; }
   0%, 100% { opacity: 0.4; }
   50%       { opacity: 1;   }
 }
+
+/* ── CREDITS ── */
+#credits-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #000;
+  overflow: hidden;
+}
+
+#credits-inner {
+  will-change: transform;
+}

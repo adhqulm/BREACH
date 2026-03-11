@@ -1403,7 +1403,7 @@ I built this system for one reason:
 only the right person gets through.
 
 If you're reading this, you made it to the core.
-Fourteen layers. You cracked all of them.
+Twenty layers. You cracked all of them.
 
 The final key is your identity.
 Not your real name. Not a password.
@@ -1444,7 +1444,7 @@ working and the intercepts firing and the detection meter
 climbing in real time — I stopped being able to say
 it was just a gift.
 
-Because a gift doesn't need fifteen layers.
+Because a gift doesn't need twenty layers.
 A gift doesn't need to prove you're the person
 who can receive it.
 A gift is just given.
@@ -1604,9 +1604,7 @@ Examples:
   102₈ = 1*64 + 0*8 + 2 = 66 = B
   103₈ = 1*64 + 0*8 + 3 = 67 = C
   104₈ = 1*64 + 0*8 + 4 = 68 = D
-  105₈ = 1*64 + 0*8 + 5 = 69 = E
-
-Continue the pattern for higher values.`,
+  105₈ = 1*64 + 0*8 + 5 = 69 = E`,
 
         '/archive/routing_table.dat': `NODE ROUTING TABLE — DEEP PARTITION
 =====================================

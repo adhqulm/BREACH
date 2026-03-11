@@ -3,7 +3,7 @@ import { PUZZLES } from './puzzles.js'
 import { processCommand } from './commands.js'
 import { playError, playSuccess, playFinalSuccess, playBeep, playCrashSound, playMorse, playAlarm } from './audio.js'
 
-const USERNAME = 'vodkashotsandvolvos'
+const USERNAME = 'unknown_op'
 const HOSTNAME = 'BREACH-SYS'
 
 // ── ANALYST INTERCEPTS ───────────────────────────────────────────────────────
@@ -551,19 +551,18 @@ export class Terminal {
         { id: 'good_ending',   title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
         { id: 'bad_ending',    title: 'DENIAL',                  desc: 'You walked away. But you came back.' },
         { id: 'secret_ending', title: 'SIGNAL FOUND',            desc: 'You looked for A. And A. answered.' },
-        { id: 'halfway',       title: 'DEEP COVER',              desc: 'Past the halfway point.' },
         { id: 'layer_15',      title: 'PAST THE WALL',           desc: 'Layer 15 cleared. The vault goes deeper.' },
         { id: 'layer_20',      title: 'AT THE CORE',             desc: 'Layer 20. The absolute end.' },
         { id: 'ghost',         title: 'GHOST',                   desc: 'No hints. No wrong answers. Flawless.' },
         { id: 'blitz',         title: 'BLITZ',                   desc: 'Layer cleared in under 30 seconds.' },
         { id: 'persistent',    title: 'PERSISTENT',              desc: 'Five wrong answers on one layer.' },
         { id: 'easter_egg',    title: 'EASTER EGG FOUND',        desc: 'You went looking.' },
-        { id: 'archaeologist', title: 'ARCHAEOLOGIST',           desc: 'You found what was hidden.' },
-        { id: 'second_run',    title: "YOU'RE BACK",             desc: "Second run. You didn't have to." },
+        { id: 'went_very_well', title: 'WE WENT VERY WELL',      desc: 'All Nomai logs recovered.' },
         { id: 'negotiator',    title: 'NEGOTIATOR',              desc: "You made a deal with K.Chen." },
         { id: 'no_deal',       title: 'NO DEAL',                 desc: "You told K.Chen to back off." },
         { id: 'ghost_reply',   title: 'GHOST REPLY',             desc: "You replied. They'll read it." },
-        { id: 'phantom_found', title: 'PHANTOM FOUND',           desc: "You found what PHANTOM left behind." },
+        { id: 'phantom_found',   title: 'PHANTOM FOUND',   desc: "You found what PHANTOM left behind." },
+        { id: 'full_disclosure', title: 'FULL DISCLOSURE', desc: "Every message. Even the Temu one." },
       ]
       const unlocked = JSON.parse(localStorage.getItem('breach_achievements') || '{}')
       const count = ALL.filter(a => unlocked[a.id]).length
@@ -594,9 +593,20 @@ export class Terminal {
       this._unlockAchievement('phantom_found', 'PHANTOM FOUND', 'You found what PHANTOM left behind.')
     }
 
-    // ── Achievement: read a hidden dotfile ───────────────
-    if (parts[0] === 'cat' && parts[1] && parts[1].startsWith('.')) {
-      this._unlockAchievement('archaeologist', 'ARCHAEOLOGIST', 'You found what was hidden.')
+    // ── Achievement: read all Nomai files ────────────────
+    const NOMAI_FILES = ['.nomai_fragment', '.nomai_log_001', '.nomai_log_002', '.nomai_final']
+    if (parts[0] === 'cat' && parts[1]) {
+      const filename = parts[1].replace(/^.*\//, '')
+      if (NOMAI_FILES.includes(filename)) {
+        const read = JSON.parse(localStorage.getItem('breach_nomai_read') || '[]')
+        if (!read.includes(filename)) {
+          read.push(filename)
+          localStorage.setItem('breach_nomai_read', JSON.stringify(read))
+        }
+        if (NOMAI_FILES.every(f => read.includes(f))) {
+          this._unlockAchievement('went_very_well', 'WE WENT VERY WELL', 'All Nomai logs recovered.')
+        }
+      }
     }
     // ── Track confession read (unlocks secret ending) ────
     if (parts[0] === 'cat' && parts[1] && parts[1].includes('confession')) {
@@ -607,7 +617,6 @@ export class Terminal {
     if (parts[0].startsWith('triggerachiev')) {
       const testAchievements = [
         { title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
-        { title: 'DEEP COVER',             desc: 'Past the halfway point.' },
         { title: 'GHOST',                  desc: 'No hints. No wrong answers. Flawless.' },
         { title: 'EASTER EGG FOUND',       desc: 'You went looking.' },
         { title: 'BLITZ',                  desc: 'Layer cleared in under 30 seconds.' },
@@ -640,6 +649,7 @@ export class Terminal {
       if (text === '__CLEAR__')             this._clearOutput()
       else if (text === '__SCAN__')         this._runScan()
       else if (text === '__REPLY__')         this._triggerReply()
+      else if (text === '__TESTLOOP__')      { if (window.triggerSunExplosion) window.triggerSunExplosion() }
       else if (text === '__ABLETON__')       { if (window.playAbletonTrack) window.playAbletonTrack() }
       else if (text === '__STOP_AUDIO__')    { if (window.stopAbletonTrack) window.stopAbletonTrack() }
       else if (text.startsWith('__DEVSKIP__')) this._loadLevel(parseInt(text.split(' ')[1]))
@@ -668,7 +678,8 @@ export class Terminal {
         hints:  this.state.hintsUsed,
       })
 
-      if (elapsed > 0 && elapsed < 30) this._unlockAchievement('blitz', 'BLITZ', 'Layer cleared in under 30 seconds.')
+      const _loopCount = parseInt(localStorage.getItem('breach_loop_count') || '0')
+      if (elapsed > 0 && elapsed < 30 && _loopCount === 0) this._unlockAchievement('blitz', 'BLITZ', 'Layer cleared in under 30 seconds.')
 
       this.print('', 'empty')
       this.print('[ ACCESS GRANTED ]', 'cyan')
@@ -1374,7 +1385,6 @@ export class Terminal {
     this.layerStartTime       = Date.now()
     this.layerWrongAttempts   = 0
 
-    if (levelId === 10) this._unlockAchievement('halfway',  'DEEP COVER',  'Past the halfway point.')
     if (levelId === 15) this._unlockAchievement('layer_15', 'PAST THE WALL', 'Layer 15 cleared. The vault goes deeper.')
     if (levelId === 20) this._unlockAchievement('layer_20', 'AT THE CORE', 'Layer 20. The absolute end.')
 
@@ -1483,7 +1493,6 @@ export class Terminal {
     const runs = (parseInt(localStorage.getItem('breach_completions') || '0')) + 1
     localStorage.setItem('breach_completions', runs)
     this._completionRun = runs
-    if (runs >= 2) this._unlockAchievement('second_run', "YOU'RE BACK", "Second run. You didn't have to.")
 
     // Pre-jumpscare tension — two alert lines before the scare hits
     setTimeout(() => {

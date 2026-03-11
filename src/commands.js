@@ -113,6 +113,14 @@ p.s. the glazed ones are already going`,
   },
   {
     id: 6,
+    from: 'adhqulm@gmail.com',
+    to: 'unknown_op',
+    subject: 'hello boobger :D',
+    date: 'just now',
+    body: `hello boobger i lvoe you YAYYY HAPPY BIRTHDAY YAYYYY:D`,
+  },
+  {
+    id: 7,
     from: 'k.chen@KIMINA-corp.int',
     to: '[IDENTITY REDACTED]',
     subject: 'I think I understand now',
@@ -165,12 +173,48 @@ P.S. I read everything about the Eye.
      Outer Wilds was right about everything that matters.`,
   },
   {
-    id: 7,
-    from: 'adhqulm@gmail.com',
-    to: 'vodkashotsandvolvos',
-    subject: 'hello boobger i lvoe you YAYYY :D',
-    date: 'just now',
-    body: `hello boobger i lvoe you YAYYY :D`,
+    id: 8,
+    from: 'noreply@glovo.com',
+    to: 'unknown_op',
+    subject: 'Your order is on its way!',
+    date: '1 hour ago',
+    body: `Hi there!
+
+Your order from McDonald's is on its way.
+
+  Order #GL-449021
+  Estimated delivery: 12-18 min
+  Rider: Tomasz K. ★★★★☆
+
+Track your order in the app.
+
+──────────────────────────────────
+Glovo — faster than you deserve.
+Unsubscribe | Privacy Policy`,
+  },
+  {
+    id: 9,
+    from: 'deals@temu.com',
+    to: 'unknown_op',
+    subject: '🔥 Items in your cart are SELLING OUT',
+    date: '3 hours ago',
+    body: `⚠ URGENT CART ALERT ⚠
+
+The following items in your cart are almost gone:
+
+  • LED Strip Lights (16.4ft) RGB     $1.89  → $0.99
+  • Mechanical Keyboard Keycap Set    $4.20  → $2.11
+  • Mini Portable Projector           $18.99 → $9.49
+  • 47 other items
+
+Use code: TEMU50OFF (expires in 02:14:33)
+
+Shop now before someone else takes your stuff.
+
+──────────────────────────────────
+Temu — shop like a billionaire.
+You are receiving this because you exist.
+Unsubscribe | Help | Why am I seeing this`,
   },
 ]
 
@@ -186,8 +230,8 @@ const PS_OUTPUT = [
   'KIMINA_sec         389   0.2   0.2  /opt/KIMINA/logger --output=/var/log/trace.log',
   'db_admin          412   1.2   1.8  /opt/KIMINA/db_engine --port=5432 --encrypt',
   'KIMINA_sec         887   3.1   0.1  /opt/KIMINA/intrusion_detect --sensitivity=HIGH',
-  'vodkashotsandvolvos  1891   0.1   0.1  -bash',
-  'vodkashotsandvolvos  1892   0.3   0.2  breach_client --stealth --layers=20',
+  'unknown_op  1891   0.1   0.1  -bash',
+  'unknown_op  1892   0.3   0.2  breach_client --stealth --layers=20',
   '',
 ]
 
@@ -201,8 +245,8 @@ const TOP_OUTPUT = [
   ' 887  KIMINA_sec             12.4    0.1   intrusion_detect --sensitivity=HIGH',
   ' 201  KIMINA_sec              8.1    0.4   security_daemon --watch',
   ' 412  db_admin               7.9    1.8   db_engine --port=5432',
-  '1892  vodkashotsandvolvos    0.3    0.2   breach_client --stealth',
-  '1891  vodkashotsandvolvos    0.1    0.1   -bash',
+  '1892  unknown_op    0.3    0.2   breach_client --stealth',
+  '1891  unknown_op    0.1    0.1   -bash',
   '',
   '⚠  WARNING: Process 1892 (breach_client) flagged for security review.',
   '',
@@ -322,7 +366,7 @@ export function processCommand(input, state, onUnlock) {
 
     // ── WHOAMI ──────────────────────────────────────────
     case 'whoami':
-      return line('vodkashotsandvolvos', 'bright')
+      return line('unknown_op', 'bright')
 
     // ── PWD ─────────────────────────────────────────────
     case 'pwd':
@@ -393,7 +437,7 @@ export function processCommand(input, state, onUnlock) {
           'kimina_sec:x:500:500:Kimina Security Daemon:/home/kimina_sec:/bin/bash',
           'k.chen:x:501:501:Dr K. Chen — Systems Architecture:/home/k.chen:/bin/bash',
           'r.fromm:x:502:502:Director R. Fromm:/home/r.fromm:/bin/bash',
-          'vodkashotsandvolvos:x:1000:1000::/home/vodkashotsandvolvos:/bin/bash',
+          'unknown_op:x:1000:1000::/home/unknown_op:/bin/bash',
         ],
         '/etc/hosts': [
           '127.0.0.1       localhost',
@@ -510,6 +554,10 @@ export function processCommand(input, state, onUnlock) {
       return []
     }
 
+    // ── TESTLOOP ────────────────────────────────────────
+    case 'testloop':
+      return [{ text: '__TESTLOOP__', style: 'internal' }]
+
     // ── DEVSKIP ─────────────────────────────────────────
     case 'devskip': {
       const n = parseInt(arg1)
@@ -522,14 +570,14 @@ export function processCommand(input, state, onUnlock) {
     case 'ps':
       return PS_OUTPUT.map(t => ({
         text: t,
-        style: t.includes('vodkashotsandvolvos') ? 'yellow' : 'green',
+        style: t.includes('unknown_op') ? 'yellow' : 'green',
       }))
 
     // ── TOP ─────────────────────────────────────────────
     case 'top':
       return TOP_OUTPUT.map(t => ({
         text: t,
-        style: t.includes('vodkashotsandvolvos') ? 'yellow'
+        style: t.includes('unknown_op') ? 'yellow'
              : t.includes('WARNING') ? 'red'
              : 'green',
       }))
@@ -559,7 +607,7 @@ export function processCommand(input, state, onUnlock) {
 
     // ── MAIL ────────────────────────────────────────────
     case 'mail': {
-      const isPostGame = state.levelId === 21
+      const isPostGame = state.levelId === 16
       const visibleMail = MAIL.filter(m => !m.postGameOnly || isPostGame)
       if (arg1 === 'read') {
         const id = parseInt(argArr[1])
@@ -567,6 +615,15 @@ export function processCommand(input, state, onUnlock) {
         const email = MAIL.find(m => m.id === id)
         if (!email) return err(`mail: no message numbered ${id}`)
         if (email.postGameOnly && !isPostGame) return err(`mail: no message numbered ${id}`)
+        const readMail = JSON.parse(localStorage.getItem('breach_mail_read') || '[]')
+        if (!readMail.includes(id)) {
+          readMail.push(id)
+          localStorage.setItem('breach_mail_read', JSON.stringify(readMail))
+          const allIds = MAIL.filter(m => !m.postGameOnly).map(m => m.id)
+          if (allIds.every(i => readMail.includes(i))) {
+            window.unlockAchievement?.('full_disclosure', 'FULL DISCLOSURE', 'Every message. Even the Temu one.')
+          }
+        }
         return [
           { text: '', style: 'empty' },
           { text: `FROM    : ${email.from}`, style: 'cyan' },
@@ -580,7 +637,7 @@ export function processCommand(input, state, onUnlock) {
         ]
       }
       const postGameNote = isPostGame
-        ? [{ text: '  > New mail available: email 6 — unlocked after breach.', style: 'yellow' }, { text: '', style: 'empty' }]
+        ? [{ text: '  > New mail available: email 7 — unlocked after breach.', style: 'yellow' }, { text: '', style: 'empty' }]
         : []
       return [
         { text: '', style: 'empty' },
@@ -592,7 +649,7 @@ export function processCommand(input, state, onUnlock) {
         { text: '  ─  ────────────────────────── ──────────────────────  ────────────', style: 'dim' },
         ...visibleMail.map(m => ({
           text: `  ${m.id}  ${m.from.slice(0, 29).padEnd(30)} ${m.subject.slice(0, 25).padEnd(26)} ${m.date}`,
-          style: m.id === 4 || m.id === 7 ? 'yellow' : m.id === 6 ? 'cyan' : 'green',
+          style: m.id === 4 || m.id === 6 ? 'yellow' : m.id === 7 ? 'cyan' : 'green',
         })),
         { text: '', style: 'empty' },
         { text: '  Use: mail read <number>', style: 'dim' },
@@ -768,7 +825,7 @@ export function processCommand(input, state, onUnlock) {
     // ── EASTER EGGS + UNKNOWN ────────────────────────────
     default: {
       if (['sudo', 'su'].includes(cmd))
-        return [{ text: 'vodkashotsandvolvos is not in the sudoers file. This incident will be reported.', style: 'red' }]
+        return [{ text: 'unknown_op is not in the sudoers file. This incident will be reported.', style: 'red' }]
       if (cmd === 'ssh')
         return [{ text: `ssh: connect to host ${arg1 || 'target'} port 22: Connection refused`, style: 'red' }]
       if (cmd === 'nmap') return [
@@ -838,14 +895,14 @@ export function processCommand(input, state, onUnlock) {
       ]
       if (cmd === 'id') return [
         { text: '', style: 'empty' },
-        { text: '  uid=1000(vodkashotsandvolvos) gid=1000(vodkashotsandvolvos)', style: 'green' },
-        { text: '  groups=1000(vodkashotsandvolvos),4(adm),27(sudo),1337(breach)', style: 'green' },
+        { text: '  uid=1000(unknown_op) gid=1000(unknown_op)', style: 'green' },
+        { text: '  groups=1000(unknown_op),4(adm),27(sudo),1337(breach)', style: 'green' },
         { text: '', style: 'empty' },
       ]
       if (cmd === 'env' || cmd === 'printenv') return [
         { text: '', style: 'empty' },
-        { text: '  USER=vodkashotsandvolvos', style: 'dim' },
-        { text: '  HOME=/home/vodkashotsandvolvos', style: 'dim' },
+        { text: '  USER=unknown_op', style: 'dim' },
+        { text: '  HOME=/home/unknown_op', style: 'dim' },
         { text: '  SHELL=/bin/bash', style: 'dim' },
         { text: '  TERM=xterm-256color', style: 'dim' },
         { text: '  PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', style: 'dim' },
@@ -1014,14 +1071,14 @@ export function processCommand(input, state, onUnlock) {
         { text: '  STATUS     : EXPELLED AT LAYER 11 — REASON UNKNOWN', style: 'red' },
         { text: '', style: 'empty' },
         { text: '  LAST RECORDED COMMAND:', style: 'dim' },
-        { text: '  vodkashotsandvolvos@BREACH-SYS:/$ cat /.phantom_trace', style: 'yellow' },
+        { text: '  unknown_op@BREACH-SYS:/$ cat /.phantom_trace', style: 'yellow' },
         { text: '', style: 'empty' },
         { text: '  [LOG FRAGMENT] PHANTOM\'s final note:', style: 'dim' },
         { text: '  "I got to layer 10. The manifesto. PHANTOM."', style: 'bright' },
         { text: '  "I don\'t know what this system IS."', style: 'bright' },
         { text: '  "I don\'t know who built it or why."', style: 'bright' },
         { text: '  "But whoever you are reading this —"', style: 'bright' },
-        { text: '  "— finish it."', style: 'bright' },
+        { text: '  "finish it."', style: 'bright' },
         { text: '', style: 'empty' },
         { text: '  [SESSION EXPIRED — PHANTOM NEVER RETURNED]', style: 'red' },
         { text: '', style: 'empty' },
