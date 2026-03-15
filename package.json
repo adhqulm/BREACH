@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron:dev": "vite build && electron .",
-    "electron:build": "vite build && electron-builder --win"
+    "electron:build": "vite build && electron-builder --win",
+    "electron:build:mac": "vite build && electron-builder --mac"
   },
   "devDependencies": {
     "electron": "^33.4.11",
@@ -34,6 +35,16 @@
           ]
         }
       ]
+    },
+    "mac": {
+      "icon": "src/icon.icns",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "category": "public.app-category.games"
     }
   }
 }
