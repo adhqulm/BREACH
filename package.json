@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "electron:dev": "vite build && electron .",
     "electron:build": "vite build && electron-builder --win",
-    "electron:build:mac": "vite build && electron-builder --mac"
+    "electron:build:mac": "vite build && electron-builder --mac --publish never"
   },
   "devDependencies": {
     "electron": "^33.4.11",
