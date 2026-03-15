@@ -27,7 +27,6 @@ html, body {
 a, button, select { cursor: pointer; }
 #terminal { cursor: text; }
 
-/* ── MATRIX RAIN CANVAS ── */
 #matrix-rain {
   position: fixed;
   inset: 0;
@@ -36,7 +35,6 @@ a, button, select { cursor: pointer; }
   opacity: 0.55;
 }
 
-/* ── CRT SCANLINES ── */
 #scanlines {
   position: fixed;
   inset: 0;
@@ -51,7 +49,6 @@ a, button, select { cursor: pointer; }
   );
 }
 
-/* ── SCAN BEAM ── */
 #scan-beam {
   position: fixed;
   left: 0; right: 0;
@@ -77,7 +74,6 @@ a, button, select { cursor: pointer; }
   100% { top: 100vh;  opacity: 0; }
 }
 
-/* ── CRT VIGNETTE ── */
 #vignette {
   position: fixed;
   inset: 0;
@@ -90,7 +86,6 @@ a, button, select { cursor: pointer; }
   );
 }
 
-/* ── LAYOUT ── */
 #app {
   display: flex;
   flex-direction: column;
@@ -105,7 +100,6 @@ a, button, select { cursor: pointer; }
   background: transparent;
 }
 
-/* ── STATUS BAR ── */
 #status-bar {
   display: flex;
   align-items: center;
@@ -130,7 +124,6 @@ a, button, select { cursor: pointer; }
   color: var(--dim-green);
 }
 
-/* ── CONNECTION STATUS DOT ── */
 #conn-status {
   display: flex;
   align-items: center;
@@ -161,7 +154,6 @@ a, button, select { cursor: pointer; }
   gap: 12px;
 }
 
-/* ── LIVE CLOCK ── */
 #status-time {
   color: var(--dim-green);
   font-size: 11px;
@@ -222,7 +214,6 @@ a, button, select { cursor: pointer; }
   transition: color 0.4s ease;
 }
 
-/* ── TERMINAL FRAME WITH CORNERS ── */
 #terminal-frame {
   flex: 1;
   position: relative;
@@ -245,7 +236,6 @@ a, button, select { cursor: pointer; }
 .corner.bottom-left  { bottom: 4px; left: 4px;  }
 .corner.bottom-right { bottom: 4px; right: 4px; }
 
-/* ── TERMINAL ── */
 #terminal {
   flex: 1;
   display: flex;
@@ -270,7 +260,6 @@ a, button, select { cursor: pointer; }
 #output::-webkit-scrollbar-track { background: transparent; }
 #output::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-/* ── OUTPUT LINES ── */
 .line {
   display: block;
   white-space: pre-wrap;
@@ -287,7 +276,6 @@ a, button, select { cursor: pointer; }
 .line.white  { color: #ffffff; }
 .line.empty  { color: transparent; }
 
-/* ── INPUT LINE ── */
 #input-line {
   display: flex;
   align-items: center;
@@ -309,7 +297,6 @@ a, button, select { cursor: pointer; }
   color: var(--bright);
 }
 
-/* ── CURSOR ── */
 #cursor {
   color: var(--green);
   text-shadow: 0 0 10px var(--green), 0 0 20px rgba(0,255,65,0.4);
@@ -322,7 +309,6 @@ a, button, select { cursor: pointer; }
   50%       { opacity: 0; }
 }
 
-/* ── SCREEN FLICKER ── */
 @keyframes flicker {
   0%   { opacity: 1; }
   92%  { opacity: 1; }
@@ -337,7 +323,6 @@ a, button, select { cursor: pointer; }
   animation: flicker 0.15s steps(1, end);
 }
 
-/* ── SUCCESS FLASH ── */
 @keyframes success-flash {
   0%   { background: rgba(0, 255, 65, 0.0); }
   15%  { background: rgba(0, 255, 65, 0.06); }
@@ -348,7 +333,6 @@ a, button, select { cursor: pointer; }
   animation: success-flash 1s ease-out;
 }
 
-/* ── ERROR SHAKE ── */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20%       { transform: translateX(-5px); }
@@ -361,7 +345,6 @@ a, button, select { cursor: pointer; }
   animation: shake 0.35s ease;
 }
 
-/* ── GLITCH EFFECT ── */
 @keyframes glitch {
   0%   { transform: translate(0); filter: none; }
   10%  { transform: translate(-3px, 1px); filter: hue-rotate(90deg) brightness(1.2); }
@@ -375,7 +358,6 @@ a, button, select { cursor: pointer; }
 
 .glitch { animation: glitch 0.4s steps(2, end); }
 
-/* ── LEVEL BANNER ── */
 .level-banner {
   color: var(--cyan);
   text-shadow: 0 0 12px var(--cyan);
@@ -384,7 +366,6 @@ a, button, select { cursor: pointer; }
   padding: 2px 0;
 }
 
-/* ── FAKE GAME OVER OVERLAY ── */
 @keyframes gameover-flicker {
   0%   { opacity: 1; }
   8%   { opacity: 0.85; }
@@ -458,7 +439,6 @@ a, button, select { cursor: pointer; }
   transition: color 0.4s ease;
 }
 
-/* ── JUMPSCARE ── */
 @keyframes js-pop {
   0%   { transform: scale(0.85); opacity: 0; }
   60%  { transform: scale(1.04); opacity: 1; }
@@ -483,7 +463,6 @@ a, button, select { cursor: pointer; }
   animation: js-pop 0.08s ease-out forwards;
 }
 
-/* ── DIALOGUE ── */
 #dialogue-overlay {
   position: fixed;
   inset: 0;
@@ -578,7 +557,6 @@ a, button, select { cursor: pointer; }
   animation: blink 1s step-end infinite;
 }
 
-/* ── ACHIEVEMENT TOAST ── */
 .achievement-toast {
   position: fixed;
   top: 48px;
@@ -637,13 +615,11 @@ a, button, select { cursor: pointer; }
   letter-spacing: 0.04em;
 }
 
-/* ── COMPLETION SCREEN ── */
 .completion-line {
   color: var(--cyan);
   text-shadow: 0 0 16px var(--cyan), 0 0 32px rgba(0,229,255,0.3);
 }
 
-/* ── SECRET ENDING — PHONE SCREEN ── */
 #secret-ending-overlay {
   position: fixed;
   inset: 0;
@@ -740,7 +716,6 @@ a, button, select { cursor: pointer; }
   50%       { opacity: 1;   }
 }
 
-/* ── CREDITS ── */
 #credits-screen {
   position: fixed;
   inset: 0;

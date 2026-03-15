@@ -1,17 +1,3 @@
-/**
- * All 20 BREACH puzzle definitions.
- *
- * Each puzzle has:
- *   id         – 1-indexed level number
- *   title      – shown in level banner
- *   intro      – array of lines shown when layer starts
- *   filesystem – { dirs: string[], files: { path: content } }
- *   answers    – array of accepted strings (case-insensitive unless noted)
- *   caseSensitive – if true, answer must match exactly (level 15 only)
- *   hints      – array of 3 strings, progressive difficulty
- *   successMsg – array of lines shown on correct unlock
- */
-
 export const PUZZLES = [
 
   // ─────────────────────────────────────────────

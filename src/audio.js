@@ -46,7 +46,6 @@ export function playKeyClick() {
   } catch (_) {}
 }
 
-// Subtle typewriter tick — freqMin/freqMax let callers vary pitch per speaker
 export function playTypeClick(freqMin = 480, freqMax = 800) {
   if (window.gameMuted) return
   try {
@@ -64,7 +63,6 @@ export function playTypeClick(freqMin = 480, freqMax = 800) {
   } catch (_) {}
 }
 
-// Morse code player — pass standard notation e.g. '-. --- -- .- ..' (space = char boundary)
 export function playMorse(morseStr) {
   if (window.gameMuted) return
   try {
@@ -83,7 +81,6 @@ export function playMorse(morseStr) {
   } catch (_) {}
 }
 
-// Dramatic crash sound — low rumble + noise burst
 export function playCrashSound() {
   if (window.gameMuted) return
   try {
@@ -124,7 +121,6 @@ export function playBeep(freq = 800, dur = 0.06) {
   } catch (_) {}
 }
 
-// Two-tone pulsing alarm — plays n bursts (default 3)
 export function playAlarm(bursts = 3) {
   if (window.gameMuted) return
   try {

@@ -1,16 +1,3 @@
-/**
- * Process a command string and return an array of output line objects.
- * Each line: { text: string, style: string }
- *
- * Internal markers (handled by terminal.js):
- *   __CLEAR__        clear the output
- *   __SCAN__         run animated vulnerability scan
- *   __THEME__ <name> change color theme
- *   __VOL__ <dir>    adjust volume
- */
-
-// ── INTERCEPTED MAIL ─────────────────────────────────────────────────────────
-
 const MAIL = [
   {
     id: 1,
@@ -218,7 +205,6 @@ Unsubscribe | Help | Why am I seeing this`,
   },
 ]
 
-// ── FAKE PROCESS LIST ─────────────────────────────────────────────────────────
 
 const PS_OUTPUT = [
   '',
@@ -269,7 +255,6 @@ const NETSTAT_OUTPUT = [
   '',
 ]
 
-// ── NETMAP ────────────────────────────────────────────────────────────────────
 
 function generateNetmap(levelId) {
   const s = (min, max, done) => {
@@ -304,7 +289,6 @@ function generateNetmap(levelId) {
   ]
 }
 
-// ── COMMAND PROCESSOR ────────────────────────────────────────────────────────
 
 export function processCommand(input, state, onUnlock) {
   const trimmed = input.trim()
@@ -319,7 +303,6 @@ export function processCommand(input, state, onUnlock) {
 
   switch (cmd.toLowerCase()) {
 
-    // ── HELP ────────────────────────────────────────────
     case 'help': {
       return [
         { text: '', style: 'empty' },
@@ -364,19 +347,15 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── WHOAMI ──────────────────────────────────────────
     case 'whoami':
       return line('unknown_op', 'bright')
 
-    // ── PWD ─────────────────────────────────────────────
     case 'pwd':
       return line(state.cwd, 'bright')
 
-    // ── CLEAR ───────────────────────────────────────────
     case 'clear':
       return [{ text: '__CLEAR__', style: 'internal' }]
 
-    // ── HISTORY ─────────────────────────────────────────
     case 'history': {
       if (!state.history || state.history.length === 0) return line('(no history)', 'dim')
       return state.history.map((h, i) => ({
@@ -385,7 +364,6 @@ export function processCommand(input, state, onUnlock) {
       }))
     }
 
-    // ── LS ──────────────────────────────────────────────
     case 'ls': {
       const fs = state.fs
       if (!fs) return err('no filesystem mounted')
@@ -408,7 +386,6 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── CD ──────────────────────────────────────────────
     case 'cd': {
       const fs = state.fs
       if (!fs) return err('no filesystem mounted')
@@ -422,13 +399,11 @@ export function processCommand(input, state, onUnlock) {
       return []
     }
 
-    // ── CAT ─────────────────────────────────────────────
     case 'cat': {
       const fs = state.fs
       if (!fs) return err('no filesystem mounted')
       if (!arg1) return err('cat: missing operand')
 
-      // Virtual system files — not in the puzzle filesystem
       const VIRTUAL_FILES = {
         '/etc/passwd': [
           'root:x:0:0:root:/root:/bin/bash',
@@ -457,7 +432,6 @@ export function processCommand(input, state, onUnlock) {
         '/proc/uptime': ['847 days, 14:31:22 — node has not rebooted since deployment'],
       }
 
-      // Resolve against virtual paths (always absolute)
       const virtualKey = arg1.startsWith('/') ? arg1
         : (state.cwd === '/' ? '/' + arg1 : state.cwd + '/' + arg1)
       if (VIRTUAL_FILES[virtualKey]) {
@@ -479,7 +453,6 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── MAN ─────────────────────────────────────────────
     case 'man': {
       const manuals = {
         ls:      'ls [-a] [PATH]  —  List directory. -a shows hidden dotfiles.',
@@ -519,7 +492,6 @@ export function processCommand(input, state, onUnlock) {
       return [{ text: '', style: 'empty' }, { text: m, style: 'bright' }, { text: '', style: 'empty' }]
     }
 
-    // ── HINT ────────────────────────────────────────────
     case 'hint': {
       const puzzle = state.puzzle
       if (!puzzle) return err('no active puzzle')
@@ -529,7 +501,6 @@ export function processCommand(input, state, onUnlock) {
       const hint = puzzle.hints[used]
       state.hintsUsed = used + 1
       const remaining = puzzle.hints.length - state.hintsUsed
-      // Penalty — bump detection
       if (state.bumpDetection) state.bumpDetection(10)
       return [
         { text: '', style: 'empty' },
@@ -541,7 +512,6 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── UNLOCK ──────────────────────────────────────────
     case 'unlock': {
       const puzzle = state.puzzle
       if (!puzzle) return err('no active puzzle')
@@ -554,11 +524,9 @@ export function processCommand(input, state, onUnlock) {
       return []
     }
 
-    // ── TESTLOOP ────────────────────────────────────────
     case 'testloop':
       return [{ text: '__TESTLOOP__', style: 'internal' }]
 
-    // ── DEVSKIP ─────────────────────────────────────────
     case 'devskip': {
       const n = parseInt(arg1)
       if (!arg1 || isNaN(n) || n < 1 || n > 20)
@@ -566,14 +534,12 @@ export function processCommand(input, state, onUnlock) {
       return [{ text: `__DEVSKIP__ ${n}`, style: 'internal' }]
     }
 
-    // ── PS ──────────────────────────────────────────────
     case 'ps':
       return PS_OUTPUT.map(t => ({
         text: t,
         style: t.includes('unknown_op') ? 'yellow' : 'green',
       }))
 
-    // ── TOP ─────────────────────────────────────────────
     case 'top':
       return TOP_OUTPUT.map(t => ({
         text: t,
@@ -582,30 +548,24 @@ export function processCommand(input, state, onUnlock) {
              : 'green',
       }))
 
-    // ── NETSTAT ─────────────────────────────────────────
     case 'netstat':
       return NETSTAT_OUTPUT.map(t => ({
         text: t,
         style: t.includes('NOTE') || t.includes('Source') ? 'yellow' : 'green',
       }))
 
-    // ── NETMAP ──────────────────────────────────────────
     case 'netmap':
       return generateNetmap(state.levelId || 0)
 
-    // ── SCAN ────────────────────────────────────────────
     case 'scan':
       return [{ text: '__SCAN__', style: 'internal' }]
 
-    // ── THEME ───────────────────────────────────────────
     case 'theme':
       return [{ text: `__THEME__ ${arg1 || 'green'}`, style: 'internal' }]
 
-    // ── VOL ─────────────────────────────────────────────
     case 'vol':
       return [{ text: `__VOL__ ${arg1 || 'up'}`, style: 'internal' }]
 
-    // ── MAIL ────────────────────────────────────────────
     case 'mail': {
       const isPostGame = state.levelId === 16
       const visibleMail = MAIL.filter(m => !m.postGameOnly || isPostGame)
@@ -657,7 +617,6 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── ANALYZE ─────────────────────────────────────────
     case 'analyze': {
       const fs = state.fs
       if (!fs) return err('no filesystem mounted')
@@ -754,7 +713,6 @@ export function processCommand(input, state, onUnlock) {
       ]
     }
 
-    // ── BASE64 ──────────────────────────────────────────
     case 'base64': {
       const op    = arg1.toLowerCase()
       const input = argArr.slice(1).join(' ').trim()
@@ -795,7 +753,6 @@ export function processCommand(input, state, onUnlock) {
       return err(`base64: unknown operation '${op}' — use encode or decode`)
     }
 
-    // ── XXD / HEXDUMP ────────────────────────────────────
     case 'xxd':
     case 'hexdump': {
       const fs = state.fs
@@ -822,7 +779,6 @@ export function processCommand(input, state, onUnlock) {
       return lines
     }
 
-    // ── EASTER EGGS + UNKNOWN ────────────────────────────
     default: {
       if (['sudo', 'su'].includes(cmd))
         return [{ text: 'unknown_op is not in the sudoers file. This incident will be reported.', style: 'red' }]
@@ -977,15 +933,13 @@ export function processCommand(input, state, onUnlock) {
       if (cmd === 'exit' || cmd === 'quit')
         return [{ text: 'There is no exit. Only forward.', style: 'dim' }]
       if (cmd === 'reset' || cmd === 'theme' || cmd === 'vol')
-        return []  // handled by terminal.js
+        return []
       if (cmd === 'mute')   return [{ text: '__VOL__ mute',   style: 'internal' }]
       if (cmd === 'unmute') return [{ text: '__VOL__ unmute', style: 'internal' }]
 
-      // ── STOP AUDIO ─────────────────────────────────────
       if (cmd === 'stop')
         return [{ text: '__STOP_AUDIO__', style: 'internal' }]
 
-      // ── EASTER EGG: OUTER WILDS ────────────────────────
       if (cmd === 'outerwilds') return [
         { text: '', style: 'empty' },
         { text: '  [ OUTER WILDS MEMORIAL ARCHIVE — READ-ONLY ]', style: 'cyan' },
@@ -1007,7 +961,6 @@ export function processCommand(input, state, onUnlock) {
         { text: '', style: 'empty' },
       ]
 
-      // ── EASTER EGG: PRODUCE ────────────────────────────
       if (cmd === 'produce') return [
         { text: '', style: 'empty' },
         { text: '  [ AUDIO ENGINE — SESSION ACTIVE ]', style: 'cyan' },
@@ -1023,7 +976,6 @@ export function processCommand(input, state, onUnlock) {
         { text: '', style: 'empty' },
       ]
 
-      // ── EASTER EGG: ABLETON ────────────────────────────
       if (cmd === 'ableton') return [
         { text: '', style: 'empty' },
         { text: '  [ ◉ PLAYBACK ACTIVE ]', style: 'cyan' },
@@ -1040,7 +992,6 @@ export function processCommand(input, state, onUnlock) {
         { text: '__ABLETON__', style: 'internal' },
       ]
 
-      // ── EASTER EGG: VOLVO ──────────────────────────────
       if (cmd === 'volvo') return [
         { text: '', style: 'empty' },
         { text: '  [ VOLVO IDENTIFICATION SYSTEM v4.2 ]', style: 'cyan' },
@@ -1059,7 +1010,6 @@ export function processCommand(input, state, onUnlock) {
         { text: '', style: 'empty' },
       ]
 
-      // ── EASTER EGG: PHANTOM ────────────────────────────
       if (cmd === 'phantom') return [
         { text: '', style: 'empty' },
         { text: '  [ PHANTOM TRACE ARCHIVE — RECOVERED SESSION LOG ]', style: 'red' },
@@ -1084,11 +1034,9 @@ export function processCommand(input, state, onUnlock) {
         { text: '', style: 'empty' },
       ]
 
-      // ── POST-GAME: REPLY ───────────────────────────────
       if (cmd === 'reply' || cmd === 'respond') {
         if (state.levelId !== 16)
           return err(`${cmd}: command not found`)
-        // Trigger the full reply dialogue sequence
         return [{ text: '__REPLY__', style: 'internal' }]
       }
 

@@ -8,7 +8,6 @@ import abletonUrl from './mp3/ableton.mp3'
 import dialogueUrl from './mp3/dialogue.mp3'
 import sunExplosionUrl from './mp3/sunexplotion.mp3'
 
-// Dialogue music — plays through the Pedro scene and credits
 const dialogueMusic = new Audio(dialogueUrl)
 dialogueMusic.loop  = true
 dialogueMusic.volume = 0
@@ -41,13 +40,10 @@ function stopDialogueAbrupt() {
   dialogueMusic.currentTime = 0
 }
 
-// Ambient background music — fade in over 4 seconds
 const bgMusic = new Audio(musicUrl)
 bgMusic.loop   = true
 bgMusic.volume = 0
-window.bgMusic = bgMusic   // exposed for vol command in terminal
-
-// Ableton easter egg track — starts at 18s
+window.bgMusic = bgMusic
 window._abletonTrack = null
 window.gameMuted = false
 window.playAbletonTrack = () => {
@@ -62,7 +58,7 @@ window.stopAbletonTrack = () => {
 }
 
 function startMusic() {
-  bgMusic.play().catch(() => {})  // silently ignore if blocked
+  bgMusic.play().catch(() => {})
   let vol = 0
   const fade = setInterval(() => {
     vol = Math.min(vol + 0.005, 0.18)
@@ -71,15 +67,11 @@ function startMusic() {
   }, 100)
 }
 
-// Preload jumpscare audio so it fires in sync with the image
 const _jumpscareSnd = new Audio(jumpscareAudioUrl)
 _jumpscareSnd.preload = 'auto'
 _jumpscareSnd.volume  = 1.0
 
-// ── JUMPSCARE ──
 function triggerJumpscare(onDone) {
-  // Start audio first — browsers have ~50-80ms audio init latency even when preloaded.
-  // Delaying the image by the same amount keeps scream and photo in sync.
   const snd = _jumpscareSnd
   snd.currentTime = 2
   snd.play().catch(() => {})
@@ -92,7 +84,6 @@ function triggerJumpscare(onDone) {
     overlay.appendChild(img)
     document.body.appendChild(overlay)
 
-    // Hold for 2.5 seconds then cut hard to black (blocker is already underneath)
     setTimeout(() => {
       overlay.remove()
       snd.pause()
@@ -101,7 +92,6 @@ function triggerJumpscare(onDone) {
   }, 80)
 }
 
-// ── DIALOGUE ──
 function buildEndingScript() {
   const confessionRead = localStorage.getItem('breach_confession_read') === '1'
   return [
@@ -179,10 +169,7 @@ function buildEndingScript() {
   ]
 }
 
-// ── SECRET ENDING ──
 function triggerSecretEnding(bgOverlay, onDone) {
-  // Reuse the existing black overlay from the dialogue — background stays black.
-  // Just repurpose its id and show the phone on top.
   const overlay = bgOverlay
   overlay.id = 'secret-ending-overlay'
   overlay.style.opacity = '1'
@@ -210,7 +197,6 @@ function triggerSecretEnding(bgOverlay, onDone) {
   sentBubble.style.opacity = '0'
   phone.appendChild(sentBubble)
 
-  // A.'s replies sent sequentially
   const A_REPLIES = [
     'hey',
     'happy birthday!!',
@@ -266,7 +252,6 @@ function triggerSecretEnding(bgOverlay, onDone) {
   }, 800)
 }
 
-// ── REPLY SEQUENCE (post-game) ──
 function triggerReplySequence(onDone) {
   const REPLY_SCRIPT = [
     'Kimi (thoughts): "...no reply needed."',
@@ -362,7 +347,6 @@ function triggerDialogue(script, onDone) {
   let choiceActive = false
   let selectedEnding = null
 
-  // Split "Speaker: text" into parts
   function parseLine(str) {
     const match = str.match(/^([^:]+):\s*(.+)$/)
     if (match) return { speaker: match[1].trim(), text: match[2].trim() }
@@ -388,14 +372,13 @@ function triggerDialogue(script, onDone) {
     advEl.style.opacity = '0'
     setSpeakerStyle(speaker)
     textEl.textContent = ''
-    // Speed and pitch vary by speaker
     let interval, freqMin, freqMax
     if (speaker === 'Kimi') {
-      interval = 55; freqMin = 280; freqMax = 500   // slow, low — confused/groggy
+      interval = 55; freqMin = 280; freqMax = 500
     } else if (speaker.startsWith('Kimi')) {
-      interval = 72; freqMin = 240; freqMax = 400   // internal thoughts — even slower, quieter
+      interval = 72; freqMin = 240; freqMax = 400
     } else {
-      interval = 30; freqMin = 600; freqMax = 950   // Pedro — fast and sharp
+      interval = 30; freqMin = 600; freqMax = 950
     }
     let i = 0
     typeTimer = setInterval(() => {
@@ -444,8 +427,6 @@ function triggerDialogue(script, onDone) {
     box.style.transition = 'opacity 0.5s ease'
     box.style.opacity = '0'
     setTimeout(() => {
-      // Keep the dialogue overlay's black background — don't remove it yet.
-      // The phone screen will appear on top of it.
       box.remove()
       triggerSecretEnding(overlay, () => {
         if (window.unlockAchievement)
@@ -466,7 +447,6 @@ function triggerDialogue(script, onDone) {
       showSecretEndingFlow()
       return
     }
-    // Good ending — stop dialogue music abruptly, play fall.mp3
     stopDialogueAbrupt()
     box.style.transition = 'opacity 0.3s ease'
     box.style.opacity = '0'
@@ -526,7 +506,6 @@ function triggerDialogue(script, onDone) {
     choicesEl.style.display = 'none'
     choicesEl.innerHTML = ''
     selectedEnding = opt.ending
-    // Prepend Kimi's spoken choice as first line of the continuation
     lines = [`Kimi: ${opt.label}`, ...opt.lines]
     lineIdx = 0
     overlay.addEventListener('click', onOverlayClick)
@@ -583,9 +562,7 @@ function triggerDialogue(script, onDone) {
   }, 2000)
 }
 
-// ── END SEQUENCE (jumpscare → dialogue) ──
 function triggerEndSequence(onDone) {
-  // Fade out background music so jumpscare sound hits harder
   if (window.bgMusic) {
     const vol = { v: window.bgMusic.volume }
     const fadeOut = setInterval(() => {
@@ -595,7 +572,6 @@ function triggerEndSequence(onDone) {
     }, 40)
   }
 
-  // Black underlay covers the game immediately — no flash when jumpscare ends
   const blocker = document.createElement('div')
   blocker.style.cssText = 'position:fixed;inset:0;z-index:99997;background:#000'
   document.body.appendChild(blocker)
@@ -608,7 +584,6 @@ function triggerEndSequence(onDone) {
 
 window.triggerEndSequence = triggerEndSequence
 
-// ── CREDITS ──
 function triggerCredits(endingType) {
   const CREDITS = [
     { text: '', cls: 'cr-gap' },
@@ -778,7 +753,6 @@ function triggerCredits(endingType) {
   const colCellStyle = 'flex:1;'
 
   for (const line of CREDITS) {
-    // Two-column label row
     if (line.col2) {
       const row = document.createElement('div')
       row.style.cssText = col2Style + 'margin-top:18px; margin-bottom:2px;'
@@ -791,7 +765,6 @@ function triggerCredits(endingType) {
       inner.appendChild(row)
       continue
     }
-    // Two-column name row (same name both sides)
     if (line.col2name) {
       const row = document.createElement('div')
       row.style.cssText = col2Style
@@ -804,7 +777,6 @@ function triggerCredits(endingType) {
       inner.appendChild(row)
       continue
     }
-    // Two-column name row (different names)
     if (line.col2name2) {
       const row = document.createElement('div')
       row.style.cssText = col2Style
@@ -817,7 +789,6 @@ function triggerCredits(endingType) {
       inner.appendChild(row)
       continue
     }
-    // Normal single-column entry
     const el = document.createElement('div')
     el.style.cssText = styleMap[line.cls] || ''
     el.textContent = line.text
@@ -827,9 +798,8 @@ function triggerCredits(endingType) {
   screen.appendChild(inner)
   document.body.appendChild(screen)
 
-  // Scroll animation
   const totalHeight = CREDITS.length * 22 + window.innerHeight
-  const duration = totalHeight * 38  // ms per px
+  const duration = totalHeight * 38
   let startTime = null
   let animFrame
 
@@ -839,7 +809,6 @@ function triggerCredits(endingType) {
     const progress = elapsed / duration
     inner.style.transform = `translateY(${-progress * (totalHeight - window.innerHeight * 0.5)}px)`
 
-    // Start fading dialogue music at 70% through
     if (progress >= 0.70) {
       const fadeProgress = (progress - 0.70) / 0.30
       dialogueMusic.volume = Math.max(0, 0.55 * (1 - fadeProgress))
@@ -856,8 +825,6 @@ function triggerCredits(endingType) {
   animFrame = requestAnimationFrame(step)
 }
 
-// ── ASH TWIN PROJECT — 22-MINUTE LOOP ──
-
 const LOOP_MS = 22 * 60 * 1000
 
 function triggerSunExplosion() {
@@ -869,14 +836,10 @@ function triggerSunExplosion() {
   if (window.bgMusic) { window.bgMusic.pause() }
   stopDialogueAbrupt()
 
-  // Sun explosion audio — starts at 1:50.5 so that 2:03 lands 1s before white ends.
-  // (white-to-black starts at t=13500ms, so "1s before" = t=12500ms = 12.5s into sequence)
-  // audio offset = 123 - 12.5 = 110.5s
   const sunSnd = new Audio(sunExplosionUrl)
   sunSnd.volume = 0
   sunSnd.currentTime = 110.5
   sunSnd.play().catch(() => {})
-  // Fade in over 4 seconds
   let sunVol = 0
   const sunFade = setInterval(() => {
     sunVol = Math.min(1.0, sunVol + 0.015)
@@ -888,24 +851,14 @@ function triggerSunExplosion() {
   flare.style.cssText = 'position:fixed;inset:0;z-index:999999;pointer-events:none;background:rgba(0,0,0,0);'
   document.body.appendChild(flare)
 
-  // Chain of CSS transitions — each one smoothly bleeds into the next.
-  // The key: set transition duration = time until next step, so it lands exactly there.
-  //
-  //  t=0      transparent
-  //  t=2s     faint warm amber tint
-  //  t=5s     rich orange glow
-  //  t=8s     pale amber-white (sun overwhelming everything)
-  //  t=10s    pure blinding white
-  //  t=11.5s  hold white, then start fading black
-  //  t=14s    full black
 
   const steps = [
-    { at: 100,   dur: 2000,  bg: 'rgba(180, 60, 0, 0.08)'  },  // barely visible warm tint
-    { at: 2100,  dur: 3000,  bg: 'rgba(255, 100, 10, 0.35)' }, // orange glow building
-    { at: 5100,  dur: 3000,  bg: 'rgba(255, 180, 60, 0.70)' }, // sun flooding in
-    { at: 8100,  dur: 2000,  bg: 'rgba(255, 230, 150, 0.90)'},  // almost white
-    { at: 10100, dur: 1400,  bg: 'rgba(255, 255, 255, 1.0)' }, // full white
-    { at: 13500, dur: 2500,  bg: 'rgba(0,   0,   0,   1.0)' }, // fade to black
+    { at: 100,   dur: 2000,  bg: 'rgba(180, 60, 0, 0.08)'  },
+    { at: 2100,  dur: 3000,  bg: 'rgba(255, 100, 10, 0.35)' },
+    { at: 5100,  dur: 3000,  bg: 'rgba(255, 180, 60, 0.70)' },
+    { at: 8100,  dur: 2000,  bg: 'rgba(255, 230, 150, 0.90)'},
+    { at: 10100, dur: 1400,  bg: 'rgba(255, 255, 255, 1.0)' },
+    { at: 13500, dur: 2500,  bg: 'rgba(0,   0,   0,   1.0)' },
   ]
 
   for (const s of steps) {
@@ -915,7 +868,6 @@ function triggerSunExplosion() {
     }, s.at)
   }
 
-  // Text appears on black (~16s in, after 2s white hold)
   setTimeout(() => {
     const msg = document.createElement('div')
     msg.style.cssText = `
@@ -981,7 +933,6 @@ function initLoopTimer() {
   setTimeout(() => triggerSunExplosion(), LOOP_MS)
 }
 
-// ── MATRIX RAIN ──
 function initMatrixRain() {
   const canvas = document.getElementById('matrix-rain')
   const ctx = canvas.getContext('2d')
@@ -1004,7 +955,6 @@ function initMatrixRain() {
   window.addEventListener('resize', resize)
 
   function draw() {
-    // Slow fade trail
     ctx.fillStyle = 'rgba(0, 0, 0, 0.04)'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
@@ -1012,12 +962,10 @@ function initMatrixRain() {
       const y = drops[i] * FONT_SIZE
       const char = CHARS[Math.floor(Math.random() * CHARS.length)]
 
-      // Bright head
       ctx.fillStyle = 'rgba(180, 255, 200, 0.9)'
       ctx.font = `bold ${FONT_SIZE}px monospace`
       ctx.fillText(char, i * FONT_SIZE, y)
 
-      // Dim body (one step behind)
       ctx.fillStyle = 'rgba(0, 200, 60, 0.35)'
       ctx.font = `${FONT_SIZE}px monospace`
       ctx.fillText(CHARS[Math.floor(Math.random() * CHARS.length)], i * FONT_SIZE, y - FONT_SIZE)
@@ -1032,7 +980,6 @@ function initMatrixRain() {
   setInterval(draw, 40)
 }
 
-// ── LIVE CLOCK ──
 function initClock() {
   const el = document.getElementById('status-time')
   function tick() {
@@ -1046,7 +993,6 @@ function initClock() {
   setInterval(tick, 1000)
 }
 
-// ── SCREEN FLICKER ──
 function initFlicker() {
   const frame = document.getElementById('terminal-frame')
   function maybeFlicker() {
@@ -1059,7 +1005,6 @@ function initFlicker() {
   setTimeout(maybeFlicker, 3000)
 }
 
-// Boot on first user interaction (required for Web Audio API)
 let booted = false
 
 async function startGame() {
@@ -1074,11 +1019,9 @@ async function startGame() {
   initLoopTimer()
 }
 
-// If the user clicks or presses a key, start
 document.addEventListener('click', startGame, { once: true })
 document.addEventListener('keydown', startGame, { once: true })
 
-// Show a "press any key" prompt until interaction
 const output = document.getElementById('output')
 const waiting = document.createElement('div')
 waiting.style.marginTop = '38vh'
@@ -1099,12 +1042,10 @@ waiting.appendChild(waitLine1)
 waiting.appendChild(waitLine2)
 output.appendChild(waiting)
 
-// Blink the main waiting line
 setInterval(() => {
   waitLine1.style.opacity = waitLine1.style.opacity === '0' ? '1' : '0'
 }, 700)
 
-// Init visual effects immediately (no user interaction required)
 initMatrixRain()
 initClock()
 initFlicker()

@@ -6,8 +6,6 @@ import { playError, playSuccess, playFinalSuccess, playBeep, playCrashSound, pla
 const USERNAME = 'unknown_op'
 const HOSTNAME = 'BREACH-SYS'
 
-// ── ANALYST INTERCEPTS ───────────────────────────────────────────────────────
-// K.Chen messages that appear after specific layers are cleared
 
 const ANALYST_INTERCEPTS = {
   3:  [
@@ -30,7 +28,6 @@ const ANALYST_INTERCEPTS = {
     { text: '  --------------------------------------------------------', style: 'red' },
     { text: '', style: 'empty' },
   ],
-  // Layer 8: K.Chen opens a direct channel and offers a deal
   8:  [
     { text: '', style: 'empty' },
     { text: '  -------- KIMINA SECURE CHANNEL — DIRECT LINE OPEN --------', style: 'yellow' },
@@ -101,8 +98,6 @@ const ANALYST_INTERCEPTS = {
     { text: '', style: 'empty' },
   ],
 }
-
-// ── CLASSIFIED FILE CONTENT ───────────────────────────────────────────────────
 
 const CLASSIFIED_FILE = `ORIGIN_UNKNOWN.CORE
 ===================
@@ -240,7 +235,6 @@ anything to watch.
 [CLASSIFICATION  : RECLASSIFIED — ORIGIN UNKNOWN]
 [END OF DOCUMENT]`
 
-// ── COLOR THEMES ─────────────────────────────────────────────────────────────
 
 const THEMES = {
   green: {
@@ -280,7 +274,6 @@ const THEMES = {
   },
 }
 
-// ── BOOT LINES ───────────────────────────────────────────────────────────────
 
 const BOOT_LINES = [
   { text: '', style: 'empty', delay: 80 },
@@ -316,7 +309,6 @@ const BOOT_LINES = [
   { text: '', style: 'empty', delay: 90 },
 ]
 
-// ── TERMINAL CLASS ────────────────────────────────────────────────────────────
 
 export class Terminal {
   constructor() {
@@ -338,8 +330,7 @@ export class Terminal {
     this.currentLevel = 0
     this.detection    = 0
 
-    // Per-layer stat tracking
-    this.layerStats         = []   // [{ time, wrong, hints }]
+    this.layerStats         = []
     this.layerStartTime     = null
     this.layerWrongAttempts = 0
 
@@ -353,31 +344,25 @@ export class Terminal {
       bumpDetection:  (n) => this._bumpDetection(n),
     }
 
-    // Tab autocomplete cycling state
     this._tabMatches  = []
     this._tabIndex    = -1
     this._tabPartial  = null
     this._tabDirPart  = ''
     this._tabCmd      = ''
 
-    // Achievement toast queue
     this._toastQueue = []
     this._toastBusy  = false
 
-    // K.Chen deal state
     this.kchen_deal_pending  = false
-    this.kchen_deal_accepted = null  // true | false | null
+    this.kchen_deal_accepted = null
 
-    // Firewall challenge state
-    this.firewall_triggered = false   // only fires once per session
+    this.firewall_triggered = false
     this.firewall_active    = false
     this.firewall_answer    = null
     this.firewall_timer     = null
 
-    // PHANTOM bleed-through (Layer 10 ghost session)
     this._phantomBleedTimer = null
 
-    // Detection spike (Layer 11 emergency protocol)
     this._emergencyProtocolActive = false
 
     this._bindEvents()
@@ -385,8 +370,6 @@ export class Terminal {
     this._startAmbientAlerts()
     window.unlockAchievement = (id, title, desc) => this._unlockAchievement(id, title, desc)
   }
-
-  // ── EVENTS ───────────────────────────────────────────────────────────────
 
   _bindEvents() {
     document.addEventListener('keydown', e => this._onKey(e))
@@ -449,7 +432,6 @@ export class Terminal {
     }
   }
 
-  // ── COMMAND SUBMISSION ───────────────────────────────────────────────────
 
   _submit() {
     const input = this.inputBuffer.trim()
@@ -462,7 +444,6 @@ export class Terminal {
 
     const parts = input.toLowerCase().split(/\s+/)
 
-    // ── Terminal-level commands ──────────────────────────
     if (parts[0] === 'reset') {
       localStorage.removeItem('breach_level')
       localStorage.removeItem('breach_detection')
@@ -472,7 +453,6 @@ export class Terminal {
       return
     }
 
-    // ── kchen deal command ────────────────────────────────
     if (parts[0] === 'kchen') {
       if (!this.kchen_deal_pending) {
         this.print('', 'empty')
@@ -526,7 +506,11 @@ export class Terminal {
       return
     }
 
-    // ── firewall command ──────────────────────────────────
+    if (parts[0] === 'testfirewall') {
+      this._triggerFirewall(true)
+      return
+    }
+
     if (parts[0] === 'firewall') {
       if (!this.firewall_active) {
         this.print('', 'empty')
@@ -545,7 +529,6 @@ export class Terminal {
       return
     }
 
-    // ── achievements command ─────────────────────────────
     if (parts[0] === 'achievements') {
       const ALL = [
         { id: 'good_ending',   title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
@@ -585,7 +568,6 @@ export class Terminal {
       return
     }
 
-    // ── Achievement: easter egg commands ────────────────
     if (['outerwilds', 'produce', 'ableton', 'volvo', 'phantom'].includes(parts[0])) {
       this._unlockAchievement('easter_egg', 'EASTER EGG FOUND', 'You went looking.')
     }
@@ -593,7 +575,6 @@ export class Terminal {
       this._unlockAchievement('phantom_found', 'PHANTOM FOUND', 'You found what PHANTOM left behind.')
     }
 
-    // ── Achievement: read all Nomai files ────────────────
     const NOMAI_FILES = ['.nomai_fragment', '.nomai_log_001', '.nomai_log_002', '.nomai_final']
     if (parts[0] === 'cat' && parts[1]) {
       const filename = parts[1].replace(/^.*\//, '')
@@ -608,12 +589,10 @@ export class Terminal {
         }
       }
     }
-    // ── Track confession read (unlocks secret ending) ────
     if (parts[0] === 'cat' && parts[1] && parts[1].includes('confession')) {
       localStorage.setItem('breach_confession_read', '1')
     }
 
-    // ── DEV: test achievement toasts ─────────────────────
     if (parts[0].startsWith('triggerachiev')) {
       const testAchievements = [
         { title: 'THE FLOOR IS STILL WET', desc: 'Good ending. You know why.' },
@@ -635,7 +614,6 @@ export class Terminal {
       return
     }
 
-    // Process via commands.js
     const outputLines = processCommand(input, this.state, (correct) => {
       this._handleUnlock(correct)
     })
@@ -645,7 +623,6 @@ export class Terminal {
         this.print(text, style)
         continue
       }
-      // Internal markers
       if (text === '__CLEAR__')             this._clearOutput()
       else if (text === '__SCAN__')         this._runScan()
       else if (text === '__REPLY__')         this._triggerReply()
@@ -661,7 +638,6 @@ export class Terminal {
     this._scrollToBottom()
   }
 
-  // ── UNLOCK HANDLING ──────────────────────────────────────────────────────
 
   _handleUnlock(correct) {
     if (correct) {
@@ -669,7 +645,6 @@ export class Terminal {
       playSuccess()
       this._bumpDetection(-10)
 
-      // Record layer stats
       const elapsed = this.layerStartTime ? Math.round((Date.now() - this.layerStartTime) / 1000) : 0
       this.layerStats.push({
         layer:  this.currentLevel,
@@ -699,7 +674,6 @@ export class Terminal {
             if (intercept) {
               setTimeout(() => {
                 this._printLinesDelayed(intercept, 40, () => {
-                  // Layer 8: open K.Chen deal — don't auto-advance, wait for kchen command
                   if (this.currentLevel === 8) {
                     const dealPrompt = [
                       { text: '  > TYPE:  kchen accept   — accept the deal', style: 'yellow' },
@@ -721,7 +695,6 @@ export class Terminal {
           })
         }, 600)
       } else {
-        // Level 20 — no success message, go straight to completion
         setTimeout(() => this._showCompletion(), 800)
       }
 
@@ -742,7 +715,6 @@ export class Terminal {
     }
   }
 
-  // ── SCAN ANIMATION ───────────────────────────────────────────────────────
 
   _runScan() {
     this.locked = true
@@ -753,7 +725,6 @@ export class Terminal {
       { text: '', style: 'empty' },
     ]
     this._printLinesDelayed(intro, 120, () => {
-      // Progress bar element
       const barEl = document.createElement('div')
       barEl.className   = 'line green'
       barEl.textContent = '      [░░░░░░░░░░░░░░░░░░░░] 0%'
@@ -789,7 +760,6 @@ export class Terminal {
     })
   }
 
-  // ── THEME ────────────────────────────────────────────────────────────────
 
   _setTheme(name) {
     const theme = THEMES[name] || THEMES.green
@@ -800,7 +770,6 @@ export class Terminal {
     this.print('', 'empty')
   }
 
-  // ── VOLUME ───────────────────────────────────────────────────────────────
 
   _adjustVolume(dir) {
     const music = window.bgMusic
@@ -835,7 +804,6 @@ export class Terminal {
     this.print('', 'empty')
   }
 
-  // ── REPLY (post-game) ────────────────────────────────────────────────────
 
   _triggerReply() {
     this.locked = true
@@ -848,7 +816,6 @@ export class Terminal {
     }
   }
 
-  // ── DETECTION METER ──────────────────────────────────────────────────────
 
   _bumpDetection(amount) {
     const prev = this.detection
@@ -856,12 +823,10 @@ export class Terminal {
     this._updateDetectionUI()
     localStorage.setItem('breach_detection', this.detection)
     if (this.detection >= 100) this._detectionAlert()
-    // Firewall triggers once when crossing 70% for the first time
     if (prev < 70 && this.detection >= 70 && !this.firewall_triggered && !this.locked) {
       this.firewall_triggered = true
       setTimeout(() => this._triggerFirewall(), 800)
     }
-    // One-time threshold alerts
     if (!this.locked && this.currentLevel >= 1 && this.currentLevel <= 20) {
       if (prev < 25 && this.detection >= 25) this._thresholdAlert(25)
       if (prev < 50 && this.detection >= 50) this._thresholdAlert(50)
@@ -912,12 +877,10 @@ export class Terminal {
     this._updateTitle()
   }
 
-  // ── FIREWALL MINI-PUZZLE ─────────────────────────────────────────────────
 
-  _triggerFirewall() {
-    if (this.locked || this.currentLevel < 1 || this.currentLevel > 15) return
+  _triggerFirewall(force = false) {
+    if (!force && (this.locked || this.currentLevel < 1 || this.currentLevel > 15)) return
 
-    // Pool of hex challenges — each decodes to a short word player must type
     const challenges = [
       { hex: '42 52 45 41 4b', answer: 'BREAK' },
       { hex: '46 4f 52 47 45', answer: 'FORGE' },
@@ -932,20 +895,19 @@ export class Terminal {
     const lines = [
       { text: '', style: 'empty' },
       { text: '  ╔══════════════════════════════════════════════╗', style: 'red' },
-      { text: '  ║          ⚠  FIREWALL ENGAGED  ⚠             ║', style: 'red' },
-      { text: '  ║                                              ║', style: 'red' },
-      { text: '  ║  Kimina countermeasure activated.            ║', style: 'red' },
-      { text: '  ║  Decode the emergency code to bypass.        ║', style: 'red' },
-      { text: '  ║                                              ║', style: 'red' },
-      { text: `  ║  HEX: ${chosen.hex.padEnd(39)}║`, style: 'yellow' },
-      { text: '  ║                                              ║', style: 'red' },
-      { text: '  ║  Type: firewall <decoded word>               ║', style: 'red' },
-      { text: '  ║  You have 30 seconds.                        ║', style: 'red' },
+      { text: '  ║              ⚠  FIREWALL ENGAGED  ⚠              ║', style: 'red' },
+      { text: '  ║                                                   ║', style: 'red' },
+      { text: '  ║          Kimina countermeasure activated.         ║', style: 'red' },
+      { text: '  ║        Decode the emergency code to bypass.       ║', style: 'red' },
+      { text: '  ║                                                   ║', style: 'red' },
+      { text: `  ║  HEX: ${chosen.hex.padEnd(39)}     ║`, style: 'yellow' },
+      { text: '  ║                                                   ║', style: 'red' },
+      { text: '  ║           Type: firewall <decoded word>           ║', style: 'red' },
+      { text: '  ║                You have 30 seconds.               ║', style: 'red' },
       { text: '  ╚══════════════════════════════════════════════╝', style: 'red' },
       { text: '', style: 'empty' },
     ]
     this._printLinesDelayed(lines, 30, () => {
-      // Countdown display
       let remaining = 30
       const countEl = document.createElement('div')
       countEl.className = 'line red'
@@ -1048,7 +1010,6 @@ export class Terminal {
     }, 120000)
   }
 
-  // ── TAB AUTOCOMPLETE ─────────────────────────────────────────────────────
 
   _autocomplete() {
     if (!this.state.fs) return
@@ -1061,7 +1022,6 @@ export class Terminal {
     const dirPart   = lastSlash >= 0 ? partial.slice(0, lastSlash + 1) : ''
     const namePart  = lastSlash >= 0 ? partial.slice(lastSlash + 1)   : partial
 
-    // Rebuild match list if input changed since last Tab
     if (this._tabPartial !== this.inputBuffer) {
       const dirPath = this.state.fs.resolve(this.state.cwd, dirPart || '.')
       if (!this.state.fs.isDir(dirPath)) return
@@ -1079,7 +1039,6 @@ export class Terminal {
       return
     }
 
-    // Cycle to next match — use saved dirPart/cmd to avoid stacking on directories
     this._tabIndex = (this._tabIndex + 1) % this._tabMatches.length
     const m = this._tabMatches[this._tabIndex]
     this.inputBuffer = this._tabCmd + ' ' + this._tabDirPart + m.name + (m.isDir ? '/' : '')
@@ -1088,7 +1047,6 @@ export class Terminal {
     playBeep(700, 0.04)
   }
 
-  // ── GLITCH SYSTEM ────────────────────────────────────────────────────────
 
   _startGlitchTimer() {
     const schedule = () => {
@@ -1139,7 +1097,6 @@ export class Terminal {
     ).join('')
   }
 
-  // ── RENDERING ────────────────────────────────────────────────────────────
 
   _renderInput() { this.$inputDisp.textContent = this.inputBuffer }
 
@@ -1176,7 +1133,6 @@ export class Terminal {
     this._updateTitle()
   }
 
-  // ── ACHIEVEMENTS ─────────────────────────────────────────────────────────
 
   _unlockAchievement(id, title, desc) {
     const saved = JSON.parse(localStorage.getItem('breach_achievements') || '{}')
@@ -1237,7 +1193,6 @@ export class Terminal {
     setTimeout(tick, 12000)
   }
 
-  // ── PHANTOM BLEED-THROUGH ────────────────────────────────────────────────
 
   _startPhantomBleedthrough() {
     const GHOST_LINES = [
@@ -1277,7 +1232,6 @@ export class Terminal {
     }
   }
 
-  // ── EMERGENCY PROTOCOL (Layer 11 detection spike) ────────────────────────
 
   _triggerEmergencyProtocol() {
     if (this._emergencyProtocolActive) return
@@ -1295,7 +1249,6 @@ export class Terminal {
       this._scrollToBottom()
     }, 2800)
 
-    // Fast-tick: +2% every 25 seconds for 3 minutes (up to 7 ticks)
     let ticks = 0
     const maxTicks = 7
     const fastTick = setInterval(() => {
@@ -1318,7 +1271,6 @@ export class Terminal {
     }, 25000)
   }
 
-  // ── LEVEL ADVANCE (with optional jumpscare on layer 9) ───────────────────
 
   _advanceToLevel(levelId) {
     if (levelId === 8) {
@@ -1332,7 +1284,6 @@ export class Terminal {
     this.locked = true
     playCrashSound()
 
-    // Brief red flash
     this.$app.style.transition = 'background 0.04s'
     this.$app.style.background = 'rgba(40,0,0,0.9)'
     setTimeout(() => { this.$app.style.background = '' }, 120)
@@ -1374,7 +1325,6 @@ export class Terminal {
     })
   }
 
-  // ── LEVEL LOADING ────────────────────────────────────────────────────────
 
   _loadLevel(levelId) {
     if (levelId > 20) { this._showCompletion(); return }
@@ -1399,7 +1349,6 @@ export class Terminal {
     this._setPrompt()
     localStorage.setItem('breach_level', levelId)
 
-    // Gradually increase music tension with layer progression
     const music = window.bgMusic
     if (music && music.duration) {
       music.playbackRate = levelId <= 7 ? 1.0 : levelId <= 14 ? 1.016 : 1.032
@@ -1418,17 +1367,13 @@ export class Terminal {
       25,
       () => {
         this.locked = false
-        // Layer 6: play NOMAI (-. --- -- .- ..) in morse as faint audio
         if (levelId === 6) setTimeout(() => playMorse('-. --- -- .- ..'), 600)
-        // Layer 10: start PHANTOM bleed-through ghost session
         if (levelId === 10) this._startPhantomBleedthrough()
-        // Layer 11: trigger one-time emergency protocol detection spike
         if (levelId === 11) this._triggerEmergencyProtocol()
       }
     )
   }
 
-  // ── BOOT ─────────────────────────────────────────────────────────────────
 
   boot() {
     this.$inputLine.style.visibility = 'hidden'
@@ -1481,7 +1426,6 @@ export class Terminal {
     }
   }
 
-  // ── COMPLETION ───────────────────────────────────────────────────────────
 
   _showCompletion() {
     this.locked = true
@@ -1489,12 +1433,10 @@ export class Terminal {
     localStorage.removeItem('breach_level')
     localStorage.removeItem('breach_detection')
 
-    // Track completion run number
     const runs = (parseInt(localStorage.getItem('breach_completions') || '0')) + 1
     localStorage.setItem('breach_completions', runs)
     this._completionRun = runs
 
-    // Pre-jumpscare tension — two alert lines before the scare hits
     setTimeout(() => {
       this.print('', 'empty')
       this.print('  ⚠ WARNING — PHYSICAL COUNTERMEASURE INCOMING', 'red')
@@ -1503,7 +1445,6 @@ export class Terminal {
       this.print('  ⚠ PROXIMITY ALERT — LOCATION IDENTIFIED', 'red')
     }, 1300)
 
-    // Trigger end sequence after the alerts land
     setTimeout(() => {
       if (typeof window.triggerEndSequence === 'function') {
         window.triggerEndSequence(() => this._renderCompletion())
@@ -1516,7 +1457,6 @@ export class Terminal {
   _renderCompletion() {
     this._clearOutput()
 
-    // ── Build stats table ──────────────────────────────
     const totalTime  = this.layerStats.reduce((s, l) => s + l.time, 0)
     const totalWrong = this.layerStats.reduce((s, l) => s + l.wrong, 0)
     const totalHints = this.layerStats.reduce((s, l) => s + l.hints, 0)
@@ -1574,7 +1514,6 @@ export class Terminal {
       { text: '', style: 'empty' },
     ]
 
-    // Trigger achievements for this run
     this._unlockAchievement('good_ending', 'THE FLOOR IS STILL WET', 'Good ending. You know why.')
     if (totalHints === 0 && totalWrong === 0)
       this._unlockAchievement('ghost', 'GHOST', 'No hints. No wrong answers. Flawless.')
@@ -1586,7 +1525,6 @@ export class Terminal {
       this.detection = 0
       this._updateDetectionUI()
 
-      // Set up post-game filesystem with the classified file
       this.state.fs = new Filesystem({
         dirs:  ['/'],
         files: {
@@ -1640,7 +1578,6 @@ In gentle code, I slur you, Kimi… I slur you.`,
     })
   }
 
-  // ── UTILITY ──────────────────────────────────────────────────────────────
 
   _printLinesDelayed(lines, defaultDelayMs, callback) {
     let i = 0
